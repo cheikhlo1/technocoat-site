@@ -194,6 +194,46 @@ body {
   margin-top: 0;
 }
 
+.manager-reminders {
+  background: #f7f9fc;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.65rem 0.75rem;
+  min-width: 280px;
+  max-width: 340px;
+}
+
+.reminders-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+#add-reminder {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #9fb0c6;
+  border-radius: 8px;
+  background: #fff;
+  color: #1d3554;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.manager-reminders ul {
+  margin: 0;
+  padding-left: 1rem;
+  color: #31455f;
+  font-size: 0.84rem;
+}
+
+.manager-reminders li {
+  margin: 0.18rem 0;
+}
+
 .big-kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -507,6 +547,11 @@ table tbody tr:nth-child(even) {
   .executive-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .manager-reminders {
+    width: 100%;
+    max-width: none;
   }
 
   .mini-charts {
