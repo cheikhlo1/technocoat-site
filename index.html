@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Production - Technocoat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Gestion Production</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <button data-section="manager">Manager</button>
+                <button data-section="responsable">Responsable méthode</button>
+                <button data-section="preparation">Préparation</button>
+                <button data-section="accroche">Accroche</button>
+                <button data-section="peinture">Peinture</button>
+                <button data-section="decroche">Décroche</button>
+                <button data-section="qualite">Qualité</button>
+                <button data-section="logistique">Logistique</button>
+                <button data-section="stock">Stock</button>
+                <button data-section="parametres">Paramètres / Utilisateurs</button>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="top-header">
+                <div class="user-info">
+                    <span>Utilisateur: John Doe</span>
+                    <span>Rôle: Manager</span>
+                    <button id="change-role">Changer rôle</button>
+                </div>
+            </header>
+            <div class="content">
+                <section id="manager" class="section active">
+                    <h2>Manager</h2>
+                    <div class="cards">
+                        <div class="card">
+                            <h3>Production Totale</h3>
+                            <p>1500 unités</p>
+                        </div>
+                        <div class="card">
+                            <h3>Efficacité</h3>
+                            <p>85%</p>
+                        </div>
+                        <div class="card alert">
+                            <h3>Alertes Stock</h3>
+                            <p>3 éléments</p>
+                        </div>
+                        <div class="card">
+                            <h3>OF en Cours</h3>
+                            <p>12</p>
+                        </div>
+                        <div class="card">
+                            <h3>Retards</h3>
+                            <p>2 OF</p>
+                        </div>
+                        <div class="card">
+                            <h3>Non-Conformités</h3>
+                            <p>5</p>
+                        </div>
+                        <div class="card">
+                            <h3>Charge Atelier</h3>
+                            <p>75%</p>
+                        </div>
+                        <div class="card">
+                            <h3>Écarts Temps</h3>
+                            <p>+5%</p>
+                        </div>
+                        <div class="card">
+                            <h3>Rentabilité</h3>
+                            <p>92%</p>
+                        </div>
+                    </div>
+                    <h3>OF en Retard</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>OF</th>
+                                <th>Client</th>
+                                <th>Retard (j)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>OF001</td>
+                                <td>Client A</td>
+                                <td>3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="graph-placeholder">
+                        <h3>Graphique Performance</h3>
+                        <div class="fake-graph">Graphique fictif</div>
+                    </div>
+                </section>
+                <section id="responsable" class="section">
+                    <h2>Responsable méthode</h2>
+                    <h3>Gammes de Fabrication</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Référence</th>
+                                <th>Étapes</th>
+                                <th>Temps Prévu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>REF001</td>
+                                <td>Préparation, Peinture, Séchage</td>
+                                <td>120 min</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3>Affectation Opérateurs</h3>
+                    <ul>
+                        <li>Alice: Préparation</li>
+                        <li>Bob: Peinture</li>
+                    </ul>
+                </section>
+                <section id="preparation" class="section">
+                    <h2>Préparation</h2>
+                    <div class="stock-alerts">
+                        <h3>Alertes Stock Préparation</h3>
+                        <ul>
+                            <li>Bouchons: Faible</li>
+                            <li>Adhésifs: OK</li>
+                        </ul>
+                    </div>
+                    <div class="info-cards">
+                        <div class="info-card">
+                            <div class="info-title">Client</div>
+                            <div class="info-value">CLIENT A</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Numéro OF</div>
+                            <div class="info-value">OF001</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Numéro de commande</div>
+                            <div class="info-value">CMD001</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Référence pièce</div>
+                            <div class="info-value">REF001</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Désignation pièce</div>
+                            <div class="info-value">Pièce A</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Quantité</div>
+                            <div class="info-value">100</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Priorité</div>
+                            <div class="info-value">Haute</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Localisation actuelle</div>
+                            <div class="info-value">Zone Préparation</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Étape à réaliser</div>
+                            <div class="info-value">Masquage</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Temps prévu</div>
+                            <div class="info-value">30 min</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Consommables nécessaires</div>
+                            <div class="info-value">Bouchons, Adhésifs</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Outillage nécessaire</div>
+                            <div class="info-value">Pistolet</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Prochaine étape</div>
+                            <div class="info-value">Accroche</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Statut</div>
+                            <div class="info-value">En cours</div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="action-btn">Démarrer la tâche</button>
+                        <button class="action-btn">Mettre en pause</button>
+                        <button class="action-btn">Terminer la tâche</button>
+                        <button class="action-btn">Signaler une anomalie</button>
+                        <button class="action-btn">Enregistrer l’observation</button>
+                    </div>
+                    <div class="fields">
+                        <label>Temps réel passé: <input type="text" placeholder="min"></label>
+                        <label>Observation opérateur: <input type="text" placeholder="Observation"></label>
+                        <label>Type d’observation: 
+                            <select>
+                                <option>Anomalie</option>
+                                <option>Amélioration</option>
+                                <option>Information</option>
+                                <option>Retard</option>
+                                <option>Manque consommable</option>
+                                <option>Outillage</option>
+                                <option>Qualité</option>
+                            </select>
+                        </label>
+                        <label>Niveau d’importance: 
+                            <select>
+                                <option>Faible</option>
+                                <option>Moyen</option>
+                                <option>Élevé</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="rex-block">
+                        <h3>Observation / Retour d’expérience</h3>
+                        <textarea placeholder="Écrivez votre observation..."></textarea>
+                        <label>Type: 
+                            <select>
+                                <option>Anomalie</option>
+                                <option>Amélioration</option>
+                                <option>Information</option>
+                                <option>Retard</option>
+                                <option>Manque consommable</option>
+                                <option>Outillage</option>
+                                <option>Qualité</option>
+                            </select>
+                        </label>
+                        <label>Importance: 
+                            <select>
+                                <option>Faible</option>
+                                <option>Moyen</option>
+                                <option>Élevé</option>
+                            </select>
+                        </label>
+                        <button class="save-btn">Enregistrer l’observation</button>
+                        <h4>Observations enregistrées</h4>
+                        <ul>
+                            <li>Masquage plus long que prévu à cause de zones difficiles d’accès.</li>
+                            <li>Manque de bouchons adaptés pour cette référence.</li>
+                            <li>Temps réel supérieur au temps prévu.</li>
+                        </ul>
+                    </div>
+                </section>
+                <section id="accroche" class="section">
+                    <h2>Accroche</h2>
+                    <div class="stock-alerts">
+                        <h3>Alertes Stock Accroche</h3>
+                        <ul>
+                            <li>Crochets: OK</li>
+                            <li>Balancelles: Faible</li>
+                        </ul>
+                    </div>
+                    <div class="info-cards">
+                        <div class="info-card">
+                            <div class="info-title">Client</div>
+                            <div class="info-value">CLIENT A</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Numéro OF</div>
+                            <div class="info-value">OF001</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Étape à réaliser</div>
+                            <div class="info-value">Accrochage</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Temps prévu</div>
+                            <div class="info-value">20 min</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Outillage nécessaire</div>
+                            <div class="info-value">Crochets</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Statut</div>
+                            <div class="info-value">En attente</div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="action-btn">Démarrer la tâche</button>
+                        <button class="action-btn">Terminer la tâche</button>
+                        <button class="action-btn">Signaler une anomalie</button>
+                    </div>
+                    <div class="rex-block">
+                        <h3>Observation / Retour d’expérience</h3>
+                        <textarea placeholder="Écrivez votre observation..."></textarea>
+                        <label>Type: 
+                            <select>
+                                <option>Anomalie</option>
+                                <option>Amélioration</option>
+                            </select>
+                        </label>
+                        <label>Importance: 
+                            <select>
+                                <option>Faible</option>
+                                <option>Moyen</option>
+                            </select>
+                        </label>
+                        <button class="save-btn">Enregistrer l’observation</button>
+                        <ul>
+                            <li>Accrochage difficile avec l’outillage actuel.</li>
+                        </ul>
+                    </div>
+                </section>
+                <section id="peinture" class="section">
+                    <h2>Peinture</h2>
+                    <div class="stock-alerts">
+                        <h3>Alertes Stock Peinture</h3>
+                        <ul>
+                            <li>Poudre: Faible</li>
+                            <li>Solvant: OK</li>
+                        </ul>
+                    </div>
+                    <div class="info-cards">
+                        <div class="info-card">
+                            <div class="info-title">Client</div>
+                            <div class="info-value">CLIENT A</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Étape à réaliser</div>
+                            <div class="info-value">Laquage</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Temps prévu</div>
+                            <div class="info-value">45 min</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Consommables nécessaires</div>
+                            <div class="info-value">Poudre, Solvant</div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="action-btn">Démarrer la tâche</button>
+                        <button class="action-btn">Terminer la tâche</button>
+                    </div>
+                    <div class="rex-block">
+                        <h3>Observation / Retour d’expérience</h3>
+                        <textarea placeholder="Écrivez votre observation..."></textarea>
+                        <button class="save-btn">Enregistrer l’observation</button>
+                        <ul>
+                            <li>Pièce arrivée avec traces avant préparation.</li>
+                        </ul>
+                    </div>
+                </section>
+                <section id="decroche" class="section">
+                    <h2>Décroche</h2>
+                    <div class="info-cards">
+                        <div class="info-card">
+                            <div class="info-title">Client</div>
+                            <div class="info-value">CLIENT A</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Étape à réaliser</div>
+                            <div class="info-value">Décrochage</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-title">Statut</div>
+                            <div class="info-value">Terminé</div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="action-btn">Terminer la tâche</button>
+                    </div>
+                    <div class="rex-block">
+                        <h3>Observation / Retour d’expérience</h3>
+                        <textarea placeholder="Écrivez votre observation..."></textarea>
+                        <button class="save-btn">Enregistrer l’observation</button>
+                    </div>
+                </section>
+                <section id="qualite" class="section">
+                    <h2>Qualité</h2>
+                    <h3>Contrôle Pièces</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>OF</th>
+                                <th>Référence</th>
+                                <th>Conformité</th>
+                                <th>Non-Conformités</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>OF001</td>
+                                <td>REF001</td>
+                                <td>Oui</td>
+                                <td>0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3>Contrôle Équipements</h3>
+                    <ul>
+                        <li>pH Bains: 7.2 (OK)</li>
+                        <li>Température: 180°C (OK)</li>
+                    </ul>
+                    <h3>Historique</h3>
+                    <p>Dernier contrôle: 04/05/2026</p>
+                </section>
+                <section id="logistique" class="section">
+                    <h2>Logistique</h2>
+                    <div class="stock-alerts">
+                        <h3>Alertes Stock Générales</h3>
+                        <ul>
+                            <li>Acier: Faible</li>
+                            <li>Vis: OK</li>
+                        </ul>
+                    </div>
+                    <h3>Produits Finis</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>OF</th>
+                                <th>Client</th>
+                                <th>Statut Livraison</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>OF001</td>
+                                <td>Client A</td>
+                                <td>Prêt</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h3>Bons de Livraison</h3>
+                    <ul>
+                        <li>BL001: Expédié</li>
+                    </ul>
+                </section>
+                <section id="stock" class="section">
+                    <h2>Stock</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Matière</th>
+                                <th>Quantité</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Acier</td>
+                                <td>100</td>
+                                <td class="alert">Faible</td>
+                            </tr>
+                            <tr>
+                                <td>Poudre</td>
+                                <td>20</td>
+                                <td class="alert">Faible</td>
+                            </tr>
+                            <tr>
+                                <td>Vis</td>
+                                <td>500</td>
+                                <td>OK</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section id="parametres" class="section">
+                    <h2>Paramètres / Utilisateurs</h2>
+                    <h3>Utilisateurs</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Rôle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>Manager</td>
+                            </tr>
+                            <tr>
+                                <td>Alice</td>
+                                <td>Opérateur</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
