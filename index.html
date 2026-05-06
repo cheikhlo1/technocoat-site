@@ -1,589 +1,560 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion de Production - Technocoat</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="app">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h1>Gestion Production</h1>
-                <p>Technocoat · Pilotage atelier</p>
-            </div>
-            <nav class="sidebar-nav">
-                <button data-section="manager">Manager</button>
-                <button data-section="production">Production / OF</button>
-                <button data-section="responsable">Responsable méthode</button>
-                <button data-section="preparation">Préparation</button>
-                <button data-section="accroche">Accroche</button>
-                <button data-section="peinture">Peinture</button>
-                <button data-section="decroche">Décroche</button>
-                <button data-section="qualite">Qualité</button>
-                <button data-section="logistique">Logistique</button>
-                <button data-section="stock">Stock</button>
-                <button data-section="database">Base de données</button>
-                <button data-section="parametres">Paramètres / Utilisateurs</button>
-            </nav>
-        </aside>
-        <main class="main-content">
-            <header class="top-header">
-                <div class="user-info">
-                    <span>Utilisateur: John Doe</span>
-                    <span>Rôle: Manager</span>
-                    <button id="change-role">Changer rôle</button>
-                </div>
-            </header>
-            <div class="content">
-                <section id="manager" class="section active">
-                    <h2>Manager</h2>
-                    <div class="cards">
-                        <div class="card">
-                            <h3>Production Totale</h3>
-                            <p>1500 unités</p>
-                        </div>
-                        <div class="card">
-                            <h3>Efficacité</h3>
-                            <p>85%</p>
-                        </div>
-                        <div class="card alert">
-                            <h3>Alertes Stock</h3>
-                            <p>3 éléments</p>
-                        </div>
-                        <div class="card">
-                            <h3>OF en Cours</h3>
-                            <p>12</p>
-                        </div>
-                        <div class="card">
-                            <h3>Retards</h3>
-                            <p>2 OF</p>
-                        </div>
-                        <div class="card">
-                            <h3>Non-Conformités</h3>
-                            <p>5</p>
-                        </div>
-                        <div class="card">
-                            <h3>Charge Atelier</h3>
-                            <p>75%</p>
-                        </div>
-                        <div class="card">
-                            <h3>Écarts Temps</h3>
-                            <p>+5%</p>
-                        </div>
-                        <div class="card">
-                            <h3>Rentabilité</h3>
-                            <p>92%</p>
-                        </div>
-                    </div>
-                    <h3>OF en Retard</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>OF</th>
-                                <th>Client</th>
-                                <th>Retard (j)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>OF001</td>
-                                <td>Client A</td>
-                                <td>3</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="graph-placeholder">
-                        <h3>Graphique Performance</h3>
-                        <div class="fake-graph">Graphique fictif</div>
-                    </div>
-                </section>
-                <section id="production" class="section">
-                    <h2>Production / OF</h2>
-                    <div class="cards">
-                        <div class="card"><h3>OF en attente</h3><p>5</p></div>
-                        <div class="card"><h3>OF en cours</h3><p>12</p></div>
-                        <div class="card"><h3>OF terminés</h3><p>27</p></div>
-                    </div>
-                    <h3>Suivi synthétique</h3>
-                    <table>
-                        <thead><tr><th>OF</th><th>Client</th><th>Étape</th><th>Statut</th></tr></thead>
-                        <tbody><tr><td>OF001</td><td>Client A</td><td>Préparation</td><td>En cours</td></tr></tbody>
-                    </table>
-                </section>
-                <section id="responsable" class="section">
-                    <h2>Responsable méthode</h2>
-                    <h3>Gammes de Fabrication</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Référence</th>
-                                <th>Étapes</th>
-                                <th>Temps Prévu</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>REF001</td>
-                                <td>Préparation, Peinture, Séchage</td>
-                                <td>120 min</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h3>Affectation Opérateurs</h3>
-                    <ul>
-                        <li>Alice: Préparation</li>
-                        <li>Bob: Peinture</li>
-                    </ul>
-                </section>
-                <section id="preparation" class="section prep-section">
-                    <h2>Préparation</h2>
-                    <div class="prep-badges" aria-label="Informations clés préparation">
-                        <span class="prep-badge badge-priority">⚑ Priorité: Haute</span>
-                        <span class="prep-badge badge-status">● Statut: En cours</span>
-                        <span class="prep-badge badge-poste">⌂ Poste: Préparation</span>
-                        <span class="prep-badge badge-urgence">⚠ Urgence: À surveiller</span>
-                    </div>
-                    <div class="stock-alerts">
-                        <h3>Alertes Stock Préparation</h3>
-                        <ul>
-                            <li>Bouchons: Faible</li>
-                            <li>Adhésifs: OK</li>
-                        </ul>
-                    </div>
-                    <div class="prep-main-grid">
-                        <div class="info-cards">
-                        <div class="info-card">
-                            <div class="info-title">Client</div>
-                            <div class="info-value">CLIENT A</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Numéro OF</div>
-                            <div class="info-value">OF001</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Numéro de commande</div>
-                            <div class="info-value">CMD001</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Référence pièce</div>
-                            <div class="info-value">REF001</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Désignation pièce</div>
-                            <div class="info-value">Pièce A</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Quantité</div>
-                            <div class="info-value">100</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Priorité</div>
-                            <div class="info-value">Haute</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Localisation actuelle</div>
-                            <div class="info-value">Zone Préparation</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Étape à réaliser</div>
-                            <div class="info-value">Masquage</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Temps prévu</div>
-                            <div class="info-value">30 min</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Consommables nécessaires</div>
-                            <div class="info-value">Bouchons, Adhésifs</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Outillage nécessaire</div>
-                            <div class="info-value">Pistolet</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Prochaine étape</div>
-                            <div class="info-value">Accroche</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Statut</div>
-                            <div class="info-value">En cours</div>
-                        </div>
-                        </div>
-                        <div class="prep-layout-cards">
-                            <article class="prep-card">
-                                <h3>🧾 Ordre de fabrication</h3>
-                                <ul>
-                                    <li><strong>OF :</strong> OF001</li>
-                                    <li><strong>Commande :</strong> CMD001</li>
-                                    <li><strong>Client :</strong> CLIENT A</li>
-                                    <li><strong>Référence :</strong> REF001 · Pièce A</li>
-                                </ul>
-                            </article>
-                            <article class="prep-card">
-                                <h3>🛠 Instructions de préparation</h3>
-                                <ol>
-                                    <li>Vérifier la gamme et le plan de masquage.</li>
-                                    <li>Préparer les consommables nécessaires avant démarrage.</li>
-                                    <li>Valider la pièce avant transfert à l’étape Accroche.</li>
-                                </ol>
-                            </article>
-                            <article class="prep-card prep-card-warning">
-                                <h3>⚠ Points de vigilance</h3>
-                                <ul>
-                                    <li>Contrôler les zones complexes (angles/perçages).</li>
-                                    <li>Surveiller le stock de bouchons annoncé faible.</li>
-                                    <li>Signaler toute anomalie immédiatement.</li>
-                                </ul>
-                            </article>
-                            <article class="prep-card">
-                                <h3>💬 Commentaires opérateur</h3>
-                                <p>Bloc de lecture rapide avant saisie détaillée dans Observation / REX.</p>
-                                <ul>
-                                    <li>Dernier retour : masquage plus long que prévu.</li>
-                                </ul>
-                            </article>
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <button class="action-btn">Démarrer la tâche</button>
-                        <button class="action-btn">Mettre en pause</button>
-                        <button class="action-btn">Terminer la tâche</button>
-                        <button class="action-btn">Signaler une anomalie</button>
-                        <button class="action-btn">Enregistrer l’observation</button>
-                    </div>
-                    <div class="fields">
-                        <label>Temps réel passé: <input type="text" placeholder="min"></label>
-                        <label>Observation opérateur: <input type="text" placeholder="Observation"></label>
-                        <label>Type d’observation: 
-                            <select>
-                                <option>Anomalie</option>
-                                <option>Amélioration</option>
-                                <option>Information</option>
-                                <option>Retard</option>
-                                <option>Manque consommable</option>
-                                <option>Outillage</option>
-                                <option>Qualité</option>
-                            </select>
-                        </label>
-                        <label>Niveau d’importance: 
-                            <select>
-                                <option>Faible</option>
-                                <option>Moyen</option>
-                                <option>Élevé</option>
-                            </select>
-                        </label>
-                    </div>
-                    <div class="rex-block">
-                        <h3>Observation / Retour d’expérience</h3>
-                        <textarea placeholder="Écrivez votre observation..."></textarea>
-                        <label>Type: 
-                            <select>
-                                <option>Anomalie</option>
-                                <option>Amélioration</option>
-                                <option>Information</option>
-                                <option>Retard</option>
-                                <option>Manque consommable</option>
-                                <option>Outillage</option>
-                                <option>Qualité</option>
-                            </select>
-                        </label>
-                        <label>Importance: 
-                            <select>
-                                <option>Faible</option>
-                                <option>Moyen</option>
-                                <option>Élevé</option>
-                            </select>
-                        </label>
-                        <button class="save-btn">Enregistrer l’observation</button>
-                        <h4>Observations enregistrées</h4>
-                        <ul>
-                            <li>Masquage plus long que prévu à cause de zones difficiles d’accès.</li>
-                            <li>Manque de bouchons adaptés pour cette référence.</li>
-                            <li>Temps réel supérieur au temps prévu.</li>
-                        </ul>
-                    </div>
-                </section>
-                <section id="accroche" class="section">
-                    <h2>Accroche</h2>
-                    <div class="stock-alerts">
-                        <h3>Alertes Stock Accroche</h3>
-                        <ul>
-                            <li>Crochets: OK</li>
-                            <li>Balancelles: Faible</li>
-                        </ul>
-                    </div>
-                    <div class="info-cards">
-                        <div class="info-card">
-                            <div class="info-title">Client</div>
-                            <div class="info-value">CLIENT A</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Numéro OF</div>
-                            <div class="info-value">OF001</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Étape à réaliser</div>
-                            <div class="info-value">Accrochage</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Temps prévu</div>
-                            <div class="info-value">20 min</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Outillage nécessaire</div>
-                            <div class="info-value">Crochets</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Statut</div>
-                            <div class="info-value">En attente</div>
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <button class="action-btn">Démarrer la tâche</button>
-                        <button class="action-btn">Terminer la tâche</button>
-                        <button class="action-btn">Signaler une anomalie</button>
-                    </div>
-                    <div class="rex-block">
-                        <h3>Observation / Retour d’expérience</h3>
-                        <textarea placeholder="Écrivez votre observation..."></textarea>
-                        <label>Type: 
-                            <select>
-                                <option>Anomalie</option>
-                                <option>Amélioration</option>
-                            </select>
-                        </label>
-                        <label>Importance: 
-                            <select>
-                                <option>Faible</option>
-                                <option>Moyen</option>
-                            </select>
-                        </label>
-                        <button class="save-btn">Enregistrer l’observation</button>
-                        <ul>
-                            <li>Accrochage difficile avec l’outillage actuel.</li>
-                        </ul>
-                    </div>
-                </section>
-                <section id="peinture" class="section">
-                    <h2>Peinture</h2>
-                    <div class="stock-alerts">
-                        <h3>Alertes Stock Peinture</h3>
-                        <ul>
-                            <li>Poudre: Faible</li>
-                            <li>Solvant: OK</li>
-                        </ul>
-                    </div>
-                    <div class="info-cards">
-                        <div class="info-card">
-                            <div class="info-title">Client</div>
-                            <div class="info-value">CLIENT A</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Étape à réaliser</div>
-                            <div class="info-value">Laquage</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Temps prévu</div>
-                            <div class="info-value">45 min</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Consommables nécessaires</div>
-                            <div class="info-value">Poudre, Solvant</div>
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <button class="action-btn">Démarrer la tâche</button>
-                        <button class="action-btn">Terminer la tâche</button>
-                    </div>
-                    <div class="rex-block">
-                        <h3>Observation / Retour d’expérience</h3>
-                        <textarea placeholder="Écrivez votre observation..."></textarea>
-                        <button class="save-btn">Enregistrer l’observation</button>
-                        <ul>
-                            <li>Pièce arrivée avec traces avant préparation.</li>
-                        </ul>
-                    </div>
-                </section>
-                <section id="decroche" class="section">
-                    <h2>Décroche</h2>
-                    <div class="info-cards">
-                        <div class="info-card">
-                            <div class="info-title">Client</div>
-                            <div class="info-value">CLIENT A</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Étape à réaliser</div>
-                            <div class="info-value">Décrochage</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Statut</div>
-                            <div class="info-value">Terminé</div>
-                        </div>
-                    </div>
-                    <div class="actions">
-                        <button class="action-btn">Terminer la tâche</button>
-                    </div>
-                    <div class="rex-block">
-                        <h3>Observation / Retour d’expérience</h3>
-                        <textarea placeholder="Écrivez votre observation..."></textarea>
-                        <button class="save-btn">Enregistrer l’observation</button>
-                    </div>
-                </section>
-                <section id="qualite" class="section">
-                    <h2>Qualité</h2>
-                    <h3>Contrôle Pièces</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>OF</th>
-                                <th>Référence</th>
-                                <th>Conformité</th>
-                                <th>Non-Conformités</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>OF001</td>
-                                <td>REF001</td>
-                                <td>Oui</td>
-                                <td>0</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h3>Contrôle Équipements</h3>
-                    <ul>
-                        <li>pH Bains: 7.2 (OK)</li>
-                        <li>Température: 180°C (OK)</li>
-                    </ul>
-                    <h3>Historique</h3>
-                    <p>Dernier contrôle: 04/05/2026</p>
-                </section>
-                <section id="logistique" class="section">
-                    <h2>Logistique</h2>
-                    <div class="stock-alerts">
-                        <h3>Alertes Stock Générales</h3>
-                        <ul>
-                            <li>Acier: Faible</li>
-                            <li>Vis: OK</li>
-                        </ul>
-                    </div>
-                    <h3>Produits Finis</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>OF</th>
-                                <th>Client</th>
-                                <th>Statut Livraison</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>OF001</td>
-                                <td>Client A</td>
-                                <td>Prêt</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <h3>Bons de Livraison</h3>
-                    <ul>
-                        <li>BL001: Expédié</li>
-                    </ul>
-                </section>
-                <section id="stock" class="section">
-                    <h2>Stock</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Matière</th>
-                                <th>Quantité</th>
-                                <th>Statut</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Acier</td>
-                                <td>100</td>
-                                <td class="alert">Faible</td>
-                            </tr>
-                            <tr>
-                                <td>Poudre</td>
-                                <td>20</td>
-                                <td class="alert">Faible</td>
-                            </tr>
-                            <tr>
-                                <td>Vis</td>
-                                <td>500</td>
-                                <td>OK</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
+:root {
+  --navy: #1f3552;
+  --navy-strong: #172a42;
+  --bg: #f2f5f9;
+  --surface: #ffffff;
+  --muted: #5c6775;
+  --text: #182432;
+  --border: #d9e0ea;
+  --orange: #f39c12;
+  --green: #1f9d58;
+  --red: #d64545;
+  --shadow: 0 8px 24px rgba(17, 24, 39, 0.08);
+  --radius: 12px;
+}
 
-                <section id="database" class="section database-section">
-                    <div class="db-header">
-                        <div>
-                            <h2>Base de données</h2>
-                            <p>Consultation, filtrage et export des données de production</p>
-                        </div>
-                        <div class="db-meta">
-                            <span id="db-date">Date: --</span>
-                            <span>Utilisateur: John Doe</span>
-                            <span>Rôle: Manager</span>
-                        </div>
-                    </div>
-                    <div class="db-kpis" id="db-kpis"></div>
-                    <div class="db-filters">
-                        <input type="text" id="db-search" placeholder="Recherche texte">
-                        <select id="db-client"><option value="">Tous les clients</option></select>
-                        <select id="db-of"><option value="">Tous les OF</option></select>
-                        <select id="db-status"><option value="">Tous les statuts</option></select>
-                        <select id="db-activity"><option value="">Toutes les activités</option></select>
-                        <input type="date" id="db-date-filter">
-                        <button id="db-reset" class="action-btn">Réinitialiser les filtres</button>
-                    </div>
-                    <div class="db-toolbar">
-                        <button class="db-tab active" data-tab="clients">Clients & commandes</button>
-                        <button class="db-tab" data-tab="production">Production</button>
-                        <button class="db-tab" data-tab="personnel">Personnel</button>
-                        <button class="db-tab" data-tab="stocks">Stocks</button>
-                        <button class="db-tab" data-tab="qualite">Qualité</button>
-                        <button class="db-tab" data-tab="rex">Observations / REX</button>
-                        <div class="db-export">
-                            <button id="db-export-excel" class="save-btn">Export Excel</button>
-                            <button id="db-export-csv" class="save-btn">Export CSV</button>
-                            <button id="db-export-pdf" class="save-btn">Export PDF</button>
-                        </div>
-                    </div>
-                    <div id="db-table-container"></div>
-                </section>
+* {
+  box-sizing: border-box;
+}
 
-                <section id="parametres" class="section">
-                    <h2>Paramètres / Utilisateurs</h2>
-                    <h3>Utilisateurs</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Rôle</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>John Doe</td>
-                                <td>Manager</td>
-                            </tr>
-                            <tr>
-                                <td>Alice</td>
-                                <td>Opérateur</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-            </div>
-        </main>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 285px;
+  background: linear-gradient(180deg, var(--navy) 0%, var(--navy-strong) 100%);
+  color: #fff;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  padding: 1.4rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.sidebar-header h1 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.sidebar-header p {
+  margin: 0.35rem 0 0;
+  font-size: 0.83rem;
+  color: #d5deea;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.85rem;
+}
+
+.sidebar-nav button {
+  border: 1px solid transparent;
+  background: transparent;
+  color: #eef4ff;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 0.72rem 0.8rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.sidebar-nav button:hover,
+.sidebar-nav button.active-nav {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.main-content {
+  margin-left: 285px;
+  width: calc(100% - 285px);
+}
+
+.top-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.5rem;
+}
+
+.user-panel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+#change-role {
+  border: none;
+  border-radius: 10px;
+  padding: 0.55rem 0.95rem;
+  background: var(--navy);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.page-content {
+  padding: 1.6rem;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.page-subtitle {
+  margin: 0.4rem 0 1.2rem;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.badges {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  color: #fff;
+}
+
+.badge.orange {
+  background: var(--orange);
+}
+
+.badge.green {
+  background: var(--green);
+}
+
+.badge.red {
+  background: var(--red);
+}
+
+.todo-box {
+  border: 1px dashed #b7c3d3;
+  border-radius: 10px;
+  padding: 0.9rem;
+  color: #394a5d;
+  background: #f9fbfd;
+}
+
+/* Dashboard Manager */
+
+.manager-meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.executive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.exec-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.exec-actions .detail-btn {
+  margin-top: 0;
+}
+
+.manager-reminders {
+  background: #f7f9fc;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.65rem 0.75rem;
+  min-width: 280px;
+  max-width: 340px;
+}
+
+.reminders-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+#add-reminder {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #9fb0c6;
+  border-radius: 8px;
+  background: #fff;
+  color: #1d3554;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.manager-reminders ul {
+  margin: 0;
+  padding-left: 1rem;
+  color: #31455f;
+  font-size: 0.84rem;
+}
+
+.manager-reminders li {
+  margin: 0.18rem 0;
+}
+
+.big-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.9rem;
+  margin: 0.8rem 0;
+}
+
+.big-kpi {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.big-kpi strong {
+  font-size: 1.4rem;
+  display: block;
+  margin: 0.25rem 0;
+}
+
+.big-kpi p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.big-kpi.good {
+  border-left: 6px solid var(--green);
+}
+
+.big-kpi.warn {
+  border-left: 6px solid var(--orange);
+}
+
+.big-kpi.danger {
+  border-left: 6px solid var(--red);
+}
+
+.big-kpi.neutral {
+  border-left: 6px solid #2d6cdf;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.8rem;
+  margin: 1rem 0;
+}
+
+.kpi-grid.compact .kpi-card {
+  padding: 0.65rem 0.8rem;
+}
+
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.85rem;
+  box-shadow: var(--shadow);
+}
+
+.kpi-card small {
+  display: block;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.kpi-card strong {
+  font-size: 1.3rem;
+}
+
+.kpi-card.good {
+  border-left: 5px solid var(--green);
+}
+
+.kpi-card.warn {
+  border-left: 5px solid var(--orange);
+}
+
+.kpi-card.danger {
+  border-left: 5px solid var(--red);
+}
+
+.kpi-card.neutral {
+  border-left: 5px solid #2d6cdf;
+}
+
+.kpi-click {
+  cursor: pointer;
+  text-align: left;
+  background: #fff;
+}
+
+.kpi-click:hover {
+  transform: translateY(-1px);
+}
+
+.manager-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.6rem 0 1rem;
+}
+
+.manager-tab {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.manager-tab.active {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+}
+
+.triple-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.8rem;
+}
+
+.alert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.8rem;
+}
+
+.alert-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.8rem;
+  box-shadow: var(--shadow);
+}
+
+.alert-card.critique {
+  border-left: 6px solid var(--red);
+}
+
+.alert-card.attention {
+  border-left: 6px solid var(--orange);
+}
+
+.alert-card.information {
+  border-left: 6px solid #2d6cdf;
+}
+
+.detail-btn {
+  margin-top: 0.6rem;
+  border: none;
+  background: var(--navy);
+  color: #fff;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* Filtres, tableaux et graphiques */
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.7rem;
+}
+
+.filters-grid input,
+.filters-grid select,
+.filters-grid button {
+  padding: 0.55rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.filters-grid button {
+  background: var(--navy);
+  color: #fff;
+  font-weight: 600;
+}
+
+.table-wrap {
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.5rem;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+table tbody tr:nth-child(even) {
+  background: #f8fbff;
+}
+
+.charge-row {
+  margin-bottom: 0.8rem;
+}
+
+.charge-row span {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.progress {
+  height: 8px;
+  background: #e5eaf1;
+  border-radius: 999px;
+  margin-top: 0.35rem;
+}
+
+.progress div {
+  height: 100%;
+  background: #2d6cdf;
+  border-radius: 999px;
+}
+
+.perf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.mini-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 140px;
+  padding: 0.5rem;
+  background: #f7f9fc;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.bar {
+  width: 12px;
+  border-radius: 4px 4px 0 0;
+}
+
+.bar.prog {
+  background: #94a3b8;
+}
+
+.bar.real {
+  background: #23486b;
+}
+
+.bar.info {
+  background: #60a5fa;
+}
+
+.bar.good {
+  background: #1f9d58;
+}
+
+.bar-col span {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+@media (max-width: 960px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
+
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .app {
+    flex-direction: column;
+  }
+
+  .executive-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .manager-reminders {
+    width: 100%;
+    max-width: none;
+  }
+
+  .mini-charts {
+    grid-template-columns: 1fr;
+  }
+}

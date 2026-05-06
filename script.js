@@ -1,140 +1,560 @@
-// Navigation
-const navButtons = document.querySelectorAll('.sidebar-nav button');
-
-navButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const sectionId = button.dataset.section;
-        showSection(sectionId);
-        setActiveNavButton(sectionId);
-    });
-});
-
-function showSection(sectionId) {
-    document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-    const selectedSection = document.getElementById(sectionId);
-    if (selectedSection) {
-        selectedSection.classList.add('active');
-        selectedSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+:root {
+  --navy: #1f3552;
+  --navy-strong: #172a42;
+  --bg: #f2f5f9;
+  --surface: #ffffff;
+  --muted: #5c6775;
+  --text: #182432;
+  --border: #d9e0ea;
+  --orange: #f39c12;
+  --green: #1f9d58;
+  --red: #d64545;
+  --shadow: 0 8px 24px rgba(17, 24, 39, 0.08);
+  --radius: 12px;
 }
 
-function setActiveNavButton(sectionId) {
-    navButtons.forEach(button => button.classList.toggle('active-nav', button.dataset.section === sectionId));
+* {
+  box-sizing: border-box;
 }
 
-document.getElementById('change-role').addEventListener('click', () => {
-    alert('Fonction de changement de rôle à implémenter.');
-});
-
-const dbState = { tab: 'clients' };
-const dbData = {
-    clients: [
-        { idClient:'CL001', client:'Client A', commande:'CMD001', montant:'12500€', dateCommande:'2026-05-02', dateProd:'2026-05-10', dateLiv:'2026-05-16', nbOF:'3', statut:'En production', priorite:'Haute' },
-        { idClient:'CL002', client:'Client B', commande:'CMD002', montant:'8400€', dateCommande:'2026-05-01', dateProd:'2026-05-12', dateLiv:'2026-05-20', nbOF:'2', statut:'Planifiée', priorite:'Moyenne' }
-    ],
-    production: [
-        { of:'OF001', commande:'CMD001', client:'Client A', ref:'REF001', designation:'Pièce A', qte:'100', etape:'Préparation', operateur:'Alice', tprevu:'30 min', treel:'34 min', ecart:'+4 min', statut:'En cours', debut:'2026-05-06', fin:'-', localisation:'Zone Préparation' },
-        { of:'OF002', commande:'CMD002', client:'Client B', ref:'REF009', designation:'Pièce Support', qte:'60', etape:'Peinture', operateur:'Bob', tprevu:'45 min', treel:'40 min', ecart:'-5 min', statut:'Terminée', debut:'2026-05-05', fin:'2026-05-05', localisation:'Cabine 2' }
-    ],
-    personnel: [
-        { id:'EMP001', nom:'Martin', prenom:'Luc', login:'lmartin', mail:'luc.martin@technocoat.local', role:'Manager', service:'Pilotage', statut:'Actif', derniere:'2026-05-06 07:45', acces:'Niveau 5' },
-        { id:'EMP014', nom:'Petit', prenom:'Nina', login:'npetit', mail:'nina.petit@technocoat.local', role:'Préparation', service:'Atelier', statut:'Actif', derniere:'2026-05-06 06:58', acces:'Niveau 2' }
-    ],
-    stocks: [
-        { code:'STK001', designation:'Bouchons silicone', famille:'Masquage', stock:'220', seuil:'150', unite:'pcs', statut:'OK', fournisseur:'FourniTech', mouvement:'2026-05-05', emplacement:'Magasin A1' },
-        { code:'STK020', designation:'Poudre RAL 9005', famille:'Peinture', stock:'45', seuil:'60', unite:'kg', statut:'Alerte', fournisseur:'ColorPro', mouvement:'2026-05-06', emplacement:'Peinture P2' }
-    ],
-    qualite: [
-        { id:'QC001', of:'OF001', ref:'REF001', type:'Contrôle visuel', resultat:'Conforme', controleur:'Sonia', date:'2026-05-06', nc:'Non', action:'-', statut:'Validé' },
-        { id:'QC007', of:'OF014', ref:'REF031', type:'Contrôle process', resultat:'Non conforme', controleur:'Yanis', date:'2026-05-04', nc:'Oui', action:'Reprise masquage', statut:'En traitement' }
-    ],
-    rex: [
-        { id:'OBS001', date:'2026-05-06', operateur:'Alice', activite:'Préparation', of:'OF001', ref:'REF001', type:'Amélioration', importance:'Moyen', commentaire:'Prévoir kit masquage prêt.', statut:'Ouvert' },
-        { id:'OBS004', date:'2026-05-05', operateur:'Bob', activite:'Peinture', of:'OF002', ref:'REF009', type:'Manque consommable', importance:'Élevé', commentaire:'Rupture poudre ponctuelle.', statut:'En cours' }
-    ]
-};
-
-const dbConfig = {
-    clients: { columns:['ID client','Client','Numéro commande','Montant commande','Date commande','Date production prévue','Date livraison demandée','Nombre d’OF','Statut commande','Priorité'], keys:['idClient','client','commande','montant','dateCommande','dateProd','dateLiv','nbOF','statut','priorite'] },
-    production: { columns:['Numéro OF','Numéro commande','Client','Référence pièce','Désignation pièce','Quantité','Étape actuelle','Opérateur affecté','Temps prévu','Temps réel','Écart temps','Statut production','Date début','Date fin','Localisation atelier'], keys:['of','commande','client','ref','designation','qte','etape','operateur','tprevu','treel','ecart','statut','debut','fin','localisation'] },
-    personnel: { columns:['ID employé','Nom','Prénom','Login','Adresse mail fictive','Rôle','Service / activité','Statut compte','Dernière connexion fictive','Niveau d’accès'], keys:['id','nom','prenom','login','mail','role','service','statut','derniere','acces'] },
-    stocks: { columns:['Code article','Désignation','Famille','Stock actuel','Seuil minimum','Unité','Statut stock','Fournisseur fictif','Dernier mouvement','Emplacement'], keys:['code','designation','famille','stock','seuil','unite','statut','fournisseur','mouvement','emplacement'] },
-    qualite: { columns:['ID contrôle','Numéro OF','Référence pièce','Type contrôle','Résultat','Contrôleur','Date contrôle','Non-conformité','Action corrective','Statut qualité'], keys:['id','of','ref','type','resultat','controleur','date','nc','action','statut'] },
-    rex: { columns:['ID observation','Date','Opérateur','Activité','Numéro OF','Référence pièce','Type observation','Importance','Commentaire','Statut traitement'], keys:['id','date','operateur','activite','of','ref','type','importance','commentaire','statut'] }
-};
-
-function badgeClass(v) { const t=(v||'').toLowerCase(); if (t.includes('retard')||t.includes('bloq')||t.includes('non conforme')) return 'danger'; if (t.includes('cours')||t.includes('alerte')||t.includes('élev')) return 'warn'; if (t.includes('termin')||t.includes('valid')||t.includes('ok')||t.includes('conforme')||t.includes('actif')) return 'ok'; return 'info'; }
-
-function populateDbFilters() {
-    const clients = [...new Set([...dbData.clients.map(x=>x.client), ...dbData.production.map(x=>x.client)])];
-    const ofs = [...new Set([...dbData.production.map(x=>x.of), ...dbData.rex.map(x=>x.of), ...dbData.qualite.map(x=>x.of)])];
-    const statuses = [...new Set(Object.values(dbData).flat().map(x=>x.statut).filter(Boolean))];
-    const activities = [...new Set([...dbData.rex.map(x=>x.activite), ...dbData.personnel.map(x=>x.service)])];
-    const fill=(id, arr)=> { const el=document.getElementById(id); arr.forEach(v=>{ const o=document.createElement('option'); o.value=v; o.textContent=v; el.appendChild(o); }); };
-    fill('db-client', clients); fill('db-of', ofs); fill('db-status', statuses); fill('db-activity', activities);
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
 }
 
-function renderDbKpis() {
-    const kpis = [
-        ['Nombre de clients', new Set(dbData.clients.map(x=>x.client)).size],
-        ['Nombre de commandes', dbData.clients.length],
-        ['Nombre d’OF', dbData.production.length],
-        ['Nombre de références suivies', new Set(dbData.production.map(x=>x.ref)).size],
-        ['Nombre d’employés', dbData.personnel.length],
-        ['Nombre d’anomalies enregistrées', dbData.rex.length],
-        ['Temps total prévu', '75 min'],
-        ['Temps total réel', '74 min']
-    ];
-    document.getElementById('db-kpis').innerHTML = kpis.map(([l,v])=>`<div class="db-kpi"><small>${l}</small><strong>${v}</strong></div>`).join('');
+.app {
+  display: flex;
+  min-height: 100vh;
 }
 
-function filterRows(rows) {
-    const q=document.getElementById('db-search').value.toLowerCase();
-    const client=document.getElementById('db-client').value; const of=document.getElementById('db-of').value;
-    const statut=document.getElementById('db-status').value; const activity=document.getElementById('db-activity').value;
-    const date=document.getElementById('db-date-filter').value;
-    return rows.filter(r=>{
-        const vals=Object.values(r).join(' ').toLowerCase();
-        const okQ=!q || vals.includes(q);
-        const okClient=!client || r.client===client;
-        const okOf=!of || r.of===of;
-        const okStatut=!statut || r.statut===statut;
-        const okAct=!activity || r.activite===activity || r.service===activity;
-        const d=r.date||r.dateCommande||r.debut||r.mouvement||'';
-        const okDate=!date || d===date;
-        return okQ&&okClient&&okOf&&okStatut&&okAct&&okDate;
-    });
+.sidebar {
+  width: 285px;
+  background: linear-gradient(180deg, var(--navy) 0%, var(--navy-strong) 100%);
+  color: #fff;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
 }
 
-function renderDbTable() {
-    const tab=dbState.tab, cfg=dbConfig[tab];
-    const rows=filterRows(dbData[tab]);
-    let html='<table><thead><tr>'+cfg.columns.map(c=>`<th>${c}</th>`).join('')+'</tr></thead><tbody>';
-    rows.forEach(r=>{ html+='<tr>'+cfg.keys.map(k=>{ const val=r[k]??''; if(['statut','priorite','resultat','importance','nc'].includes(k)) return `<td><span class="badge ${badgeClass(String(val))}">${val}</span></td>`; return `<td>${val}</td>`; }).join('')+'</tr>'; });
-    html += rows.length ? '</tbody></table>' : '</tbody></table><p>Aucune donnée pour ces filtres.</p>';
-    document.getElementById('db-table-container').innerHTML=html;
+.sidebar-header {
+  padding: 1.4rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-function exportCsvCurrentTab() {
-    const cfg=dbConfig[dbState.tab];
-    const rows=filterRows(dbData[dbState.tab]);
-    const csv=[cfg.columns.join(';'), ...rows.map(r=>cfg.keys.map(k=>`"${String(r[k]??'').replaceAll('"','""')}"`).join(';'))].join('\n');
-    const blob=new Blob([csv], {type:'text/csv;charset=utf-8;'});
-    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`base_donnees_${dbState.tab}.csv`; a.click(); URL.revokeObjectURL(a.href);
+.sidebar-header h1 {
+  margin: 0;
+  font-size: 1.2rem;
 }
 
-function initDatabasePage() {
-    const date = new Date().toLocaleDateString('fr-FR');
-    const dateNode = document.getElementById('db-date'); if (dateNode) dateNode.textContent = `Date: ${date}`;
-    renderDbKpis(); populateDbFilters(); renderDbTable();
-    document.querySelectorAll('.db-tab').forEach(btn=>btn.addEventListener('click', ()=>{ document.querySelectorAll('.db-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); dbState.tab=btn.dataset.tab; renderDbTable(); }));
-    ['db-search','db-client','db-of','db-status','db-activity','db-date-filter'].forEach(id=>document.getElementById(id).addEventListener('input', renderDbTable));
-    document.getElementById('db-reset').addEventListener('click', ()=>{ ['db-search','db-client','db-of','db-status','db-activity','db-date-filter'].forEach(id=>document.getElementById(id).value=''); renderDbTable(); });
-    document.getElementById('db-export-csv').addEventListener('click', exportCsvCurrentTab);
-    document.getElementById('db-export-excel').addEventListener('click', ()=>alert('Export Excel disponible dans une future version.'));
-    document.getElementById('db-export-pdf').addEventListener('click', ()=>alert('Export PDF disponible dans une future version.'));
+.sidebar-header p {
+  margin: 0.35rem 0 0;
+  font-size: 0.83rem;
+  color: #d5deea;
 }
 
-initDatabasePage();
-showSection('manager');
-setActiveNavButton('manager');
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.85rem;
+}
+
+.sidebar-nav button {
+  border: 1px solid transparent;
+  background: transparent;
+  color: #eef4ff;
+  text-align: left;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 0.72rem 0.8rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.sidebar-nav button:hover,
+.sidebar-nav button.active-nav {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.main-content {
+  margin-left: 285px;
+  width: calc(100% - 285px);
+}
+
+.top-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.5rem;
+}
+
+.user-panel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+#change-role {
+  border: none;
+  border-radius: 10px;
+  padding: 0.55rem 0.95rem;
+  background: var(--navy);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.page-content {
+  padding: 1.6rem;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.page-subtitle {
+  margin: 0.4rem 0 1.2rem;
+  color: var(--muted);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.badges {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  color: #fff;
+}
+
+.badge.orange {
+  background: var(--orange);
+}
+
+.badge.green {
+  background: var(--green);
+}
+
+.badge.red {
+  background: var(--red);
+}
+
+.todo-box {
+  border: 1px dashed #b7c3d3;
+  border-radius: 10px;
+  padding: 0.9rem;
+  color: #394a5d;
+  background: #f9fbfd;
+}
+
+/* Dashboard Manager */
+
+.manager-meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.executive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.exec-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.exec-actions .detail-btn {
+  margin-top: 0;
+}
+
+.manager-reminders {
+  background: #f7f9fc;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.65rem 0.75rem;
+  min-width: 280px;
+  max-width: 340px;
+}
+
+.reminders-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+#add-reminder {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #9fb0c6;
+  border-radius: 8px;
+  background: #fff;
+  color: #1d3554;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.manager-reminders ul {
+  margin: 0;
+  padding-left: 1rem;
+  color: #31455f;
+  font-size: 0.84rem;
+}
+
+.manager-reminders li {
+  margin: 0.18rem 0;
+}
+
+.big-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.9rem;
+  margin: 0.8rem 0;
+}
+
+.big-kpi {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.big-kpi strong {
+  font-size: 1.4rem;
+  display: block;
+  margin: 0.25rem 0;
+}
+
+.big-kpi p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.big-kpi.good {
+  border-left: 6px solid var(--green);
+}
+
+.big-kpi.warn {
+  border-left: 6px solid var(--orange);
+}
+
+.big-kpi.danger {
+  border-left: 6px solid var(--red);
+}
+
+.big-kpi.neutral {
+  border-left: 6px solid #2d6cdf;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.8rem;
+  margin: 1rem 0;
+}
+
+.kpi-grid.compact .kpi-card {
+  padding: 0.65rem 0.8rem;
+}
+
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.85rem;
+  box-shadow: var(--shadow);
+}
+
+.kpi-card small {
+  display: block;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.kpi-card strong {
+  font-size: 1.3rem;
+}
+
+.kpi-card.good {
+  border-left: 5px solid var(--green);
+}
+
+.kpi-card.warn {
+  border-left: 5px solid var(--orange);
+}
+
+.kpi-card.danger {
+  border-left: 5px solid var(--red);
+}
+
+.kpi-card.neutral {
+  border-left: 5px solid #2d6cdf;
+}
+
+.kpi-click {
+  cursor: pointer;
+  text-align: left;
+  background: #fff;
+}
+
+.kpi-click:hover {
+  transform: translateY(-1px);
+}
+
+.manager-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.6rem 0 1rem;
+}
+
+.manager-tab {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  padding: 0.55rem 0.8rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.manager-tab.active {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+}
+
+.triple-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.8rem;
+}
+
+.alert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.8rem;
+}
+
+.alert-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.8rem;
+  box-shadow: var(--shadow);
+}
+
+.alert-card.critique {
+  border-left: 6px solid var(--red);
+}
+
+.alert-card.attention {
+  border-left: 6px solid var(--orange);
+}
+
+.alert-card.information {
+  border-left: 6px solid #2d6cdf;
+}
+
+.detail-btn {
+  margin-top: 0.6rem;
+  border: none;
+  background: var(--navy);
+  color: #fff;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+/* Filtres, tableaux et graphiques */
+
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.7rem;
+}
+
+.filters-grid input,
+.filters-grid select,
+.filters-grid button {
+  padding: 0.55rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.filters-grid button {
+  background: var(--navy);
+  color: #fff;
+  font-weight: 600;
+}
+
+.table-wrap {
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.5rem;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+table tbody tr:nth-child(even) {
+  background: #f8fbff;
+}
+
+.charge-row {
+  margin-bottom: 0.8rem;
+}
+
+.charge-row span {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.progress {
+  height: 8px;
+  background: #e5eaf1;
+  border-radius: 999px;
+  margin-top: 0.35rem;
+}
+
+.progress div {
+  height: 100%;
+  background: #2d6cdf;
+  border-radius: 999px;
+}
+
+.perf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.mini-charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 140px;
+  padding: 0.5rem;
+  background: #f7f9fc;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.bar {
+  width: 12px;
+  border-radius: 4px 4px 0 0;
+}
+
+.bar.prog {
+  background: #94a3b8;
+}
+
+.bar.real {
+  background: #23486b;
+}
+
+.bar.info {
+  background: #60a5fa;
+}
+
+.bar.good {
+  background: #1f9d58;
+}
+
+.bar-col span {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+@media (max-width: 960px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
+
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .app {
+    flex-direction: column;
+  }
+
+  .executive-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .manager-reminders {
+    width: 100%;
+    max-width: none;
+  }
+
+  .mini-charts {
+    grid-template-columns: 1fr;
+  }
+}
