@@ -6,6 +6,7 @@ const appData = {
     { id: 'CLI-004', nom: 'AgriMeca France', secteur: 'Agro-équipement', contact: 'Julien Robert', email: 'julien.robert@agrimeca-fictif.fr', telephone: '05 61 14 98 77', statut: 'Actif' },
     { id: 'CLI-005', nom: 'UrbanMobilité Groupe', secteur: 'Mobilité urbaine', contact: 'Emma Leroy', email: 'emma.leroy@urbanmobilite-fictif.fr', telephone: '01 75 54 63 90', statut: 'Prospect chaud' }
   ],
+
   commandes: [
     { id: 'CMD-001', numeroCommande: 'TC-2026-001', clientId: 'CLI-001', dateCommande: '2026-05-01', dateLivraisonDemandee: '2026-05-20', montant: 18450, priorite: 'Haute', statut: 'Validée' },
     { id: 'CMD-002', numeroCommande: 'TC-2026-002', clientId: 'CLI-002', dateCommande: '2026-05-02', dateLivraisonDemandee: '2026-05-22', montant: 9750, priorite: 'Moyenne', statut: 'Planifiée' },
@@ -16,6 +17,7 @@ const appData = {
     { id: 'CMD-007', numeroCommande: 'TC-2026-007', clientId: 'CLI-003', dateCommande: '2026-05-05', dateLivraisonDemandee: '2026-06-04', montant: 15670, priorite: 'Haute', statut: 'Validée' },
     { id: 'CMD-008', numeroCommande: 'TC-2026-008', clientId: 'CLI-002', dateCommande: '2026-05-06', dateLivraisonDemandee: '2026-06-06', montant: 6340, priorite: 'Moyenne', statut: 'Validée' }
   ],
+
   ordresFabrication: [
     { id: 'OF-001', numeroOF: 'OF260501', commandeId: 'CMD-001', clientId: 'CLI-001', dateReception: '2026-05-02', dateProductionPrevue: '2026-05-08', dateLivraisonDemandee: '2026-05-20', priorite: 'Haute', statutGlobal: 'En cours', localisationActuelle: 'Préparation', referencesIds: ['REF-001', 'REF-002'] },
     { id: 'OF-002', numeroOF: 'OF260502', commandeId: 'CMD-002', clientId: 'CLI-002', dateReception: '2026-05-03', dateProductionPrevue: '2026-05-09', dateLivraisonDemandee: '2026-05-22', priorite: 'Moyenne', statutGlobal: 'Planifié', localisationActuelle: 'Réception', referencesIds: ['REF-003', 'REF-004'] },
@@ -26,6 +28,7 @@ const appData = {
     { id: 'OF-007', numeroOF: 'OF260507', commandeId: 'CMD-007', clientId: 'CLI-003', dateReception: '2026-05-06', dateProductionPrevue: '2026-05-15', dateLivraisonDemandee: '2026-06-04', priorite: 'Haute', statutGlobal: 'En cours', localisationActuelle: 'Qualité', referencesIds: ['REF-013', 'REF-014'] },
     { id: 'OF-008', numeroOF: 'OF260508', commandeId: 'CMD-008', clientId: 'CLI-002', dateReception: '2026-05-06', dateProductionPrevue: '2026-05-16', dateLivraisonDemandee: '2026-06-06', priorite: 'Moyenne', statutGlobal: 'Terminé', localisationActuelle: 'Logistique', referencesIds: ['REF-015'] }
   ],
+
   referencesPieces: [
     { id: 'REF-001', ofId: 'OF-001', reference: 'AN-PLT-01', designation: 'Platine support', quantite: 80, gammeId: 'GAM-001', statut: 'En cours', localisation: 'Préparation', priorite: 'Haute' },
     { id: 'REF-002', ofId: 'OF-001', reference: 'AN-BRA-02', designation: 'Bras articulé', quantite: 40, gammeId: 'GAM-002', statut: 'En cours', localisation: 'Préparation', priorite: 'Haute' },
@@ -43,6 +46,7 @@ const appData = {
     { id: 'REF-014', ofId: 'OF-007', reference: 'MS-PLT-12', designation: 'Plateau médical', quantite: 55, gammeId: 'GAM-005', statut: 'Contrôle', localisation: 'Qualité', priorite: 'Haute' },
     { id: 'REF-015', ofId: 'OF-008', reference: 'RT-LNK-10', designation: 'Lien de fixation', quantite: 200, gammeId: 'GAM-004', statut: 'Terminé', localisation: 'Logistique', priorite: 'Moyenne' }
   ],
+
   gammes: [
     { id: 'GAM-001', nom: 'Gamme standard platines', referencePiece: 'AN-PLT-01', etapes: ['Réception', 'Revue technique', 'Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité si nécessaire', 'Logistique'], tempsPrevuTotal: 185, commentaireMethode: 'Masquage renforcé sur perçages.' },
     { id: 'GAM-002', nom: 'Gamme bras articulés', referencePiece: 'AN-BRA-02', etapes: ['Réception', 'Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité si nécessaire', 'Logistique'], tempsPrevuTotal: 160, commentaireMethode: 'Prévoir outillage spécifique axe.' },
@@ -53,11 +57,13 @@ const appData = {
     { id: 'GAM-007', nom: 'Gamme mobilité urgente', referencePiece: 'UM-CHS-01', etapes: ['Réception', 'Revue technique', 'Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité si nécessaire', 'Logistique'], tempsPrevuTotal: 220, commentaireMethode: 'Flux prioritaire sous 48h.' },
     { id: 'GAM-008', nom: 'Gamme bagues', referencePiece: 'AN-BAQ-13', etapes: ['Réception', 'Préparation', 'Peinture', 'Décroche', 'Qualité si nécessaire', 'Logistique'], tempsPrevuTotal: 120, commentaireMethode: 'Contrôle visuel systématique.' }
   ],
+
   taches: Array.from({ length: 25 }, (_, i) => {
     const etapes = ['Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité', 'Logistique'];
     const operateurs = ['OP-001', 'OP-002', 'OP-003', 'OP-004', 'OP-005', 'OP-006', 'OP-007', 'OP-008', 'OP-009', 'OP-010'];
     const refs = ['REF-001', 'REF-002', 'REF-003', 'REF-004', 'REF-005', 'REF-006', 'REF-007', 'REF-008', 'REF-009', 'REF-010', 'REF-011', 'REF-012', 'REF-013', 'REF-014', 'REF-015'];
     const ofs = ['OF-001', 'OF-002', 'OF-003', 'OF-004', 'OF-005', 'OF-006', 'OF-007', 'OF-008'];
+
     return {
       id: `TCH-${String(i + 1).padStart(3, '0')}`,
       ofId: ofs[i % ofs.length],
@@ -72,6 +78,7 @@ const appData = {
       commentaire: 'Tâche fictive de suivi atelier.'
     };
   }),
+
   operateurs: [
     { id: 'OP-001', nom: 'Durand', prenom: 'Alice', login: 'adurand', email: 'alice.durand@technocoat.local', role: 'Manager', activite: 'Manager', statutCompte: 'Actif' },
     { id: 'OP-002', nom: 'Petit', prenom: 'Nina', login: 'npetit', email: 'nina.petit@technocoat.local', role: 'Responsable méthode', activite: 'Méthodes', statutCompte: 'Actif' },
@@ -84,8 +91,10 @@ const appData = {
     { id: 'OP-009', nom: 'Lemoine', prenom: 'Jade', login: 'jlemoine', email: 'jade.lemoine@technocoat.local', role: 'Administrateur', activite: 'Paramètres', statutCompte: 'Actif' },
     { id: 'OP-010', nom: 'Colin', prenom: 'Marc', login: 'mcolin', email: 'marc.colin@technocoat.local', role: 'Préparation', activite: 'Préparation', statutCompte: 'Suspendu' }
   ],
+
   stocks: Array.from({ length: 20 }, (_, i) => {
     const familles = ['Préparation', 'Accroche', 'Peinture', 'Qualité', 'Logistique', 'Général'];
+
     return {
       id: `STK-${String(i + 1).padStart(3, '0')}`,
       codeArticle: `ART-${100 + i}`,
@@ -99,9 +108,11 @@ const appData = {
       fournisseur: `Fournisseur fictif ${1 + (i % 6)}`
     };
   }),
+
   observations: Array.from({ length: 10 }, (_, i) => {
     const types = ['Anomalie', 'Amélioration', 'Information', 'Retard', 'Manque consommable', 'Outillage', 'Qualité'];
     const activites = ['Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité', 'Logistique'];
+
     return {
       id: `OBS-${String(i + 1).padStart(3, '0')}`,
       date: `2026-05-${String(2 + i).padStart(2, '0')}`,
@@ -115,8 +126,10 @@ const appData = {
       statutTraitement: i % 2 === 0 ? 'Ouvert' : 'En cours'
     };
   }),
+
   controlesQualite: Array.from({ length: 8 }, (_, i) => {
     const types = ['Contrôle visuel', 'Contrôle dimensionnel', 'Contrôle bain', 'Contrôle équipement', 'Contrôle process'];
+
     return {
       id: `CQ-${String(i + 1).padStart(3, '0')}`,
       date: `2026-05-${String(4 + i).padStart(2, '0')}`,
@@ -129,8 +142,10 @@ const appData = {
       statut: i % 3 === 0 ? 'Action requise' : 'Validé'
     };
   }),
+
   mouvementsLogistiques: Array.from({ length: 8 }, (_, i) => {
     const types = ['Réception pièces brutes', 'Mise à disposition produits finis', 'Expédition', 'Réception matière', 'Livraison client'];
+
     return {
       id: `MVL-${String(i + 1).padStart(3, '0')}`,
       date: `2026-05-${String(5 + i).padStart(2, '0')}`,
@@ -145,11 +160,25 @@ const appData = {
   })
 };
 
-function getClientById(id) { return appData.clients.find((item) => item.id === id); }
-function getCommandeById(id) { return appData.commandes.find((item) => item.id === id); }
-function getOFById(id) { return appData.ordresFabrication.find((item) => item.id === id); }
-function getReferenceById(id) { return appData.referencesPieces.find((item) => item.id === id); }
-function getOperateurById(id) { return appData.operateurs.find((item) => item.id === id); }
+function getClientById(id) {
+  return appData.clients.find((item) => item.id === id);
+}
+
+function getCommandeById(id) {
+  return appData.commandes.find((item) => item.id === id);
+}
+
+function getOFById(id) {
+  return appData.ordresFabrication.find((item) => item.id === id);
+}
+
+function getReferenceById(id) {
+  return appData.referencesPieces.find((item) => item.id === id);
+}
+
+function getOperateurById(id) {
+  return appData.operateurs.find((item) => item.id === id);
+}
 
 function getTachesByActivite(activite) {
   const operateursActivite = appData.operateurs
@@ -174,6 +203,13 @@ function getObservationsByActivite(activite) {
 function getReferencesByOF(ofId) {
   return appData.referencesPieces.filter((item) => item.ofId === ofId);
 }
+
+function formatDateFr(dateStr) {
+  return new Date(dateStr).toLocaleDateString('fr-FR');
+}
+
+const contentNode = document.getElementById('page-content');
+const navButtons = document.querySelectorAll('.sidebar-nav button');
 
 const pages = {
   manager: {
@@ -250,10 +286,367 @@ const pages = {
   }
 };
 
-const contentNode = document.getElementById('page-content');
-const navButtons = document.querySelectorAll('.sidebar-nav button');
+function getManagerDataset(filters = {}) {
+  const search = (filters.search || '').toLowerCase();
+
+  const byOF = appData.ordresFabrication.filter((of) => {
+    const client = getClientById(of.clientId);
+    const textPool = `${of.numeroOF} ${of.statutGlobal} ${of.localisationActuelle} ${client?.nom || ''}`.toLowerCase();
+
+    const bySearch = !search || textPool.includes(search);
+    const byClient = !filters.clientId || of.clientId === filters.clientId;
+    const byStatut = !filters.statutOF || of.statutGlobal === filters.statutOF;
+    const byPriorite = !filters.priorite || of.priorite === filters.priorite;
+    const byActivite = !filters.activite || of.localisationActuelle === filters.activite;
+    const byPeriode = !filters.periode || of.dateProductionPrevue.startsWith(filters.periode);
+
+    return bySearch && byClient && byStatut && byPriorite && byActivite && byPeriode;
+  });
+
+  const ofIds = new Set(byOF.map((x) => x.id));
+  const references = appData.referencesPieces.filter((r) => ofIds.has(r.ofId));
+  const taches = appData.taches.filter((t) => ofIds.has(t.ofId));
+  const observations = appData.observations.filter((o) => ofIds.has(o.ofId));
+
+  return { byOF, references, taches, observations };
+}
+
+function computeManagerKpis(dataset) {
+  const { byOF, references, taches, observations } = dataset;
+
+  const ouvertsObs = observations.filter((o) => o.statutTraitement !== 'Traité' && o.statutTraitement !== 'Clos').length;
+  const stockCritiques = appData.stocks.filter((s) => s.stockActuel <= s.seuilMinimum).length;
+  const ecartMoyen = taches.length
+    ? Math.round(taches.reduce((acc, t) => acc + (t.tempsReel - t.tempsPrevu), 0) / taches.length)
+    : 0;
+
+  const today = '2026-05-06';
+  const ofRetard = byOF.filter((of) => of.dateLivraisonDemandee < today && of.statutGlobal !== 'Terminé').length;
+
+  return [
+    ['👥', 'Clients', appData.clients.length, 'neutral'],
+    ['📦', 'Commandes', appData.commandes.length, 'neutral'],
+    ['🏭', 'OF total', byOF.length, 'neutral'],
+    ['🔄', 'OF en cours', byOF.filter((x) => x.statutGlobal === 'En cours').length, 'warn'],
+    ['✅', 'OF terminés', byOF.filter((x) => x.statutGlobal === 'Terminé').length, 'good'],
+    ['⏰', 'OF en retard', ofRetard, 'danger'],
+    ['🧩', 'Références suivies', references.length, 'neutral'],
+    ['🛠', 'Tâches ouvertes', taches.filter((x) => x.statut !== 'Terminé').length, 'warn'],
+    ['✔️', 'Tâches terminées', taches.filter((x) => x.statut === 'Terminé').length, 'good'],
+    ['⚠️', 'Obs ouvertes', ouvertsObs, 'danger'],
+    ['📉', 'Alertes stock', stockCritiques, 'danger'],
+    ['⏱', 'Écart moyen', `${ecartMoyen} min`, ecartMoyen > 10 ? 'danger' : ecartMoyen > 0 ? 'warn' : 'good']
+  ];
+}
+
+function renderManagerPage() {
+  const today = new Date().toLocaleDateString('fr-FR');
+  const optionsClients = appData.clients
+    .map((c) => `<option value="${c.id}">${c.nom}</option>`)
+    .join('');
+
+  contentNode.innerHTML = `
+    <section class="manager-head card">
+      <h2 class="page-title">Manager</h2>
+      <p class="page-subtitle">Tableau de bord global de pilotage production</p>
+      <div class="manager-meta">
+        <span>Date : ${today}</span>
+        <span>Utilisateur : John Doe</span>
+        <span>Rôle : Manager</span>
+      </div>
+    </section>
+
+    <section class="manager-filters card">
+      <div class="filters-grid">
+        <input id="f-search" placeholder="Recherche texte" />
+        <select id="f-client">
+          <option value="">Client</option>
+          ${optionsClients}
+        </select>
+        <select id="f-statut">
+          <option value="">Statut OF</option>
+          <option>En cours</option>
+          <option>Planifié</option>
+          <option>Terminé</option>
+          <option>Bloqué</option>
+        </select>
+        <select id="f-priorite">
+          <option value="">Priorité</option>
+          <option>Urgente</option>
+          <option>Haute</option>
+          <option>Moyenne</option>
+          <option>Basse</option>
+        </select>
+        <select id="f-activite">
+          <option value="">Activité</option>
+          <option>Préparation</option>
+          <option>Accroche</option>
+          <option>Peinture</option>
+          <option>Décroche</option>
+          <option>Qualité</option>
+          <option>Logistique</option>
+        </select>
+        <input id="f-periode" type="month" />
+        <button id="f-reset" type="button">Réinitialiser</button>
+      </div>
+    </section>
+
+    <section id="manager-kpis" class="kpi-grid"></section>
+
+    <section class="card">
+      <h3>Situation atelier</h3>
+      <div id="manager-situation"></div>
+    </section>
+
+    <section class="card">
+      <h3>Charge par activité</h3>
+      <div id="manager-charge"></div>
+    </section>
+
+    <section class="card">
+      <h3>Écarts temps prévu / temps réel</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>OF</th>
+              <th>Client</th>
+              <th>Référence</th>
+              <th>Activité</th>
+              <th>Opérateur</th>
+              <th>Temps prévu</th>
+              <th>Temps réel</th>
+              <th>Écart</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody id="manager-ecarts"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Alertes stock</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Code article</th>
+              <th>Désignation</th>
+              <th>Famille</th>
+              <th>Stock actuel</th>
+              <th>Seuil minimum</th>
+              <th>Statut</th>
+              <th>Emplacement</th>
+            </tr>
+          </thead>
+          <tbody id="manager-stock"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Observations et anomalies</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Activité</th>
+              <th>OF</th>
+              <th>Référence</th>
+              <th>Type</th>
+              <th>Importance</th>
+              <th>Commentaire</th>
+              <th>Statut traitement</th>
+            </tr>
+          </thead>
+          <tbody id="manager-observations"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="perf-grid" id="manager-performance"></section>
+  `;
+
+  function applyFilters() {
+    const filters = {
+      search: document.getElementById('f-search').value,
+      clientId: document.getElementById('f-client').value,
+      statutOF: document.getElementById('f-statut').value,
+      priorite: document.getElementById('f-priorite').value,
+      activite: document.getElementById('f-activite').value,
+      periode: document.getElementById('f-periode').value
+    };
+
+    const data = getManagerDataset(filters);
+    const kpis = computeManagerKpis(data);
+
+    document.getElementById('manager-kpis').innerHTML = kpis
+      .map(([icon, label, value, tone]) => `
+        <article class="kpi-card ${tone}">
+          <small>${icon} ${label}</small>
+          <strong>${value}</strong>
+        </article>
+      `)
+      .join('');
+
+    const urgents = data.byOF.filter((x) => x.priorite === 'Urgente' || x.priorite === 'Haute').length;
+    const bloques = data.byOF.filter((x) => x.statutGlobal === 'Bloqué').length;
+    const enCours = data.byOF.filter((x) => x.statutGlobal === 'En cours').length;
+    const localisations = [...new Set(data.byOF.map((x) => x.localisationActuelle))].join(', ');
+
+    document.getElementById('manager-situation').innerHTML = `
+      <div class="kpi-grid">
+        <article class="kpi-card warn"><small>OF urgents</small><strong>${urgents}</strong></article>
+        <article class="kpi-card danger"><small>OF bloqués</small><strong>${bloques}</strong></article>
+        <article class="kpi-card neutral"><small>OF en cours</small><strong>${enCours}</strong></article>
+        <article class="kpi-card neutral"><small>Localisations actuelles</small><strong>${localisations || '-'}</strong></article>
+      </div>
+    `;
+
+    const activites = ['Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité', 'Logistique'];
+
+    document.getElementById('manager-charge').innerHTML = activites
+      .map((activite) => {
+        const taches = getTachesByActivite(activite).filter((tache) =>
+          data.byOF.some((of) => of.id === tache.ofId)
+        );
+
+        const tempsPrevu = taches.reduce((somme, tache) => somme + tache.tempsPrevu, 0);
+        const tempsReel = taches.reduce((somme, tache) => somme + tache.tempsReel, 0);
+        const terminees = taches.filter((tache) => tache.statut === 'Terminé').length;
+        const taux = taches.length ? Math.round((terminees / taches.length) * 100) : 0;
+
+        return `
+          <div class="charge-row">
+            <span>${activite}</span>
+            <span>${taches.length} tâches · ${tempsPrevu}m / ${tempsReel}m · ${taux}%</span>
+            <div class="progress">
+              <div style="width:${taux}%"></div>
+            </div>
+          </div>
+        `;
+      })
+      .join('');
+
+    document.getElementById('manager-ecarts').innerHTML = data.taches
+      .filter((tache) => tache.tempsReel > tache.tempsPrevu)
+      .map((tache) => {
+        const of = getOFById(tache.ofId);
+        const client = getClientById(of.clientId);
+        const reference = getReferenceById(tache.referencePieceId);
+        const operateur = getOperateurById(tache.operateurId);
+        const ecart = tache.tempsReel - tache.tempsPrevu;
+
+        return `
+          <tr>
+            <td>${of.numeroOF}</td>
+            <td>${client.nom}</td>
+            <td>${reference.reference}</td>
+            <td>${tache.etape}</td>
+            <td>${operateur.prenom} ${operateur.nom}</td>
+            <td>${tache.tempsPrevu}m</td>
+            <td>${tache.tempsReel}m</td>
+            <td><span class="badge ${ecart > 20 ? 'red' : 'orange'}">+${ecart}m</span></td>
+            <td>${tache.statut}</td>
+          </tr>
+        `;
+      })
+      .join('');
+
+    document.getElementById('manager-stock').innerHTML = appData.stocks
+      .filter((stock) => stock.stockActuel <= stock.seuilMinimum)
+      .map((stock) => {
+        const state = stock.stockActuel <= stock.seuilMinimum * 0.7 ? 'Critique' : 'Bas';
+
+        return `
+          <tr>
+            <td>${stock.codeArticle}</td>
+            <td>${stock.designation}</td>
+            <td>${stock.famille}</td>
+            <td>${stock.stockActuel}</td>
+            <td>${stock.seuilMinimum}</td>
+            <td><span class="badge ${state === 'Critique' ? 'red' : 'orange'}">${state}</span></td>
+            <td>${stock.emplacement}</td>
+          </tr>
+        `;
+      })
+      .join('');
+
+    document.getElementById('manager-observations').innerHTML = data.observations
+      .filter((observation) =>
+        observation.importance === 'Élevée' ||
+        observation.type === 'Anomalie' ||
+        observation.type === 'Retard' ||
+        observation.type === 'Qualité' ||
+        observation.statutTraitement !== 'Traité'
+      )
+      .map((observation) => {
+        const of = getOFById(observation.ofId);
+        const reference = getReferenceById(observation.referencePieceId);
+
+        return `
+          <tr>
+            <td>${formatDateFr(observation.date)}</td>
+            <td>${observation.activite}</td>
+            <td>${of?.numeroOF || '-'}</td>
+            <td>${reference?.reference || '-'}</td>
+            <td><span class="badge ${observation.type === 'Anomalie' || observation.type === 'Qualité' ? 'red' : 'orange'}">${observation.type}</span></td>
+            <td>${observation.importance}</td>
+            <td>${observation.commentaire}</td>
+            <td>${observation.statutTraitement}</td>
+          </tr>
+        `;
+      })
+      .join('');
+
+    const tauxOfTermines = data.byOF.length
+      ? Math.round((data.byOF.filter((x) => x.statutGlobal === 'Terminé').length / data.byOF.length) * 100)
+      : 0;
+
+    const tauxTachesTerminees = data.taches.length
+      ? Math.round((data.taches.filter((x) => x.statut === 'Terminé').length / data.taches.length) * 100)
+      : 0;
+
+    const ofBloques = data.byOF.filter((x) => x.statutGlobal === 'Bloqué').length;
+    const ecartTotal = data.taches.reduce((somme, tache) => somme + (tache.tempsReel - tache.tempsPrevu), 0);
+
+    const tauxRetard = data.byOF.length
+      ? Math.round((data.byOF.filter((x) => x.dateLivraisonDemandee < '2026-05-06' && x.statutGlobal !== 'Terminé').length / data.byOF.length) * 100)
+      : 0;
+
+    document.getElementById('manager-performance').innerHTML = `
+      <article class="kpi-card good"><small>Taux OF terminés</small><strong>${tauxOfTermines}%</strong></article>
+      <article class="kpi-card good"><small>Taux tâches terminées</small><strong>${tauxTachesTerminees}%</strong></article>
+      <article class="kpi-card danger"><small>Anomalies ouvertes</small><strong>${data.observations.filter((x) => x.statutTraitement !== 'Traité').length}</strong></article>
+      <article class="kpi-card danger"><small>OF bloqués</small><strong>${ofBloques}</strong></article>
+      <article class="kpi-card warn"><small>Écart total temps</small><strong>${ecartTotal} min</strong></article>
+      <article class="kpi-card warn"><small>Taux de retard</small><strong>${tauxRetard}%</strong></article>
+    `;
+  }
+
+  applyFilters();
+
+  ['f-search', 'f-client', 'f-statut', 'f-priorite', 'f-activite', 'f-periode'].forEach((id) => {
+    document.getElementById(id).addEventListener('input', applyFilters);
+  });
+
+  document.getElementById('f-reset').addEventListener('click', () => {
+    ['f-search', 'f-client', 'f-statut', 'f-priorite', 'f-activite', 'f-periode'].forEach((id) => {
+      document.getElementById(id).value = '';
+    });
+
+    applyFilters();
+  });
+}
 
 function renderPage(pageKey) {
+  if (pageKey === 'manager') {
+    renderManagerPage();
+    return;
+  }
+
   const page = pages[pageKey];
   if (!page) return;
 
