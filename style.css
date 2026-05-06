@@ -250,6 +250,48 @@ table,
     color: #0f3d84;
 }
 
+
+.prep-layout-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.9rem;
+    margin: 0.5rem 0 1.35rem;
+}
+
+.prep-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 1rem;
+}
+
+.prep-card h3 {
+    margin: 0 0 0.7rem;
+    font-size: 1rem;
+}
+
+.prep-card ul,
+.prep-card ol {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: #334155;
+}
+
+.prep-card li + li {
+    margin-top: 0.35rem;
+}
+
+.prep-card p {
+    margin: 0 0 0.7rem;
+    color: #334155;
+}
+
+.prep-card-warning {
+    border-left: 4px solid var(--warning);
+    background: #fffcf4;
+}
+
 .actions {
     display: flex;
     gap: 0.65rem;
