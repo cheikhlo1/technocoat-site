@@ -546,3 +546,31 @@ th {
         justify-content: center;
     }
 }
+
+.database-section {
+    background: #f7f9fc;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem;
+}
+.db-header {display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:flex-start;}
+.db-header p {margin:0.2rem 0 0;color:var(--muted);}
+.db-meta {display:grid;gap:0.3rem;font-weight:600;color:#334155;}
+.db-kpis {display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.8rem;margin:1rem 0;}
+.db-kpi {background:#fff;border:1px solid var(--border);border-radius:12px;padding:0.8rem;box-shadow:var(--shadow-sm);}
+.db-kpi small{color:var(--muted);} .db-kpi strong{display:block;font-size:1.2rem;color:#0f3d84;}
+.db-filters {display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0.6rem;margin-bottom:1rem;}
+.db-filters input,.db-filters select {padding:0.55rem 0.65rem;border:1px solid #cfd8e3;border-radius:10px;}
+.db-toolbar{display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;margin-bottom:0.8rem;}
+.db-tab{border:1px solid #cfd8e3;background:#fff;border-radius:999px;padding:0.45rem 0.8rem;cursor:pointer;font-weight:600;}
+.db-tab.active{background:#1e3a8a;color:#fff;border-color:#1e3a8a;}
+.db-export{margin-left:auto;display:flex;gap:0.45rem;flex-wrap:wrap;}
+#db-table-container table{font-size:0.9rem;}
+.badge{padding:0.2rem 0.55rem;border-radius:999px;font-size:0.78rem;font-weight:700;display:inline-block;}
+.badge.ok{background:#e7f7ee;color:#0b7a45;} .badge.warn{background:#fff4e8;color:#b45309;} .badge.danger{background:#ffeaea;color:#b42318;} .badge.info{background:#e9f2ff;color:#1d4ed8;}
+
+@media (max-width: 860px){
+ .db-export{margin-left:0;}
+ .db-toolbar{align-items:stretch;}
+}
+
