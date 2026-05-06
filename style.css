@@ -167,6 +167,39 @@ body {
   background: #f9fbfd;
 }
 
+/* Préparation */
+
+.prep-section {
+  background: linear-gradient(180deg, #f7faff 0%, #f2f6fc 100%);
+  border: 1px solid #d8e2ef;
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.prep-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.prep-card p,
+.prep-card li {
+  color: #334155;
+}
+
+.prep-card ul,
+.prep-card ol {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.prep-card-warning {
+  border-left: 4px solid #f59e0b;
+  background: #fffcf5;
+}
+
 /* Dashboard Manager */
 
 .manager-meta {
