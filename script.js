@@ -6,6 +6,7 @@ const appData = {
     { id: 'CLI-004', nom: 'AgriMeca France', secteur: 'Agro-équipement', contact: 'Julien Robert', email: 'julien.robert@agrimeca-fictif.fr', telephone: '05 61 14 98 77', statut: 'Actif' },
     { id: 'CLI-005', nom: 'UrbanMobilité Groupe', secteur: 'Mobilité urbaine', contact: 'Emma Leroy', email: 'emma.leroy@urbanmobilite-fictif.fr', telephone: '01 75 54 63 90', statut: 'Prospect chaud' }
   ],
+
   commandes: [
     { id: 'CMD-001', numeroCommande: 'TC-2026-001', clientId: 'CLI-001', dateCommande: '2026-05-01', dateLivraisonDemandee: '2026-05-20', montant: 18450, priorite: 'Haute', statut: 'Validée' },
     { id: 'CMD-002', numeroCommande: 'TC-2026-002', clientId: 'CLI-002', dateCommande: '2026-05-02', dateLivraisonDemandee: '2026-05-22', montant: 9750, priorite: 'Moyenne', statut: 'Planifiée' },
@@ -16,6 +17,7 @@ const appData = {
     { id: 'CMD-007', numeroCommande: 'TC-2026-007', clientId: 'CLI-003', dateCommande: '2026-05-05', dateLivraisonDemandee: '2026-06-04', montant: 15670, priorite: 'Haute', statut: 'Validée' },
     { id: 'CMD-008', numeroCommande: 'TC-2026-008', clientId: 'CLI-002', dateCommande: '2026-05-06', dateLivraisonDemandee: '2026-06-06', montant: 6340, priorite: 'Moyenne', statut: 'Validée' }
   ],
+
   ordresFabrication: [
     { id: 'OF-001', numeroOF: 'OF260501', commandeId: 'CMD-001', clientId: 'CLI-001', dateReception: '2026-05-02', dateProductionPrevue: '2026-05-08', dateLivraisonDemandee: '2026-05-20', priorite: 'Haute', statutGlobal: 'En cours', localisationActuelle: 'Préparation', referencesIds: ['REF-001', 'REF-002'] },
     { id: 'OF-002', numeroOF: 'OF260502', commandeId: 'CMD-002', clientId: 'CLI-002', dateReception: '2026-05-03', dateProductionPrevue: '2026-05-09', dateLivraisonDemandee: '2026-05-22', priorite: 'Moyenne', statutGlobal: 'Planifié', localisationActuelle: 'Réception', referencesIds: ['REF-003', 'REF-004'] },
@@ -26,6 +28,7 @@ const appData = {
     { id: 'OF-007', numeroOF: 'OF260507', commandeId: 'CMD-007', clientId: 'CLI-003', dateReception: '2026-05-06', dateProductionPrevue: '2026-05-15', dateLivraisonDemandee: '2026-06-04', priorite: 'Haute', statutGlobal: 'En cours', localisationActuelle: 'Qualité', referencesIds: ['REF-013', 'REF-014'] },
     { id: 'OF-008', numeroOF: 'OF260508', commandeId: 'CMD-008', clientId: 'CLI-002', dateReception: '2026-05-06', dateProductionPrevue: '2026-05-16', dateLivraisonDemandee: '2026-06-06', priorite: 'Moyenne', statutGlobal: 'Terminé', localisationActuelle: 'Logistique', referencesIds: ['REF-015'] }
   ],
+
   referencesPieces: [
     { id: 'REF-001', ofId: 'OF-001', reference: 'AN-PLT-01', designation: 'Platine support', quantite: 80, gammeId: 'GAM-001', statut: 'En cours', localisation: 'Préparation', priorite: 'Haute' },
     { id: 'REF-002', ofId: 'OF-001', reference: 'AN-BRA-02', designation: 'Bras articulé', quantite: 40, gammeId: 'GAM-002', statut: 'En cours', localisation: 'Préparation', priorite: 'Haute' },
@@ -43,6 +46,7 @@ const appData = {
     { id: 'REF-014', ofId: 'OF-007', reference: 'MS-PLT-12', designation: 'Plateau médical', quantite: 55, gammeId: 'GAM-005', statut: 'Contrôle', localisation: 'Qualité', priorite: 'Haute' },
     { id: 'REF-015', ofId: 'OF-008', reference: 'RT-LNK-10', designation: 'Lien de fixation', quantite: 200, gammeId: 'GAM-004', statut: 'Terminé', localisation: 'Logistique', priorite: 'Moyenne' }
   ],
+
   gammes: [
     { id: 'GAM-001', nom: 'Gamme standard platines', referencePiece: 'AN-PLT-01', etapes: ['Réception', 'Revue technique', 'Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité si nécessaire', 'Logistique'], tempsPrevuTotal: 185, commentaireMethode: 'Masquage renforcé sur perçages.' },
     { id: 'GAM-002', nom: 'Gamme bras articulés', referencePiece: 'AN-BRA-02', etapes: ['Réception', 'Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité si nécessaire', 'Logistique'], tempsPrevuTotal: 160, commentaireMethode: 'Prévoir outillage spécifique axe.' },
@@ -53,11 +57,13 @@ const appData = {
     { id: 'GAM-007', nom: 'Gamme mobilité urgente', referencePiece: 'UM-CHS-01', etapes: ['Réception', 'Revue technique', 'Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité si nécessaire', 'Logistique'], tempsPrevuTotal: 220, commentaireMethode: 'Flux prioritaire sous 48h.' },
     { id: 'GAM-008', nom: 'Gamme bagues', referencePiece: 'AN-BAQ-13', etapes: ['Réception', 'Préparation', 'Peinture', 'Décroche', 'Qualité si nécessaire', 'Logistique'], tempsPrevuTotal: 120, commentaireMethode: 'Contrôle visuel systématique.' }
   ],
+
   taches: Array.from({ length: 25 }, (_, i) => {
     const etapes = ['Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité', 'Logistique'];
     const operateurs = ['OP-001', 'OP-002', 'OP-003', 'OP-004', 'OP-005', 'OP-006', 'OP-007', 'OP-008', 'OP-009', 'OP-010'];
     const refs = ['REF-001', 'REF-002', 'REF-003', 'REF-004', 'REF-005', 'REF-006', 'REF-007', 'REF-008', 'REF-009', 'REF-010', 'REF-011', 'REF-012', 'REF-013', 'REF-014', 'REF-015'];
     const ofs = ['OF-001', 'OF-002', 'OF-003', 'OF-004', 'OF-005', 'OF-006', 'OF-007', 'OF-008'];
+
     return {
       id: `TCH-${String(i + 1).padStart(3, '0')}`,
       ofId: ofs[i % ofs.length],
@@ -72,6 +78,7 @@ const appData = {
       commentaire: 'Tâche fictive de suivi atelier.'
     };
   }),
+
   operateurs: [
     { id: 'OP-001', nom: 'Durand', prenom: 'Alice', login: 'adurand', email: 'alice.durand@technocoat.local', role: 'Manager', activite: 'Manager', statutCompte: 'Actif' },
     { id: 'OP-002', nom: 'Petit', prenom: 'Nina', login: 'npetit', email: 'nina.petit@technocoat.local', role: 'Responsable méthode', activite: 'Méthodes', statutCompte: 'Actif' },
@@ -84,8 +91,10 @@ const appData = {
     { id: 'OP-009', nom: 'Lemoine', prenom: 'Jade', login: 'jlemoine', email: 'jade.lemoine@technocoat.local', role: 'Administrateur', activite: 'Paramètres', statutCompte: 'Actif' },
     { id: 'OP-010', nom: 'Colin', prenom: 'Marc', login: 'mcolin', email: 'marc.colin@technocoat.local', role: 'Préparation', activite: 'Préparation', statutCompte: 'Suspendu' }
   ],
+
   stocks: Array.from({ length: 20 }, (_, i) => {
     const familles = ['Préparation', 'Accroche', 'Peinture', 'Qualité', 'Logistique', 'Général'];
+
     return {
       id: `STK-${String(i + 1).padStart(3, '0')}`,
       codeArticle: `ART-${100 + i}`,
@@ -99,9 +108,11 @@ const appData = {
       fournisseur: `Fournisseur fictif ${1 + (i % 6)}`
     };
   }),
+
   observations: Array.from({ length: 10 }, (_, i) => {
     const types = ['Anomalie', 'Amélioration', 'Information', 'Retard', 'Manque consommable', 'Outillage', 'Qualité'];
     const activites = ['Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité', 'Logistique'];
+
     return {
       id: `OBS-${String(i + 1).padStart(3, '0')}`,
       date: `2026-05-${String(2 + i).padStart(2, '0')}`,
@@ -115,8 +126,10 @@ const appData = {
       statutTraitement: i % 2 === 0 ? 'Ouvert' : 'En cours'
     };
   }),
+
   controlesQualite: Array.from({ length: 8 }, (_, i) => {
     const types = ['Contrôle visuel', 'Contrôle dimensionnel', 'Contrôle bain', 'Contrôle équipement', 'Contrôle process'];
+
     return {
       id: `CQ-${String(i + 1).padStart(3, '0')}`,
       date: `2026-05-${String(4 + i).padStart(2, '0')}`,
@@ -129,8 +142,10 @@ const appData = {
       statut: i % 3 === 0 ? 'Action requise' : 'Validé'
     };
   }),
+
   mouvementsLogistiques: Array.from({ length: 8 }, (_, i) => {
     const types = ['Réception pièces brutes', 'Mise à disposition produits finis', 'Expédition', 'Réception matière', 'Livraison client'];
+
     return {
       id: `MVL-${String(i + 1).padStart(3, '0')}`,
       date: `2026-05-${String(5 + i).padStart(2, '0')}`,
@@ -145,75 +160,144 @@ const appData = {
   })
 };
 
-function getClientById(id) { return appData.clients.find((item) => item.id === id); }
-function getCommandeById(id) { return appData.commandes.find((item) => item.id === id); }
-function getOFById(id) { return appData.ordresFabrication.find((item) => item.id === id); }
-function getReferenceById(id) { return appData.referencesPieces.find((item) => item.id === id); }
-function getOperateurById(id) { return appData.operateurs.find((item) => item.id === id); }
+const contentNode = document.getElementById('page-content');
+const navButtons = document.querySelectorAll('.sidebar-nav button');
+
+const pages = {
+  manager: {
+    title: 'Manager',
+    subtitle: 'Vue globale des indicateurs de pilotage atelier.',
+    description: 'Synthèse fictive des OF, délais, qualité et charge atelier.',
+    metrics: ['OF en cours : 12', 'Tâches terminées : 38', 'Alertes stock : 2']
+  },
+  production: {
+    title: 'Production / OF',
+    subtitle: 'Suivi des ordres de fabrication et des priorités.',
+    description: 'Liste simplifiée des OF actifs et de leur avancement.',
+    metrics: ['OF en attente : 5', 'OF terminés : 27', 'Retards : 1']
+  },
+  'responsable-methode': {
+    title: 'Responsable méthode',
+    subtitle: 'Préparation des gammes et standards de fabrication.',
+    description: 'Structure métier prête pour intégrer les gammes par référence.',
+    metrics: ['Gammes actives : 18', 'Révisions en cours : 3', 'Écarts process : 0']
+  },
+  preparation: {
+    title: 'Préparation',
+    subtitle: 'Tâches opérateur et préparation des pièces.',
+    description: 'Suivi fictif des besoins masquage et outillage.',
+    metrics: ['Tâches du jour : 9', 'Temps prévu : 6h20', 'Blocages : 1']
+  },
+  accroche: {
+    title: 'Accroche',
+    subtitle: 'Organisation des balancelles et accroche des pièces.',
+    description: 'Zone de suivi des priorités et consommables accroche.',
+    metrics: ['OF à accrocher : 4', 'Crochets dispo : 160', 'Retards : 0']
+  },
+  peinture: {
+    title: 'Peinture',
+    subtitle: 'Pilotage cabine et consommation peinture.',
+    description: 'Indicateurs fictifs sur cadence, qualité et consommables.',
+    metrics: ['OF en cabine : 3', 'Conso poudre : 42 kg', 'Alertes qualité : 1']
+  },
+  decroche: {
+    title: 'Décroche',
+    subtitle: 'Suivi des pièces en sortie et transfert.',
+    description: 'Visualisation simplifiée de la décroche et du flux aval.',
+    metrics: ['Lots à décrocher : 6', 'Transferts prêts : 4', 'Anomalies : 0']
+  },
+  qualite: {
+    title: 'Qualité',
+    subtitle: 'Contrôles qualité et suivi des non-conformités.',
+    description: 'Emplacement réservé aux contrôles visuels et dimensionnels.',
+    metrics: ['Contrôles prévus : 14', 'NC ouvertes : 2', 'NC clôturées : 5']
+  },
+  logistique: {
+    title: 'Logistique',
+    subtitle: 'Expéditions, livraisons et coordination flux.',
+    description: 'Synthèse fictive du stock global et des livraisons.',
+    metrics: ['Expéditions du jour : 3', 'Réceptions : 2', 'Urgences : 1']
+  },
+  stock: {
+    title: 'Stock',
+    subtitle: 'Stock central et alertes de réapprovisionnement.',
+    description: 'Base propre pour le suivi des niveaux par activité.',
+    metrics: ['Articles suivis : 124', 'Articles en alerte : 7', 'Ruptures : 0']
+  },
+  'base-donnees': {
+    title: 'Base de données',
+    subtitle: 'Page de simulation des données futures.',
+    description: 'Aucune base réelle : uniquement un espace de préparation fonctionnelle.',
+    metrics: ['Tables simulées : 11', 'Données fictives : actives', 'Connexion réelle : non']
+  },
+  parametres: {
+    title: 'Paramètres / Utilisateurs',
+    subtitle: 'Gestion visuelle des profils et préférences.',
+    description: 'Préparation des rôles sans authentification réelle.',
+    metrics: ['Utilisateurs fictifs : 10', 'Rôles configurés : 9', 'Demandes accès : 2']
+  }
+};
+
+function getClientById(id) {
+  return appData.clients.find((item) => item.id === id);
+}
+
+function getCommandeById(id) {
+  return appData.commandes.find((item) => item.id === id);
+}
+
+function getOFById(id) {
+  return appData.ordresFabrication.find((item) => item.id === id);
+}
+
+function getReferenceById(id) {
+  return appData.referencesPieces.find((item) => item.id === id);
+}
+
+function getOperateurById(id) {
+  return appData.operateurs.find((item) => item.id === id);
+}
+
 function getTachesByActivite(activite) {
-  const operateursActivite = appData.operateurs.filter((item) => item.activite === activite).map((item) => item.id);
+  const operateursActivite = appData.operateurs
+    .filter((item) => item.activite === activite)
+    .map((item) => item.id);
+
   return appData.taches.filter((item) => operateursActivite.includes(item.operateurId));
 }
-function getTachesByOperateur(operateurId) { return appData.taches.filter((item) => item.operateurId === operateurId); }
-function getStocksByFamille(famille) { return appData.stocks.filter((item) => item.famille === famille); }
-function getObservationsByActivite(activite) { return appData.observations.filter((item) => item.activite === activite); }
-function getReferencesByOF(ofId) { return appData.referencesPieces.filter((item) => item.ofId === ofId); }
 
+function getReferencesByOF(ofId) {
+  return appData.referencesPieces.filter((item) => item.ofId === ofId);
+}
 
 function formatDateFr(dateStr) {
   return new Date(dateStr).toLocaleDateString('fr-FR');
 }
 
-function getManagerDataset(filters = {}) {
-  const search = (filters.search || '').toLowerCase();
-  const byOF = appData.ordresFabrication.filter((of) => {
-    const client = getClientById(of.clientId);
-    const textPool = `${of.numeroOF} ${of.statutGlobal} ${of.localisationActuelle} ${client?.nom || ''}`.toLowerCase();
-    const bySearch = !search || textPool.includes(search);
-    const byClient = !filters.clientId || of.clientId === filters.clientId;
-    const byStatut = !filters.statutOF || of.statutGlobal === filters.statutOF;
-    const byPriorite = !filters.priorite || of.priorite === filters.priorite;
-    const byActivite = !filters.activite || of.localisationActuelle === filters.activite;
-    const byPeriode = !filters.periode || of.dateProductionPrevue.startsWith(filters.periode);
-    return bySearch && byClient && byStatut && byPriorite && byActivite && byPeriode;
-  });
-
-  const ofIds = new Set(byOF.map((x) => x.id));
-  const references = appData.referencesPieces.filter((r) => ofIds.has(r.ofId));
-  const taches = appData.taches.filter((t) => ofIds.has(t.ofId));
-  const observations = appData.observations.filter((o) => ofIds.has(o.ofId));
-  return { byOF, references, taches, observations };
-}
-
-function computeManagerKpis(dataset) {
-  const { byOF, references, taches, observations } = dataset;
-  const ouvertsObs = observations.filter((o) => o.statutTraitement !== 'Traité' && o.statutTraitement !== 'Clos').length;
-  const stockCritiques = appData.stocks.filter((s) => s.stockActuel <= s.seuilMinimum).length;
-  const ecartMoyen = taches.length ? Math.round(taches.reduce((acc, t) => acc + (t.tempsReel - t.tempsPrevu), 0) / taches.length) : 0;
-  const today='2026-05-06';
-  const ofRetard = byOF.filter((of)=> of.dateLivraisonDemandee < today && of.statutGlobal !== 'Terminé').length;
-  return [
-    ['👥', 'Clients', appData.clients.length, 'neutral'],['📦','Commandes',appData.commandes.length,'neutral'],['🏭','OF total',byOF.length,'neutral'],
-    ['🔄','OF en cours',byOF.filter((x)=>x.statutGlobal==='En cours').length,'warn'],['✅','OF terminés',byOF.filter((x)=>x.statutGlobal==='Terminé').length,'good'],['⏰','OF en retard',ofRetard,'danger'],
-    ['🧩','Références suivies',references.length,'neutral'],['🛠','Tâches ouvertes',taches.filter((x)=>x.statut!=='Terminé').length,'warn'],['✔️','Tâches terminées',taches.filter((x)=>x.statut==='Terminé').length,'good'],
-    ['⚠️','Obs ouvertes',ouvertsObs,'danger'],['📉','Alertes stock',stockCritiques,'danger'],['⏱','Écart moyen',`${ecartMoyen} min`,ecartMoyen>10?'danger':ecartMoyen>0?'warn':'good']
-  ];
-}
-
 function renderManagerPage() {
   const today = new Date().toLocaleDateString('fr-FR');
-  const activities = ['Préparation','Accroche','Peinture','Décroche','Qualité','Logistique'];
+  const activities = ['Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité', 'Logistique'];
+
   const ofTotal = appData.ordresFabrication.length;
-  const ofCours = appData.ordresFabrication.filter((x)=>x.statutGlobal==='En cours').length;
-  const ofTermines = appData.ordresFabrication.filter((x)=>x.statutGlobal==='Terminé').length;
-  const ofBloques = appData.ordresFabrication.filter((x)=>x.statutGlobal==='Bloqué').length;
-  const tachesOuvertes = appData.taches.filter((x)=>x.statut!=='Terminé').length;
-  const alertesStock = appData.stocks.filter((s)=>s.stockActuel<=s.seuilMinimum).length;
-  const obsOuvertes = appData.observations.filter((o)=>o.statutTraitement!=='Traité').length;
-  const ecartMoyen = Math.round(appData.taches.reduce((a,t)=>a+(t.tempsReel-t.tempsPrevu),0)/appData.taches.length);
+  const ofCours = appData.ordresFabrication.filter((x) => x.statutGlobal === 'En cours').length;
+  const ofTermines = appData.ordresFabrication.filter((x) => x.statutGlobal === 'Terminé').length;
+  const ofBloques = appData.ordresFabrication.filter((x) => x.statutGlobal === 'Bloqué').length;
+  const tachesOuvertes = appData.taches.filter((x) => x.statut !== 'Terminé').length;
+  const alertesStock = appData.stocks.filter((s) => s.stockActuel <= s.seuilMinimum).length;
+  const obsOuvertes = appData.observations.filter((o) => o.statutTraitement !== 'Traité').length;
+  const ecartMoyen = Math.round(appData.taches.reduce((acc, t) => acc + (t.tempsReel - t.tempsPrevu), 0) / appData.taches.length);
 
   contentNode.innerHTML = `
-    <section class="manager-head card"><h2 class="page-title">Manager</h2><p class="page-subtitle">Tableau de bord global de pilotage production</p><div class="manager-meta"><span>Date : ${today}</span><span>Utilisateur : John Doe</span><span>Rôle : Manager</span></div></section>
+    <section class="manager-head card">
+      <h2 class="page-title">Manager</h2>
+      <p class="page-subtitle">Tableau de bord global de pilotage production</p>
+      <div class="manager-meta">
+        <span>Date : ${today}</span>
+        <span>Utilisateur : John Doe</span>
+        <span>Rôle : Manager</span>
+      </div>
+    </section>
+
     <section class="manager-tabs" id="manager-tabs">
       <button class="manager-tab active" data-tab="global">Vue globale</button>
       <button class="manager-tab" data-tab="of">OF & retards</button>
@@ -223,88 +307,362 @@ function renderManagerPage() {
       <button class="manager-tab" data-tab="obs">Observations / anomalies</button>
       <button class="manager-tab" data-tab="export">Export & analyse</button>
     </section>
-    <section id="manager-tab-content"></section>`;
+
+    <section id="manager-tab-content"></section>
+  `;
 
   function renderTab(tab) {
     const node = document.getElementById('manager-tab-content');
+
     if (tab === 'global') {
-      node.innerHTML = `<div class="kpi-grid compact">
-        <article class="kpi-card neutral"><small>OF total</small><strong>${ofTotal}</strong></article>
-        <article class="kpi-card warn"><small>OF en cours</small><strong>${ofCours}</strong></article>
-        <article class="kpi-card good"><small>OF terminés</small><strong>${ofTermines}</strong></article>
-        <article class="kpi-card danger"><small>OF bloqués</small><strong>${ofBloques}</strong></article>
-        <article class="kpi-card warn"><small>Tâches ouvertes</small><strong>${tachesOuvertes}</strong></article>
-        <article class="kpi-card danger"><small>Alertes stock</small><strong>${alertesStock}</strong></article>
-        <article class="kpi-card danger"><small>Observations ouvertes</small><strong>${obsOuvertes}</strong></article>
-        <article class="kpi-card ${ecartMoyen>10?'danger':'warn'}"><small>Écart moyen</small><strong>${ecartMoyen} min</strong></article>
-      </div>
-      <div class="triple-grid">
-        <article class="card"><h3>Priorités du jour</h3><ul>${appData.ordresFabrication.filter((x)=>x.priorite==='Urgente'||x.priorite==='Haute').slice(0,4).map((x)=>`<li>${x.numeroOF} - ${x.localisationActuelle}</li>`).join('')}</ul><button class="detail-btn" data-go-tab="of">Voir détails</button></article>
-        <article class="card"><h3>Alertes importantes</h3><ul><li>${ofBloques} OF bloqués</li><li>${alertesStock} alertes stock</li><li>${obsOuvertes} observations ouvertes</li></ul><button class="detail-btn" data-go-tab="stocks">Voir détails</button></article>
-        <article class="card"><h3>Résumé atelier</h3><ul><li>OF actifs: ${ofCours}</li><li>Tâches ouvertes: ${tachesOuvertes}</li><li>Écart moyen: ${ecartMoyen} min</li></ul><button class="detail-btn" data-go-tab="charge">Voir détails</button></article>
-      </div>`;
-    }
-    if (tab === 'of') {
-      node.innerHTML = `<article class="card"><h3>OF urgents, bloqués et en retard</h3><div class="table-wrap"><table><thead><tr><th>OF</th><th>Client</th><th>Référence</th><th>Localisation</th><th>Priorité</th><th>Statut</th></tr></thead><tbody>${appData.ordresFabrication.filter((x)=>x.priorite==='Urgente'||x.statutGlobal==='Bloqué'||(x.dateLivraisonDemandee<'2026-05-06'&&x.statutGlobal!=='Terminé')).map((x)=>{const cl=getClientById(x.clientId); const ref=getReferencesByOF(x.id)[0]; return `<tr><td>${x.numeroOF}</td><td>${cl?.nom||'-'}</td><td>${ref?.reference||'-'}</td><td>${x.localisationActuelle}</td><td><span class="badge ${x.priorite==='Urgente'?'red':'orange'}">${x.priorite}</span></td><td><span class="badge ${x.statutGlobal==='Bloqué'?'red':x.statutGlobal==='Terminé'?'green':'orange'}">${x.statutGlobal}</span></td></tr>`;}).join('')}</tbody></table></div></article>`;
-    }
-    if (tab === 'charge') {
-      node.innerHTML = `<article class="card"><h3>Charge par activité</h3>${activities.map((a)=>{const t=getTachesByActivite(a); const tp=t.reduce((s,x)=>s+x.tempsPrevu,0); const tr=t.reduce((s,x)=>s+x.tempsReel,0); const tx=t.length?Math.round((t.filter((x)=>x.statut==='Terminé').length/t.length)*100):0; return `<div class="charge-row"><span><strong>${a}</strong> · ${t.length} tâches · Prévu ${tp}m · Réel ${tr}m · Avancement ${tx}%</span><div class="progress"><div style="width:${tx}%"></div></div></div>`;}).join('')}</article>`;
-    }
-    if (tab === 'temps') {
-      node.innerHTML = `<article class="card"><h3>Dépassements temps</h3><div class="table-wrap"><table><thead><tr><th>OF</th><th>Référence</th><th>Activité</th><th>Opérateur</th><th>Prévu</th><th>Réel</th><th>Écart</th></tr></thead><tbody>${appData.taches.filter((t)=>t.tempsReel>t.tempsPrevu).map((t)=>{const of=getOFById(t.ofId); const r=getReferenceById(t.referencePieceId); const op=getOperateurById(t.operateurId); const e=t.tempsReel-t.tempsPrevu; return `<tr><td>${of?.numeroOF||'-'}</td><td>${r?.reference||'-'}</td><td>${t.etape}</td><td>${op?.prenom||''} ${op?.nom||''}</td><td>${t.tempsPrevu}m</td><td>${t.tempsReel}m</td><td><span class="badge ${e>20?'red':'orange'}">+${e}m</span></td></tr>`;}).join('')}</tbody></table></div></article>`;
-    }
-    if (tab === 'stocks') {
-      node.innerHTML = `<article class="card"><h3>Stocks bas et critiques</h3><div class="table-wrap"><table><thead><tr><th>Code</th><th>Désignation</th><th>Famille</th><th>Stock</th><th>Seuil</th><th>Emplacement</th><th>Statut</th></tr></thead><tbody>${appData.stocks.filter((s)=>s.stockActuel<=s.seuilMinimum).map((s)=>{const crit=s.stockActuel<=s.seuilMinimum*0.7; return `<tr><td>${s.codeArticle}</td><td>${s.designation}</td><td>${s.famille}</td><td>${s.stockActuel}</td><td>${s.seuilMinimum}</td><td>${s.emplacement}</td><td><span class="badge ${crit?'red':'orange'}">${crit?'Critique':'Bas'}</span></td></tr>`;}).join('')}</tbody></table></div></article>`;
-    }
-    if (tab === 'obs') {
-      node.innerHTML = `<article class="card"><h3>Observations / anomalies</h3><div class="table-wrap"><table><thead><tr><th>Date</th><th>Activité</th><th>OF</th><th>Référence</th><th>Type</th><th>Importance</th><th>Commentaire</th><th>Statut</th></tr></thead><tbody>${appData.observations.filter((o)=>o.statutTraitement!=='Traité'||o.importance==='Élevée'||['Anomalie','Retard','Qualité'].includes(o.type)).map((o)=>{const of=getOFById(o.ofId); const r=getReferenceById(o.referencePieceId); return `<tr><td>${formatDateFr(o.date)}</td><td>${o.activite}</td><td>${of?.numeroOF||'-'}</td><td>${r?.reference||'-'}</td><td><span class="badge ${['Anomalie','Qualité'].includes(o.type)?'red':'orange'}">${o.type}</span></td><td>${o.importance}</td><td>${o.commentaire}</td><td>${o.statutTraitement}</td></tr>`;}).join('')}</tbody></table></div></article>`;
-    }
-    if (tab === 'export') {
-      node.innerHTML = `<article class="card"><h3>Export & analyse</h3><div class="filters-grid"><select><option>Client</option>${appData.clients.map((c)=>`<option>${c.nom}</option>`).join('')}</select><select><option>Activité</option>${activities.map((a)=>`<option>${a}</option>`).join('')}</select><select><option>Statut</option><option>En cours</option><option>Terminé</option><option>Bloqué</option></select><select><option>Priorité</option><option>Urgente</option><option>Haute</option><option>Moyenne</option></select><input type="month"/><button type="button" onclick="alert('Export CSV fictif prêt')">Export CSV</button><button type="button" onclick="alert('Export Excel à venir')">Export Excel</button><button type="button" onclick="alert('Export PDF à venir')">Export PDF</button></div></article>`;
+      node.innerHTML = `
+        <div class="kpi-grid compact">
+          <article class="kpi-card neutral"><small>OF total</small><strong>${ofTotal}</strong></article>
+          <article class="kpi-card warn"><small>OF en cours</small><strong>${ofCours}</strong></article>
+          <article class="kpi-card good"><small>OF terminés</small><strong>${ofTermines}</strong></article>
+          <article class="kpi-card danger"><small>OF bloqués</small><strong>${ofBloques}</strong></article>
+          <article class="kpi-card warn"><small>Tâches ouvertes</small><strong>${tachesOuvertes}</strong></article>
+          <article class="kpi-card danger"><small>Alertes stock</small><strong>${alertesStock}</strong></article>
+          <article class="kpi-card danger"><small>Observations ouvertes</small><strong>${obsOuvertes}</strong></article>
+          <article class="kpi-card ${ecartMoyen > 10 ? 'danger' : 'warn'}"><small>Écart moyen</small><strong>${ecartMoyen} min</strong></article>
+        </div>
+
+        <div class="triple-grid">
+          <article class="card">
+            <h3>Priorités du jour</h3>
+            <ul>
+              ${appData.ordresFabrication
+                .filter((x) => x.priorite === 'Urgente' || x.priorite === 'Haute')
+                .slice(0, 4)
+                .map((x) => `<li>${x.numeroOF} - ${x.localisationActuelle}</li>`)
+                .join('')}
+            </ul>
+            <button class="detail-btn" data-go-tab="of" type="button">Voir détails</button>
+          </article>
+
+          <article class="card">
+            <h3>Alertes importantes</h3>
+            <ul>
+              <li>${ofBloques} OF bloqués</li>
+              <li>${alertesStock} alertes stock</li>
+              <li>${obsOuvertes} observations ouvertes</li>
+            </ul>
+            <button class="detail-btn" data-go-tab="stocks" type="button">Voir détails</button>
+          </article>
+
+          <article class="card">
+            <h3>Résumé atelier</h3>
+            <ul>
+              <li>OF actifs : ${ofCours}</li>
+              <li>Tâches ouvertes : ${tachesOuvertes}</li>
+              <li>Écart moyen : ${ecartMoyen} min</li>
+            </ul>
+            <button class="detail-btn" data-go-tab="charge" type="button">Voir détails</button>
+          </article>
+        </div>
+      `;
     }
 
-    document.querySelectorAll('.detail-btn').forEach((btn)=>btn.addEventListener('click', ()=>activateTab(btn.dataset.goTab)));
+    if (tab === 'of') {
+      node.innerHTML = `
+        <article class="card">
+          <h3>OF urgents, bloqués et en retard</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>OF</th>
+                  <th>Client</th>
+                  <th>Référence</th>
+                  <th>Localisation</th>
+                  <th>Priorité</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${appData.ordresFabrication
+                  .filter((x) => x.priorite === 'Urgente' || x.statutGlobal === 'Bloqué' || (x.dateLivraisonDemandee < '2026-05-06' && x.statutGlobal !== 'Terminé'))
+                  .map((x) => {
+                    const client = getClientById(x.clientId);
+                    const reference = getReferencesByOF(x.id)[0];
+
+                    return `
+                      <tr>
+                        <td>${x.numeroOF}</td>
+                        <td>${client?.nom || '-'}</td>
+                        <td>${reference?.reference || '-'}</td>
+                        <td>${x.localisationActuelle}</td>
+                        <td><span class="badge ${x.priorite === 'Urgente' ? 'red' : 'orange'}">${x.priorite}</span></td>
+                        <td><span class="badge ${x.statutGlobal === 'Bloqué' ? 'red' : x.statutGlobal === 'Terminé' ? 'green' : 'orange'}">${x.statutGlobal}</span></td>
+                      </tr>
+                    `;
+                  })
+                  .join('')}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `;
+    }
+
+    if (tab === 'charge') {
+      node.innerHTML = `
+        <article class="card">
+          <h3>Charge par activité</h3>
+          ${activities
+            .map((activity) => {
+              const taches = getTachesByActivite(activity);
+              const tempsPrevu = taches.reduce((somme, tache) => somme + tache.tempsPrevu, 0);
+              const tempsReel = taches.reduce((somme, tache) => somme + tache.tempsReel, 0);
+              const taux = taches.length ? Math.round((taches.filter((x) => x.statut === 'Terminé').length / taches.length) * 100) : 0;
+
+              return `
+                <div class="charge-row">
+                  <span><strong>${activity}</strong> · ${taches.length} tâches · Prévu ${tempsPrevu}m · Réel ${tempsReel}m · Avancement ${taux}%</span>
+                  <div class="progress">
+                    <div style="width:${taux}%"></div>
+                  </div>
+                </div>
+              `;
+            })
+            .join('')}
+        </article>
+      `;
+    }
+
+    if (tab === 'temps') {
+      node.innerHTML = `
+        <article class="card">
+          <h3>Dépassements temps</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>OF</th>
+                  <th>Référence</th>
+                  <th>Activité</th>
+                  <th>Opérateur</th>
+                  <th>Prévu</th>
+                  <th>Réel</th>
+                  <th>Écart</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${appData.taches
+                  .filter((tache) => tache.tempsReel > tache.tempsPrevu)
+                  .map((tache) => {
+                    const of = getOFById(tache.ofId);
+                    const reference = getReferenceById(tache.referencePieceId);
+                    const operateur = getOperateurById(tache.operateurId);
+                    const ecart = tache.tempsReel - tache.tempsPrevu;
+
+                    return `
+                      <tr>
+                        <td>${of?.numeroOF || '-'}</td>
+                        <td>${reference?.reference || '-'}</td>
+                        <td>${tache.etape}</td>
+                        <td>${operateur?.prenom || ''} ${operateur?.nom || ''}</td>
+                        <td>${tache.tempsPrevu}m</td>
+                        <td>${tache.tempsReel}m</td>
+                        <td><span class="badge ${ecart > 20 ? 'red' : 'orange'}">+${ecart}m</span></td>
+                      </tr>
+                    `;
+                  })
+                  .join('')}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `;
+    }
+
+    if (tab === 'stocks') {
+      node.innerHTML = `
+        <article class="card">
+          <h3>Stocks bas et critiques</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Désignation</th>
+                  <th>Famille</th>
+                  <th>Stock</th>
+                  <th>Seuil</th>
+                  <th>Emplacement</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${appData.stocks
+                  .filter((stock) => stock.stockActuel <= stock.seuilMinimum)
+                  .map((stock) => {
+                    const critique = stock.stockActuel <= stock.seuilMinimum * 0.7;
+
+                    return `
+                      <tr>
+                        <td>${stock.codeArticle}</td>
+                        <td>${stock.designation}</td>
+                        <td>${stock.famille}</td>
+                        <td>${stock.stockActuel}</td>
+                        <td>${stock.seuilMinimum}</td>
+                        <td>${stock.emplacement}</td>
+                        <td><span class="badge ${critique ? 'red' : 'orange'}">${critique ? 'Critique' : 'Bas'}</span></td>
+                      </tr>
+                    `;
+                  })
+                  .join('')}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `;
+    }
+
+    if (tab === 'obs') {
+      node.innerHTML = `
+        <article class="card">
+          <h3>Observations / anomalies</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Activité</th>
+                  <th>OF</th>
+                  <th>Référence</th>
+                  <th>Type</th>
+                  <th>Importance</th>
+                  <th>Commentaire</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${appData.observations
+                  .filter((observation) => observation.statutTraitement !== 'Traité' || observation.importance === 'Élevée' || ['Anomalie', 'Retard', 'Qualité'].includes(observation.type))
+                  .map((observation) => {
+                    const of = getOFById(observation.ofId);
+                    const reference = getReferenceById(observation.referencePieceId);
+
+                    return `
+                      <tr>
+                        <td>${formatDateFr(observation.date)}</td>
+                        <td>${observation.activite}</td>
+                        <td>${of?.numeroOF || '-'}</td>
+                        <td>${reference?.reference || '-'}</td>
+                        <td><span class="badge ${['Anomalie', 'Qualité'].includes(observation.type) ? 'red' : 'orange'}">${observation.type}</span></td>
+                        <td>${observation.importance}</td>
+                        <td>${observation.commentaire}</td>
+                        <td>${observation.statutTraitement}</td>
+                      </tr>
+                    `;
+                  })
+                  .join('')}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `;
+    }
+
+    if (tab === 'export') {
+      node.innerHTML = `
+        <article class="card">
+          <h3>Export & analyse</h3>
+          <div class="filters-grid">
+            <select>
+              <option>Client</option>
+              ${appData.clients.map((client) => `<option>${client.nom}</option>`).join('')}
+            </select>
+
+            <select>
+              <option>Activité</option>
+              ${activities.map((activity) => `<option>${activity}</option>`).join('')}
+            </select>
+
+            <select>
+              <option>Statut</option>
+              <option>En cours</option>
+              <option>Terminé</option>
+              <option>Bloqué</option>
+            </select>
+
+            <select>
+              <option>Priorité</option>
+              <option>Urgente</option>
+              <option>Haute</option>
+              <option>Moyenne</option>
+            </select>
+
+            <input type="month" />
+            <button type="button" onclick="alert('Export CSV fictif prêt')">Export CSV</button>
+            <button type="button" onclick="alert('Export Excel à venir')">Export Excel</button>
+            <button type="button" onclick="alert('Export PDF à venir')">Export PDF</button>
+          </div>
+        </article>
+      `;
+    }
+
+    document.querySelectorAll('.detail-btn').forEach((button) => {
+      button.addEventListener('click', () => activateTab(button.dataset.goTab));
+    });
   }
 
   function activateTab(tab) {
-    document.querySelectorAll('.manager-tab').forEach((b)=>b.classList.toggle('active', b.dataset.tab===tab));
+    document.querySelectorAll('.manager-tab').forEach((button) => {
+      button.classList.toggle('active', button.dataset.tab === tab);
+    });
+
     renderTab(tab);
   }
 
-  document.querySelectorAll('.manager-tab').forEach((b)=>b.addEventListener('click', ()=>activateTab(b.dataset.tab)));
+  document.querySelectorAll('.manager-tab').forEach((button) => {
+    button.addEventListener('click', () => activateTab(button.dataset.tab));
+  });
+
   activateTab('global');
 }
-
-const pages = {
-  manager: { title: 'Manager', subtitle: 'Vue globale des indicateurs de pilotage atelier.', description: 'Synthèse fictive des OF, délais, qualité et charge atelier.', metrics: ['OF en cours : 12', 'Tâches terminées : 38', 'Alertes stock : 2'] },
-  production: { title: 'Production / OF', subtitle: 'Suivi des ordres de fabrication et des priorités.', description: 'Liste simplifiée des OF actifs et de leur avancement.', metrics: ['OF en attente : 5', 'OF terminés : 27', 'Retards : 1'] },
-  'responsable-methode': { title: 'Responsable méthode', subtitle: 'Préparation des gammes et standards de fabrication.', description: 'Structure métier prête pour intégrer les gammes par référence.', metrics: ['Gammes actives : 18', 'Révisions en cours : 3', 'Écarts process : 0'] },
-  preparation: { title: 'Préparation', subtitle: 'Tâches opérateur et préparation des pièces.', description: 'Suivi fictif des besoins masquage et outillage.', metrics: ['Tâches du jour : 9', 'Temps prévu : 6h20', 'Blocages : 1'] },
-  accroche: { title: 'Accroche', subtitle: 'Organisation des balancelles et accroche des pièces.', description: 'Zone de suivi des priorités et consommables accroche.', metrics: ['OF à accrocher : 4', 'Crochets dispo : 160', 'Retards : 0'] },
-  peinture: { title: 'Peinture', subtitle: 'Pilotage cabine et consommation peinture.', description: 'Indicateurs fictifs sur cadence, qualité et consommables.', metrics: ['OF en cabine : 3', 'Conso poudre : 42 kg', 'Alertes qualité : 1'] },
-  decroche: { title: 'Décroche', subtitle: 'Suivi des pièces en sortie et transfert.', description: 'Visualisation simplifiée de la décroche et du flux aval.', metrics: ['Lots à décrocher : 6', 'Transferts prêts : 4', 'Anomalies : 0'] },
-  qualite: { title: 'Qualité', subtitle: 'Contrôles qualité et suivi des non-conformités.', description: 'Emplacement réservé aux contrôles visuels et dimensionnels.', metrics: ['Contrôles prévus : 14', 'NC ouvertes : 2', 'NC clôturées : 5'] },
-  logistique: { title: 'Logistique', subtitle: 'Expéditions, livraisons et coordination flux.', description: 'Synthèse fictive du stock global et des livraisons.', metrics: ['Expéditions du jour : 3', 'Réceptions : 2', 'Urgences : 1'] },
-  stock: { title: 'Stock', subtitle: 'Stock central et alertes de réapprovisionnement.', description: 'Base propre pour le suivi des niveaux par activité.', metrics: ['Articles suivis : 124', 'Articles en alerte : 7', 'Ruptures : 0'] },
-  'base-donnees': { title: 'Base de données', subtitle: 'Page de simulation des données futures.', description: 'Aucune base réelle : uniquement un espace de préparation fonctionnelle.', metrics: ['Tables simulées : 11', 'Données fictives : actives', 'Connexion réelle : non'] },
-  parametres: { title: 'Paramètres / Utilisateurs', subtitle: 'Gestion visuelle des profils et préférences.', description: 'Préparation des rôles sans authentification réelle.', metrics: ['Utilisateurs fictifs : 10', 'Rôles configurés : 9', 'Demandes accès : 2'] }
-};
-
-const contentNode = document.getElementById('page-content');
-const navButtons = document.querySelectorAll('.sidebar-nav button');
 
 function renderPage(pageKey) {
   if (pageKey === 'manager') {
     renderManagerPage();
     return;
   }
+
   const page = pages[pageKey];
   if (!page) return;
-  contentNode.innerHTML = `<h2 class="page-title">${page.title}</h2><p class="page-subtitle">${page.subtitle}</p><article class="card"><h3>Carte de présentation</h3><p>${page.description}</p><div class="badges"><span class="badge orange">Priorité atelier</span><span class="badge green">Suivi terminé</span><span class="badge red">Alerte active</span></div></article><article class="card"><h3>Données fictives</h3><ul>${page.metrics.map((metric) => `<li>${metric}</li>`).join('')}</ul></article><article class="todo-box"><strong>À développer :</strong> contenu détaillé métier, tableaux OF et formulaires opérateurs.</article>`;
+
+  contentNode.innerHTML = `
+    <h2 class="page-title">${page.title}</h2>
+    <p class="page-subtitle">${page.subtitle}</p>
+
+    <article class="card">
+      <h3>Carte de présentation</h3>
+      <p>${page.description}</p>
+      <div class="badges">
+        <span class="badge orange">Priorité atelier</span>
+        <span class="badge green">Suivi terminé</span>
+        <span class="badge red">Alerte active</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <h3>Données fictives</h3>
+      <ul>
+        ${page.metrics.map((metric) => `<li>${metric}</li>`).join('')}
+      </ul>
+    </article>
+
+    <article class="todo-box">
+      <strong>À développer :</strong> contenu détaillé métier, tableaux OF et formulaires opérateurs.
+    </article>
+  `;
 }
 
 function setActiveButton(pageKey) {
-  navButtons.forEach((button) => button.classList.toggle('active-nav', button.dataset.section === pageKey));
+  navButtons.forEach((button) => {
+    button.classList.toggle('active-nav', button.dataset.section === pageKey);
+  });
 }
 
 navButtons.forEach((button) => {
