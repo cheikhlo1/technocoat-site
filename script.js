@@ -160,54 +160,6 @@ const appData = {
   })
 };
 
-function getClientById(id) {
-  return appData.clients.find((item) => item.id === id);
-}
-
-function getCommandeById(id) {
-  return appData.commandes.find((item) => item.id === id);
-}
-
-function getOFById(id) {
-  return appData.ordresFabrication.find((item) => item.id === id);
-}
-
-function getReferenceById(id) {
-  return appData.referencesPieces.find((item) => item.id === id);
-}
-
-function getOperateurById(id) {
-  return appData.operateurs.find((item) => item.id === id);
-}
-
-function getTachesByActivite(activite) {
-  const operateursActivite = appData.operateurs
-    .filter((item) => item.activite === activite)
-    .map((item) => item.id);
-
-  return appData.taches.filter((item) => operateursActivite.includes(item.operateurId));
-}
-
-function getTachesByOperateur(operateurId) {
-  return appData.taches.filter((item) => item.operateurId === operateurId);
-}
-
-function getStocksByFamille(famille) {
-  return appData.stocks.filter((item) => item.famille === famille);
-}
-
-function getObservationsByActivite(activite) {
-  return appData.observations.filter((item) => item.activite === activite);
-}
-
-function getReferencesByOF(ofId) {
-  return appData.referencesPieces.filter((item) => item.ofId === ofId);
-}
-
-function formatDateFr(dateStr) {
-  return new Date(dateStr).toLocaleDateString('fr-FR');
-}
-
 const contentNode = document.getElementById('page-content');
 const navButtons = document.querySelectorAll('.sidebar-nav button');
 
@@ -286,64 +238,54 @@ const pages = {
   }
 };
 
-function getManagerDataset(filters = {}) {
-  const search = (filters.search || '').toLowerCase();
-
-  const byOF = appData.ordresFabrication.filter((of) => {
-    const client = getClientById(of.clientId);
-    const textPool = `${of.numeroOF} ${of.statutGlobal} ${of.localisationActuelle} ${client?.nom || ''}`.toLowerCase();
-
-    const bySearch = !search || textPool.includes(search);
-    const byClient = !filters.clientId || of.clientId === filters.clientId;
-    const byStatut = !filters.statutOF || of.statutGlobal === filters.statutOF;
-    const byPriorite = !filters.priorite || of.priorite === filters.priorite;
-    const byActivite = !filters.activite || of.localisationActuelle === filters.activite;
-    const byPeriode = !filters.periode || of.dateProductionPrevue.startsWith(filters.periode);
-
-    return bySearch && byClient && byStatut && byPriorite && byActivite && byPeriode;
-  });
-
-  const ofIds = new Set(byOF.map((x) => x.id));
-  const references = appData.referencesPieces.filter((r) => ofIds.has(r.ofId));
-  const taches = appData.taches.filter((t) => ofIds.has(t.ofId));
-  const observations = appData.observations.filter((o) => ofIds.has(o.ofId));
-
-  return { byOF, references, taches, observations };
+function getClientById(id) {
+  return appData.clients.find((item) => item.id === id);
 }
 
-function computeManagerKpis(dataset) {
-  const { byOF, references, taches, observations } = dataset;
+function getCommandeById(id) {
+  return appData.commandes.find((item) => item.id === id);
+}
 
-  const ouvertsObs = observations.filter((o) => o.statutTraitement !== 'Traité' && o.statutTraitement !== 'Clos').length;
-  const stockCritiques = appData.stocks.filter((s) => s.stockActuel <= s.seuilMinimum).length;
-  const ecartMoyen = taches.length
-    ? Math.round(taches.reduce((acc, t) => acc + (t.tempsReel - t.tempsPrevu), 0) / taches.length)
-    : 0;
+function getOFById(id) {
+  return appData.ordresFabrication.find((item) => item.id === id);
+}
 
-  const today = '2026-05-06';
-  const ofRetard = byOF.filter((of) => of.dateLivraisonDemandee < today && of.statutGlobal !== 'Terminé').length;
+function getReferenceById(id) {
+  return appData.referencesPieces.find((item) => item.id === id);
+}
 
-  return [
-    ['👥', 'Clients', appData.clients.length, 'neutral'],
-    ['📦', 'Commandes', appData.commandes.length, 'neutral'],
-    ['🏭', 'OF total', byOF.length, 'neutral'],
-    ['🔄', 'OF en cours', byOF.filter((x) => x.statutGlobal === 'En cours').length, 'warn'],
-    ['✅', 'OF terminés', byOF.filter((x) => x.statutGlobal === 'Terminé').length, 'good'],
-    ['⏰', 'OF en retard', ofRetard, 'danger'],
-    ['🧩', 'Références suivies', references.length, 'neutral'],
-    ['🛠', 'Tâches ouvertes', taches.filter((x) => x.statut !== 'Terminé').length, 'warn'],
-    ['✔️', 'Tâches terminées', taches.filter((x) => x.statut === 'Terminé').length, 'good'],
-    ['⚠️', 'Obs ouvertes', ouvertsObs, 'danger'],
-    ['📉', 'Alertes stock', stockCritiques, 'danger'],
-    ['⏱', 'Écart moyen', `${ecartMoyen} min`, ecartMoyen > 10 ? 'danger' : ecartMoyen > 0 ? 'warn' : 'good']
-  ];
+function getOperateurById(id) {
+  return appData.operateurs.find((item) => item.id === id);
+}
+
+function getTachesByActivite(activite) {
+  const operateursActivite = appData.operateurs
+    .filter((item) => item.activite === activite)
+    .map((item) => item.id);
+
+  return appData.taches.filter((item) => operateursActivite.includes(item.operateurId));
+}
+
+function getReferencesByOF(ofId) {
+  return appData.referencesPieces.filter((item) => item.ofId === ofId);
+}
+
+function formatDateFr(dateStr) {
+  return new Date(dateStr).toLocaleDateString('fr-FR');
 }
 
 function renderManagerPage() {
   const today = new Date().toLocaleDateString('fr-FR');
-  const optionsClients = appData.clients
-    .map((c) => `<option value="${c.id}">${c.nom}</option>`)
-    .join('');
+  const activities = ['Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité', 'Logistique'];
+
+  const ofTotal = appData.ordresFabrication.length;
+  const ofCours = appData.ordresFabrication.filter((x) => x.statutGlobal === 'En cours').length;
+  const ofTermines = appData.ordresFabrication.filter((x) => x.statutGlobal === 'Terminé').length;
+  const ofBloques = appData.ordresFabrication.filter((x) => x.statutGlobal === 'Bloqué').length;
+  const tachesOuvertes = appData.taches.filter((x) => x.statut !== 'Terminé').length;
+  const alertesStock = appData.stocks.filter((s) => s.stockActuel <= s.seuilMinimum).length;
+  const obsOuvertes = appData.observations.filter((o) => o.statutTraitement !== 'Traité').length;
+  const ecartMoyen = Math.round(appData.taches.reduce((acc, t) => acc + (t.tempsReel - t.tempsPrevu), 0) / appData.taches.length);
 
   contentNode.innerHTML = `
     <section class="manager-head card">
@@ -356,289 +298,329 @@ function renderManagerPage() {
       </div>
     </section>
 
-    <section class="manager-filters card">
-      <div class="filters-grid">
-        <input id="f-search" placeholder="Recherche texte" />
-        <select id="f-client">
-          <option value="">Client</option>
-          ${optionsClients}
-        </select>
-        <select id="f-statut">
-          <option value="">Statut OF</option>
-          <option>En cours</option>
-          <option>Planifié</option>
-          <option>Terminé</option>
-          <option>Bloqué</option>
-        </select>
-        <select id="f-priorite">
-          <option value="">Priorité</option>
-          <option>Urgente</option>
-          <option>Haute</option>
-          <option>Moyenne</option>
-          <option>Basse</option>
-        </select>
-        <select id="f-activite">
-          <option value="">Activité</option>
-          <option>Préparation</option>
-          <option>Accroche</option>
-          <option>Peinture</option>
-          <option>Décroche</option>
-          <option>Qualité</option>
-          <option>Logistique</option>
-        </select>
-        <input id="f-periode" type="month" />
-        <button id="f-reset" type="button">Réinitialiser</button>
-      </div>
+    <section class="manager-tabs" id="manager-tabs">
+      <button class="manager-tab active" data-tab="global">Vue globale</button>
+      <button class="manager-tab" data-tab="of">OF & retards</button>
+      <button class="manager-tab" data-tab="charge">Charge atelier</button>
+      <button class="manager-tab" data-tab="temps">Temps & performance</button>
+      <button class="manager-tab" data-tab="stocks">Stocks critiques</button>
+      <button class="manager-tab" data-tab="obs">Observations / anomalies</button>
+      <button class="manager-tab" data-tab="export">Export & analyse</button>
     </section>
 
-    <section id="manager-kpis" class="kpi-grid"></section>
-
-    <section class="card">
-      <h3>Situation atelier</h3>
-      <div id="manager-situation"></div>
-    </section>
-
-    <section class="card">
-      <h3>Charge par activité</h3>
-      <div id="manager-charge"></div>
-    </section>
-
-    <section class="card">
-      <h3>Écarts temps prévu / temps réel</h3>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>OF</th>
-              <th>Client</th>
-              <th>Référence</th>
-              <th>Activité</th>
-              <th>Opérateur</th>
-              <th>Temps prévu</th>
-              <th>Temps réel</th>
-              <th>Écart</th>
-              <th>Statut</th>
-            </tr>
-          </thead>
-          <tbody id="manager-ecarts"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="card">
-      <h3>Alertes stock</h3>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Code article</th>
-              <th>Désignation</th>
-              <th>Famille</th>
-              <th>Stock actuel</th>
-              <th>Seuil minimum</th>
-              <th>Statut</th>
-              <th>Emplacement</th>
-            </tr>
-          </thead>
-          <tbody id="manager-stock"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="card">
-      <h3>Observations et anomalies</h3>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Activité</th>
-              <th>OF</th>
-              <th>Référence</th>
-              <th>Type</th>
-              <th>Importance</th>
-              <th>Commentaire</th>
-              <th>Statut traitement</th>
-            </tr>
-          </thead>
-          <tbody id="manager-observations"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="perf-grid" id="manager-performance"></section>
+    <section id="manager-tab-content"></section>
   `;
 
-  function applyFilters() {
-    const filters = {
-      search: document.getElementById('f-search').value,
-      clientId: document.getElementById('f-client').value,
-      statutOF: document.getElementById('f-statut').value,
-      priorite: document.getElementById('f-priorite').value,
-      activite: document.getElementById('f-activite').value,
-      periode: document.getElementById('f-periode').value
-    };
+  function renderTab(tab) {
+    const node = document.getElementById('manager-tab-content');
 
-    const data = getManagerDataset(filters);
-    const kpis = computeManagerKpis(data);
+    if (tab === 'global') {
+      node.innerHTML = `
+        <div class="kpi-grid compact">
+          <article class="kpi-card neutral"><small>OF total</small><strong>${ofTotal}</strong></article>
+          <article class="kpi-card warn"><small>OF en cours</small><strong>${ofCours}</strong></article>
+          <article class="kpi-card good"><small>OF terminés</small><strong>${ofTermines}</strong></article>
+          <article class="kpi-card danger"><small>OF bloqués</small><strong>${ofBloques}</strong></article>
+          <article class="kpi-card warn"><small>Tâches ouvertes</small><strong>${tachesOuvertes}</strong></article>
+          <article class="kpi-card danger"><small>Alertes stock</small><strong>${alertesStock}</strong></article>
+          <article class="kpi-card danger"><small>Observations ouvertes</small><strong>${obsOuvertes}</strong></article>
+          <article class="kpi-card ${ecartMoyen > 10 ? 'danger' : 'warn'}"><small>Écart moyen</small><strong>${ecartMoyen} min</strong></article>
+        </div>
 
-    document.getElementById('manager-kpis').innerHTML = kpis
-      .map(([icon, label, value, tone]) => `
-        <article class="kpi-card ${tone}">
-          <small>${icon} ${label}</small>
-          <strong>${value}</strong>
-        </article>
-      `)
-      .join('');
+        <div class="triple-grid">
+          <article class="card">
+            <h3>Priorités du jour</h3>
+            <ul>
+              ${appData.ordresFabrication
+                .filter((x) => x.priorite === 'Urgente' || x.priorite === 'Haute')
+                .slice(0, 4)
+                .map((x) => `<li>${x.numeroOF} - ${x.localisationActuelle}</li>`)
+                .join('')}
+            </ul>
+            <button class="detail-btn" data-go-tab="of" type="button">Voir détails</button>
+          </article>
 
-    const urgents = data.byOF.filter((x) => x.priorite === 'Urgente' || x.priorite === 'Haute').length;
-    const bloques = data.byOF.filter((x) => x.statutGlobal === 'Bloqué').length;
-    const enCours = data.byOF.filter((x) => x.statutGlobal === 'En cours').length;
-    const localisations = [...new Set(data.byOF.map((x) => x.localisationActuelle))].join(', ');
+          <article class="card">
+            <h3>Alertes importantes</h3>
+            <ul>
+              <li>${ofBloques} OF bloqués</li>
+              <li>${alertesStock} alertes stock</li>
+              <li>${obsOuvertes} observations ouvertes</li>
+            </ul>
+            <button class="detail-btn" data-go-tab="stocks" type="button">Voir détails</button>
+          </article>
 
-    document.getElementById('manager-situation').innerHTML = `
-      <div class="kpi-grid">
-        <article class="kpi-card warn"><small>OF urgents</small><strong>${urgents}</strong></article>
-        <article class="kpi-card danger"><small>OF bloqués</small><strong>${bloques}</strong></article>
-        <article class="kpi-card neutral"><small>OF en cours</small><strong>${enCours}</strong></article>
-        <article class="kpi-card neutral"><small>Localisations actuelles</small><strong>${localisations || '-'}</strong></article>
-      </div>
-    `;
+          <article class="card">
+            <h3>Résumé atelier</h3>
+            <ul>
+              <li>OF actifs : ${ofCours}</li>
+              <li>Tâches ouvertes : ${tachesOuvertes}</li>
+              <li>Écart moyen : ${ecartMoyen} min</li>
+            </ul>
+            <button class="detail-btn" data-go-tab="charge" type="button">Voir détails</button>
+          </article>
+        </div>
+      `;
+    }
 
-    const activites = ['Préparation', 'Accroche', 'Peinture', 'Décroche', 'Qualité', 'Logistique'];
+    if (tab === 'of') {
+      node.innerHTML = `
+        <article class="card">
+          <h3>OF urgents, bloqués et en retard</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>OF</th>
+                  <th>Client</th>
+                  <th>Référence</th>
+                  <th>Localisation</th>
+                  <th>Priorité</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${appData.ordresFabrication
+                  .filter((x) => x.priorite === 'Urgente' || x.statutGlobal === 'Bloqué' || (x.dateLivraisonDemandee < '2026-05-06' && x.statutGlobal !== 'Terminé'))
+                  .map((x) => {
+                    const client = getClientById(x.clientId);
+                    const reference = getReferencesByOF(x.id)[0];
 
-    document.getElementById('manager-charge').innerHTML = activites
-      .map((activite) => {
-        const taches = getTachesByActivite(activite).filter((tache) =>
-          data.byOF.some((of) => of.id === tache.ofId)
-        );
-
-        const tempsPrevu = taches.reduce((somme, tache) => somme + tache.tempsPrevu, 0);
-        const tempsReel = taches.reduce((somme, tache) => somme + tache.tempsReel, 0);
-        const terminees = taches.filter((tache) => tache.statut === 'Terminé').length;
-        const taux = taches.length ? Math.round((terminees / taches.length) * 100) : 0;
-
-        return `
-          <div class="charge-row">
-            <span>${activite}</span>
-            <span>${taches.length} tâches · ${tempsPrevu}m / ${tempsReel}m · ${taux}%</span>
-            <div class="progress">
-              <div style="width:${taux}%"></div>
-            </div>
+                    return `
+                      <tr>
+                        <td>${x.numeroOF}</td>
+                        <td>${client?.nom || '-'}</td>
+                        <td>${reference?.reference || '-'}</td>
+                        <td>${x.localisationActuelle}</td>
+                        <td><span class="badge ${x.priorite === 'Urgente' ? 'red' : 'orange'}">${x.priorite}</span></td>
+                        <td><span class="badge ${x.statutGlobal === 'Bloqué' ? 'red' : x.statutGlobal === 'Terminé' ? 'green' : 'orange'}">${x.statutGlobal}</span></td>
+                      </tr>
+                    `;
+                  })
+                  .join('')}
+              </tbody>
+            </table>
           </div>
-        `;
-      })
-      .join('');
+        </article>
+      `;
+    }
 
-    document.getElementById('manager-ecarts').innerHTML = data.taches
-      .filter((tache) => tache.tempsReel > tache.tempsPrevu)
-      .map((tache) => {
-        const of = getOFById(tache.ofId);
-        const client = getClientById(of.clientId);
-        const reference = getReferenceById(tache.referencePieceId);
-        const operateur = getOperateurById(tache.operateurId);
-        const ecart = tache.tempsReel - tache.tempsPrevu;
+    if (tab === 'charge') {
+      node.innerHTML = `
+        <article class="card">
+          <h3>Charge par activité</h3>
+          ${activities
+            .map((activity) => {
+              const taches = getTachesByActivite(activity);
+              const tempsPrevu = taches.reduce((somme, tache) => somme + tache.tempsPrevu, 0);
+              const tempsReel = taches.reduce((somme, tache) => somme + tache.tempsReel, 0);
+              const taux = taches.length ? Math.round((taches.filter((x) => x.statut === 'Terminé').length / taches.length) * 100) : 0;
 
-        return `
-          <tr>
-            <td>${of.numeroOF}</td>
-            <td>${client.nom}</td>
-            <td>${reference.reference}</td>
-            <td>${tache.etape}</td>
-            <td>${operateur.prenom} ${operateur.nom}</td>
-            <td>${tache.tempsPrevu}m</td>
-            <td>${tache.tempsReel}m</td>
-            <td><span class="badge ${ecart > 20 ? 'red' : 'orange'}">+${ecart}m</span></td>
-            <td>${tache.statut}</td>
-          </tr>
-        `;
-      })
-      .join('');
+              return `
+                <div class="charge-row">
+                  <span><strong>${activity}</strong> · ${taches.length} tâches · Prévu ${tempsPrevu}m · Réel ${tempsReel}m · Avancement ${taux}%</span>
+                  <div class="progress">
+                    <div style="width:${taux}%"></div>
+                  </div>
+                </div>
+              `;
+            })
+            .join('')}
+        </article>
+      `;
+    }
 
-    document.getElementById('manager-stock').innerHTML = appData.stocks
-      .filter((stock) => stock.stockActuel <= stock.seuilMinimum)
-      .map((stock) => {
-        const state = stock.stockActuel <= stock.seuilMinimum * 0.7 ? 'Critique' : 'Bas';
+    if (tab === 'temps') {
+      node.innerHTML = `
+        <article class="card">
+          <h3>Dépassements temps</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>OF</th>
+                  <th>Référence</th>
+                  <th>Activité</th>
+                  <th>Opérateur</th>
+                  <th>Prévu</th>
+                  <th>Réel</th>
+                  <th>Écart</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${appData.taches
+                  .filter((tache) => tache.tempsReel > tache.tempsPrevu)
+                  .map((tache) => {
+                    const of = getOFById(tache.ofId);
+                    const reference = getReferenceById(tache.referencePieceId);
+                    const operateur = getOperateurById(tache.operateurId);
+                    const ecart = tache.tempsReel - tache.tempsPrevu;
 
-        return `
-          <tr>
-            <td>${stock.codeArticle}</td>
-            <td>${stock.designation}</td>
-            <td>${stock.famille}</td>
-            <td>${stock.stockActuel}</td>
-            <td>${stock.seuilMinimum}</td>
-            <td><span class="badge ${state === 'Critique' ? 'red' : 'orange'}">${state}</span></td>
-            <td>${stock.emplacement}</td>
-          </tr>
-        `;
-      })
-      .join('');
+                    return `
+                      <tr>
+                        <td>${of?.numeroOF || '-'}</td>
+                        <td>${reference?.reference || '-'}</td>
+                        <td>${tache.etape}</td>
+                        <td>${operateur?.prenom || ''} ${operateur?.nom || ''}</td>
+                        <td>${tache.tempsPrevu}m</td>
+                        <td>${tache.tempsReel}m</td>
+                        <td><span class="badge ${ecart > 20 ? 'red' : 'orange'}">+${ecart}m</span></td>
+                      </tr>
+                    `;
+                  })
+                  .join('')}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `;
+    }
 
-    document.getElementById('manager-observations').innerHTML = data.observations
-      .filter((observation) =>
-        observation.importance === 'Élevée' ||
-        observation.type === 'Anomalie' ||
-        observation.type === 'Retard' ||
-        observation.type === 'Qualité' ||
-        observation.statutTraitement !== 'Traité'
-      )
-      .map((observation) => {
-        const of = getOFById(observation.ofId);
-        const reference = getReferenceById(observation.referencePieceId);
+    if (tab === 'stocks') {
+      node.innerHTML = `
+        <article class="card">
+          <h3>Stocks bas et critiques</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Désignation</th>
+                  <th>Famille</th>
+                  <th>Stock</th>
+                  <th>Seuil</th>
+                  <th>Emplacement</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${appData.stocks
+                  .filter((stock) => stock.stockActuel <= stock.seuilMinimum)
+                  .map((stock) => {
+                    const critique = stock.stockActuel <= stock.seuilMinimum * 0.7;
 
-        return `
-          <tr>
-            <td>${formatDateFr(observation.date)}</td>
-            <td>${observation.activite}</td>
-            <td>${of?.numeroOF || '-'}</td>
-            <td>${reference?.reference || '-'}</td>
-            <td><span class="badge ${observation.type === 'Anomalie' || observation.type === 'Qualité' ? 'red' : 'orange'}">${observation.type}</span></td>
-            <td>${observation.importance}</td>
-            <td>${observation.commentaire}</td>
-            <td>${observation.statutTraitement}</td>
-          </tr>
-        `;
-      })
-      .join('');
+                    return `
+                      <tr>
+                        <td>${stock.codeArticle}</td>
+                        <td>${stock.designation}</td>
+                        <td>${stock.famille}</td>
+                        <td>${stock.stockActuel}</td>
+                        <td>${stock.seuilMinimum}</td>
+                        <td>${stock.emplacement}</td>
+                        <td><span class="badge ${critique ? 'red' : 'orange'}">${critique ? 'Critique' : 'Bas'}</span></td>
+                      </tr>
+                    `;
+                  })
+                  .join('')}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `;
+    }
 
-    const tauxOfTermines = data.byOF.length
-      ? Math.round((data.byOF.filter((x) => x.statutGlobal === 'Terminé').length / data.byOF.length) * 100)
-      : 0;
+    if (tab === 'obs') {
+      node.innerHTML = `
+        <article class="card">
+          <h3>Observations / anomalies</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Activité</th>
+                  <th>OF</th>
+                  <th>Référence</th>
+                  <th>Type</th>
+                  <th>Importance</th>
+                  <th>Commentaire</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${appData.observations
+                  .filter((observation) => observation.statutTraitement !== 'Traité' || observation.importance === 'Élevée' || ['Anomalie', 'Retard', 'Qualité'].includes(observation.type))
+                  .map((observation) => {
+                    const of = getOFById(observation.ofId);
+                    const reference = getReferenceById(observation.referencePieceId);
 
-    const tauxTachesTerminees = data.taches.length
-      ? Math.round((data.taches.filter((x) => x.statut === 'Terminé').length / data.taches.length) * 100)
-      : 0;
+                    return `
+                      <tr>
+                        <td>${formatDateFr(observation.date)}</td>
+                        <td>${observation.activite}</td>
+                        <td>${of?.numeroOF || '-'}</td>
+                        <td>${reference?.reference || '-'}</td>
+                        <td><span class="badge ${['Anomalie', 'Qualité'].includes(observation.type) ? 'red' : 'orange'}">${observation.type}</span></td>
+                        <td>${observation.importance}</td>
+                        <td>${observation.commentaire}</td>
+                        <td>${observation.statutTraitement}</td>
+                      </tr>
+                    `;
+                  })
+                  .join('')}
+              </tbody>
+            </table>
+          </div>
+        </article>
+      `;
+    }
 
-    const ofBloques = data.byOF.filter((x) => x.statutGlobal === 'Bloqué').length;
-    const ecartTotal = data.taches.reduce((somme, tache) => somme + (tache.tempsReel - tache.tempsPrevu), 0);
+    if (tab === 'export') {
+      node.innerHTML = `
+        <article class="card">
+          <h3>Export & analyse</h3>
+          <div class="filters-grid">
+            <select>
+              <option>Client</option>
+              ${appData.clients.map((client) => `<option>${client.nom}</option>`).join('')}
+            </select>
 
-    const tauxRetard = data.byOF.length
-      ? Math.round((data.byOF.filter((x) => x.dateLivraisonDemandee < '2026-05-06' && x.statutGlobal !== 'Terminé').length / data.byOF.length) * 100)
-      : 0;
+            <select>
+              <option>Activité</option>
+              ${activities.map((activity) => `<option>${activity}</option>`).join('')}
+            </select>
 
-    document.getElementById('manager-performance').innerHTML = `
-      <article class="kpi-card good"><small>Taux OF terminés</small><strong>${tauxOfTermines}%</strong></article>
-      <article class="kpi-card good"><small>Taux tâches terminées</small><strong>${tauxTachesTerminees}%</strong></article>
-      <article class="kpi-card danger"><small>Anomalies ouvertes</small><strong>${data.observations.filter((x) => x.statutTraitement !== 'Traité').length}</strong></article>
-      <article class="kpi-card danger"><small>OF bloqués</small><strong>${ofBloques}</strong></article>
-      <article class="kpi-card warn"><small>Écart total temps</small><strong>${ecartTotal} min</strong></article>
-      <article class="kpi-card warn"><small>Taux de retard</small><strong>${tauxRetard}%</strong></article>
-    `;
+            <select>
+              <option>Statut</option>
+              <option>En cours</option>
+              <option>Terminé</option>
+              <option>Bloqué</option>
+            </select>
+
+            <select>
+              <option>Priorité</option>
+              <option>Urgente</option>
+              <option>Haute</option>
+              <option>Moyenne</option>
+            </select>
+
+            <input type="month" />
+            <button type="button" onclick="alert('Export CSV fictif prêt')">Export CSV</button>
+            <button type="button" onclick="alert('Export Excel à venir')">Export Excel</button>
+            <button type="button" onclick="alert('Export PDF à venir')">Export PDF</button>
+          </div>
+        </article>
+      `;
+    }
+
+    document.querySelectorAll('.detail-btn').forEach((button) => {
+      button.addEventListener('click', () => activateTab(button.dataset.goTab));
+    });
   }
 
-  applyFilters();
-
-  ['f-search', 'f-client', 'f-statut', 'f-priorite', 'f-activite', 'f-periode'].forEach((id) => {
-    document.getElementById(id).addEventListener('input', applyFilters);
-  });
-
-  document.getElementById('f-reset').addEventListener('click', () => {
-    ['f-search', 'f-client', 'f-statut', 'f-priorite', 'f-activite', 'f-periode'].forEach((id) => {
-      document.getElementById(id).value = '';
+  function activateTab(tab) {
+    document.querySelectorAll('.manager-tab').forEach((button) => {
+      button.classList.toggle('active', button.dataset.tab === tab);
     });
 
-    applyFilters();
+    renderTab(tab);
+  }
+
+  document.querySelectorAll('.manager-tab').forEach((button) => {
+    button.addEventListener('click', () => activateTab(button.dataset.tab));
   });
+
+  activateTab('global');
 }
 
 function renderPage(pageKey) {
