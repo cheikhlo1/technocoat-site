@@ -251,6 +251,7 @@ table,
 }
 
 
+ codex/create-new-branch-for-operator-preparation-page-nagari
 .prep-section {
     background: linear-gradient(180deg, #f7faff 0%, #f2f6fc 100%);
     border: 1px solid #d8e2ef;
@@ -311,17 +312,55 @@ table,
 .prep-card p,
 .prep-card li {
     color: #334155;
+
+.prep-layout-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.9rem;
+    margin: 0.5rem 0 1.35rem;
+}
+
+.prep-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 1rem;
+}
+
+.prep-card h3 {
+    margin: 0 0 0.7rem;
+    font-size: 1rem;
+ main
 }
 
 .prep-card ul,
 .prep-card ol {
     margin: 0;
     padding-left: 1.1rem;
+ codex/create-new-branch-for-operator-preparation-page-nagari
 }
 
 .prep-card-warning {
     border-left: 4px solid #f59e0b;
     background: #fffcf5;
+
+    color: #334155;
+}
+
+.prep-card li + li {
+    margin-top: 0.35rem;
+}
+
+.prep-card p {
+    margin: 0 0 0.7rem;
+    color: #334155;
+}
+
+.prep-card-warning {
+    border-left: 4px solid var(--warning);
+    background: #fffcf4;
+ main
 }
 
 .actions {
@@ -534,3 +573,4 @@ th {
  .db-export{margin-left:0;}
  .db-toolbar{align-items:stretch;}
 }
+
