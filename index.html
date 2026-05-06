@@ -11,6 +11,7 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h1>Gestion Production</h1>
+                <p>Technocoat · Pilotage atelier</p>
             </div>
             <nav class="sidebar-nav">
                 <button data-section="manager">Manager</button>
@@ -122,130 +123,192 @@
                     </ul>
                 </section>
                 <section id="preparation" class="section">
-                    <h2>Préparation</h2>
-                    <div class="stock-alerts">
-                        <h3>Alertes Stock Préparation</h3>
-                        <ul>
-                            <li>Bouchons: Faible</li>
-                            <li>Adhésifs: OK</li>
-                        </ul>
-                    </div>
-                    <div class="info-cards">
-                        <div class="info-card">
-                            <div class="info-title">Client</div>
-                            <div class="info-value">CLIENT A</div>
+                    <div class="prep-header">
+                        <div>
+                            <h2>Préparation</h2>
+                            <p>Réception, revue technique, masquage et préparation avant production</p>
                         </div>
-                        <div class="info-card">
-                            <div class="info-title">Numéro OF</div>
-                            <div class="info-value">OF001</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Numéro de commande</div>
-                            <div class="info-value">CMD001</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Référence pièce</div>
-                            <div class="info-value">REF001</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Désignation pièce</div>
-                            <div class="info-value">Pièce A</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Quantité</div>
-                            <div class="info-value">100</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Priorité</div>
-                            <div class="info-value">Haute</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Localisation actuelle</div>
-                            <div class="info-value">Zone Préparation</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Étape à réaliser</div>
-                            <div class="info-value">Masquage</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Temps prévu</div>
-                            <div class="info-value">30 min</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Consommables nécessaires</div>
-                            <div class="info-value">Bouchons, Adhésifs</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Outillage nécessaire</div>
-                            <div class="info-value">Pistolet</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Prochaine étape</div>
-                            <div class="info-value">Accroche</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-title">Statut</div>
-                            <div class="info-value">En cours</div>
+                        <div class="prep-meta">
+                            <span>Date : <strong id="prep-date">06/05/2026</strong></span>
+                            <span>Opérateur : <strong>Alex Martin</strong></span>
+                            <span>Rôle : <strong>Préparation</strong></span>
                         </div>
                     </div>
-                    <div class="actions">
-                        <button class="action-btn">Démarrer la tâche</button>
-                        <button class="action-btn">Mettre en pause</button>
-                        <button class="action-btn">Terminer la tâche</button>
-                        <button class="action-btn">Signaler une anomalie</button>
-                        <button class="action-btn">Enregistrer l’observation</button>
+
+                    <div class="prep-kpis">
+                        <div class="prep-kpi"><span>OF à préparer aujourd’hui</span><strong>7</strong></div>
+                        <div class="prep-kpi"><span>Références à préparer</span><strong>14</strong></div>
+                        <div class="prep-kpi"><span>Tâches terminées</span><strong>5</strong></div>
+                        <div class="prep-kpi"><span>Tâches en retard</span><strong class="kpi-warn">2</strong></div>
+                        <div class="prep-kpi"><span>Temps prévu total</span><strong>3h 40</strong></div>
+                        <div class="prep-kpi"><span>Temps réel renseigné</span><strong>2h 55</strong></div>
+                        <div class="prep-kpi"><span>Consommables manquants</span><strong class="kpi-danger">1</strong></div>
+                        <div class="prep-kpi"><span>Observations ouvertes</span><strong>4</strong></div>
                     </div>
-                    <div class="fields">
-                        <label>Temps réel passé: <input type="text" placeholder="min"></label>
-                        <label>Observation opérateur: <input type="text" placeholder="Observation"></label>
-                        <label>Type d’observation: 
-                            <select>
-                                <option>Anomalie</option>
-                                <option>Amélioration</option>
-                                <option>Information</option>
-                                <option>Retard</option>
-                                <option>Manque consommable</option>
-                                <option>Outillage</option>
-                                <option>Qualité</option>
-                            </select>
-                        </label>
-                        <label>Niveau d’importance: 
-                            <select>
-                                <option>Faible</option>
-                                <option>Moyen</option>
-                                <option>Élevé</option>
-                            </select>
-                        </label>
+
+                    <h3>Affaires / OF à préparer</h3>
+                    <div class="prep-orders">
+                        <article class="prep-order-card" data-of="OF001" data-reference="REF001" data-priority="haute" data-status="en-cours">
+                            <div class="order-top">
+                                <h4>OF001 · REF001</h4>
+                                <span class="badge priority-high">Urgent</span>
+                            </div>
+                            <div class="info-cards prep-info-grid">
+                                <div class="info-card"><div class="info-title">Client</div><div class="info-value">CLIENT A</div></div>
+                                <div class="info-card"><div class="info-title">Numéro OF</div><div class="info-value">OF001</div></div>
+                                <div class="info-card"><div class="info-title">Numéro de commande</div><div class="info-value">CMD001</div></div>
+                                <div class="info-card"><div class="info-title">Référence pièce</div><div class="info-value">REF001</div></div>
+                                <div class="info-card"><div class="info-title">Désignation pièce</div><div class="info-value">Support moteur</div></div>
+                                <div class="info-card"><div class="info-title">Quantité</div><div class="info-value">120</div></div>
+                                <div class="info-card"><div class="info-title">Priorité</div><div class="info-value">Haute</div></div>
+                                <div class="info-card"><div class="info-title">Date livraison demandée</div><div class="info-value">08/05/2026</div></div>
+                                <div class="info-card"><div class="info-title">Localisation actuelle</div><div class="info-value">Zone préparation A</div></div>
+                                <div class="info-card"><div class="info-title">Étape actuelle</div><div class="info-value">Préparation</div></div>
+                                <div class="info-card"><div class="info-title">Prochaine étape</div><div class="info-value">Accroche</div></div>
+                                <div class="info-card"><div class="info-title">Statut</div><div class="info-value"><span class="badge status-badge status-running">En cours</span></div></div>
+                            </div>
+                            <div class="prep-tech">
+                                <h5>Informations de préparation</h5>
+                                <ul>
+                                    <li><strong>Type de préparation :</strong> Nettoyage + masquage partiel</li>
+                                    <li><strong>Type de masquage :</strong> Bouchons + adhésif haute température</li>
+                                    <li><strong>Zones à protéger :</strong> Taraudages M6, portées fonctionnelles, surfaces de contact</li>
+                                    <li><strong>Consommables nécessaires :</strong> Bouchons silicone, ruban adhésif, gants, chiffons</li>
+                                    <li><strong>Outillage nécessaire :</strong> Chariot, bac de préparation, cutter de sécurité</li>
+                                    <li><strong>Fiche instruction associée :</strong> FI-PREP-024</li>
+                                    <li><strong>Points de vigilance :</strong> Vérifier la présence de tous les bouchons avant mise à l’accroche</li>
+                                    <li><strong>Temps prévu :</strong> 18 min</li>
+                                    <li><strong>Nombre d’opérateurs :</strong> 1</li>
+                                    <li><strong>Commentaire méthode :</strong> Contrôler les zones d’appui avant masquage final</li>
+                                </ul>
+                            </div>
+                        </article>
+
+                        <article class="prep-order-card" data-of="OF001" data-reference="REF002" data-priority="moyenne" data-status="attente">
+                            <div class="order-top">
+                                <h4>OF001 · REF002</h4>
+                                <span class="badge priority-medium">Planifié</span>
+                            </div>
+                            <div class="info-cards prep-info-grid">
+                                <div class="info-card"><div class="info-title">Client</div><div class="info-value">CLIENT A</div></div>
+                                <div class="info-card"><div class="info-title">Numéro OF</div><div class="info-value">OF001</div></div>
+                                <div class="info-card"><div class="info-title">Numéro de commande</div><div class="info-value">CMD001</div></div>
+                                <div class="info-card"><div class="info-title">Référence pièce</div><div class="info-value">REF002</div></div>
+                                <div class="info-card"><div class="info-title">Désignation pièce</div><div class="info-value">Plaque liaison</div></div>
+                                <div class="info-card"><div class="info-title">Quantité</div><div class="info-value">80</div></div>
+                                <div class="info-card"><div class="info-title">Priorité</div><div class="info-value">Moyenne</div></div>
+                                <div class="info-card"><div class="info-title">Date livraison demandée</div><div class="info-value">09/05/2026</div></div>
+                                <div class="info-card"><div class="info-title">Localisation actuelle</div><div class="info-value">Zone réception</div></div>
+                                <div class="info-card"><div class="info-title">Étape actuelle</div><div class="info-value">Préparation</div></div>
+                                <div class="info-card"><div class="info-title">Prochaine étape</div><div class="info-value">Accroche</div></div>
+                                <div class="info-card"><div class="info-title">Statut</div><div class="info-value"><span class="badge status-badge status-waiting">En attente</span></div></div>
+                            </div>
+                            <div class="prep-tech">
+                                <h5>Informations de préparation</h5>
+                                <ul>
+                                    <li><strong>Type de préparation :</strong> Dégraissage + masquage complet</li>
+                                    <li><strong>Type de masquage :</strong> Film + bouchons silicone</li>
+                                    <li><strong>Zones à protéger :</strong> Taraudages M8, bords usinés</li>
+                                    <li><strong>Consommables nécessaires :</strong> Film, adhésif, gants, chiffons</li>
+                                    <li><strong>Outillage nécessaire :</strong> Table tournante, cutter, bac de tri</li>
+                                    <li><strong>Fiche instruction associée :</strong> FI-PREP-017</li>
+                                    <li><strong>Points de vigilance :</strong> Contrôler la tenue du film en zone angle vif</li>
+                                    <li><strong>Temps prévu :</strong> 24 min</li>
+                                    <li><strong>Nombre d’opérateurs :</strong> 1</li>
+                                    <li><strong>Commentaire méthode :</strong> Prioriser ce lot après OF001-REF001</li>
+                                </ul>
+                            </div>
+                        </article>
                     </div>
-                    <div class="rex-block">
-                        <h3>Observation / Retour d’expérience</h3>
-                        <textarea placeholder="Écrivez votre observation..."></textarea>
-                        <label>Type: 
-                            <select>
-                                <option>Anomalie</option>
-                                <option>Amélioration</option>
-                                <option>Information</option>
-                                <option>Retard</option>
-                                <option>Manque consommable</option>
-                                <option>Outillage</option>
-                                <option>Qualité</option>
-                            </select>
-                        </label>
-                        <label>Importance: 
-                            <select>
-                                <option>Faible</option>
-                                <option>Moyen</option>
-                                <option>Élevé</option>
-                            </select>
-                        </label>
-                        <button class="save-btn">Enregistrer l’observation</button>
-                        <h4>Observations enregistrées</h4>
-                        <ul>
-                            <li>Masquage plus long que prévu à cause de zones difficiles d’accès.</li>
-                            <li>Manque de bouchons adaptés pour cette référence.</li>
-                            <li>Temps réel supérieur au temps prévu.</li>
-                        </ul>
+
+                    <div class="prep-operator-grid">
+                        <section class="prep-panel">
+                            <h3>Actions opérateur</h3>
+                            <div class="actions">
+                                <button class="action-btn" id="prep-start">Démarrer la tâche</button>
+                                <button class="action-btn" id="prep-pause">Mettre en pause</button>
+                                <button class="action-btn" id="prep-finish">Terminer la tâche</button>
+                                <button class="action-btn" id="prep-issue">Signaler une anomalie</button>
+                                <button class="save-btn" id="prep-save">Enregistrer</button>
+                            </div>
+                            <div class="fields">
+                                <label>Heure de début<input type="time" id="prep-start-time"></label>
+                                <label>Heure de fin<input type="time" id="prep-end-time"></label>
+                                <label>Temps réel passé<input type="text" id="prep-real-time" placeholder="min"></label>
+                                <label>Quantité préparée<input type="number" placeholder="0"></label>
+                                <label>Quantité bloquée<input type="number" placeholder="0"></label>
+                                <label>Consommables utilisés<input type="text" placeholder="Bouchons, ruban"></label>
+                                <label>Statut final
+                                    <select id="prep-final-status">
+                                        <option>Terminé</option><option>Partiellement terminé</option><option>Bloqué</option>
+                                    </select>
+                                </label>
+                                <label>Besoin contrôle qualité
+                                    <select><option>Oui</option><option>Non</option></select>
+                                </label>
+                            </div>
+                        </section>
+
+                        <section class="prep-panel rex-block" id="prep-rex">
+                            <h3>Observation / Retour d’expérience</h3>
+                            <label>Type d’observation
+                                <select id="prep-observation-type"><option>Anomalie</option><option>Amélioration</option><option>Information</option><option>Retard</option><option>Manque consommable</option><option>Outillage</option><option>Qualité</option></select>
+                            </label>
+                            <label>Niveau d’importance
+                                <select id="prep-observation-level"><option>Faible</option><option>Moyen</option><option>Élevé</option></select>
+                            </label>
+                            <textarea id="prep-observation-text" placeholder="Observation libre"></textarea>
+                            <button class="save-btn" id="prep-add-observation">Enregistrer l’observation</button>
+                            <h4>Observations enregistrées</h4>
+                            <ul id="prep-observation-list">
+                                <li>Masquage plus long que prévu à cause de zones difficiles d’accès.</li>
+                                <li>Manque de bouchons adaptés pour cette référence.</li>
+                                <li>Pièce arrivée avec traces avant préparation.</li>
+                                <li>Temps réel supérieur au temps prévu.</li>
+                                <li>Instruction de masquage à clarifier.</li>
+                            </ul>
+                        </section>
                     </div>
+
+                    <section class="prep-panel">
+                        <h3>Alertes préparation</h3>
+                        <div class="prep-alerts">
+                            <div class="prep-alert"><span class="badge priority-high">Critique</span><p>Consommable manquant</p><small>OF001 · REF002</small></div>
+                            <div class="prep-alert"><span class="badge priority-high">Urgent</span><p>OF urgent à traiter avant 14h</p><small>OF004 · REF021</small></div>
+                            <div class="prep-alert"><span class="badge status-blocked">Blocage</span><p>Pièce bloquée suite choc réception</p><small>OF002 · REF009</small></div>
+                            <div class="prep-alert"><span class="badge status-running">Qualité</span><p>Contrôle qualité demandé</p><small>OF003 · REF014</small></div>
+                            <div class="prep-alert"><span class="badge priority-medium">Écart temps</span><p>Écart prévu/réel supérieur à 20%</p><small>OF001 · REF001</small></div>
+                            <div class="prep-alert"><span class="badge status-waiting">Instruction</span><p>Fiche instruction manquante</p><small>OF005 · REF031</small></div>
+                        </div>
+                    </section>
+
+                    <section class="prep-panel">
+                        <h3>Stock préparation</h3>
+                        <table>
+                            <thead><tr><th>Consommable</th><th>Stock actuel</th><th>Seuil minimum</th><th>Statut</th></tr></thead>
+                            <tbody>
+                                <tr><td>Bouchons silicone</td><td>320</td><td>300</td><td><span class="badge status-running">OK</span></td></tr>
+                                <tr><td>Ruban adhésif haute température</td><td>18</td><td>25</td><td><span class="badge priority-medium">Bas</span></td></tr>
+                                <tr><td>Film de masquage</td><td>9</td><td>15</td><td><span class="badge priority-high">Critique</span></td></tr>
+                                <tr><td>Gants</td><td>140</td><td>120</td><td><span class="badge status-running">OK</span></td></tr>
+                                <tr><td>Chiffons</td><td>65</td><td>50</td><td><span class="badge status-running">OK</span></td></tr>
+                                <tr><td>Cutter de sécurité</td><td>6</td><td>10</td><td><span class="badge priority-medium">Bas</span></td></tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section class="prep-panel">
+                        <h3>Tableau récapitulatif préparation</h3>
+                        <table>
+                            <thead>
+                                <tr><th>OF</th><th>Client</th><th>Référence</th><th>Désignation</th><th>Quantité</th><th>Priorité</th><th>Temps prévu</th><th>Temps réel</th><th>Statut</th><th>Opérateur</th><th>Observation</th></tr>
+                            </thead>
+                            <tbody id="prep-summary-table">
+                                <tr><td>OF001</td><td>Client A</td><td>REF001</td><td>Support moteur</td><td>120</td><td>Haute</td><td>18 min</td><td>22 min</td><td><span class="badge status-badge status-running">En cours</span></td><td>Alex Martin</td><td>Zones difficiles d’accès</td></tr>
+                                <tr><td>OF001</td><td>Client A</td><td>REF002</td><td>Plaque liaison</td><td>80</td><td>Moyenne</td><td>24 min</td><td>--</td><td><span class="badge status-badge status-waiting">En attente</span></td><td>Alex Martin</td><td>Consommable à compléter</td></tr>
+                            </tbody>
+                        </table>
+                    </section>
                 </section>
                 <section id="accroche" class="section">
                     <h2>Accroche</h2>
