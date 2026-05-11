@@ -1,242 +1,267 @@
 # Instructions pour Codex — Projet Technocoat
 
-## Contexte du projet
+## Contexte général
+
 Ce projet est une application web de gestion de production industrielle pour Technocoat.
 
-L’objectif est de créer une maquette dynamique, professionnelle et progressive permettant de gérer :
-- les OF
-- les commandes
-- les références pièces
-- les tâches opérateurs
-- les étapes de production
-- les stocks
-- les observations opérateurs
-- les indicateurs de production
+L’objectif est de créer une application claire, professionnelle, fonctionnelle et évolutive permettant de gérer :
+- les clients ;
+- les commandes ;
+- les affaires / OF ;
+- les références pièces ;
+- les gammes ;
+- les étapes de production ;
+- les tâches opérateurs ;
+- les temps prévus et réels ;
+- les stocks ;
+- les mouvements de stock ;
+- la qualité ;
+- les contrôles équipements ;
+- la logistique ;
+- les observations / retours d’expérience ;
+- les indicateurs de pilotage.
 
-Le projet doit rester simple pour le moment et fonctionner uniquement en local ou via GitHub Pages.
-
----
+Le projet doit être développé progressivement, étape par étape.
 
 ## Technologies autorisées
-- HTML
-- CSS
-- JavaScript pur
 
----
+Utiliser uniquement :
+- HTML ;
+- CSS ;
+- JavaScript pur.
+
+Aucune technologie serveur pour le moment.
 
 ## Technologies interdites
-Ne jamais utiliser :
-- React
-- Vue
-- Angular
-- Bootstrap
-- Tailwind
-- Node.js
-- Express
-- PHP
-- Backend
-- Base de données externe
-- Framework JavaScript
-- Librairie externe inutile
 
----
+Ne pas utiliser :
+- React ;
+- Vue ;
+- Angular ;
+- Bootstrap ;
+- Tailwind ;
+- Node.js ;
+- Express ;
+- PHP ;
+- backend ;
+- base de données externe ;
+- framework JavaScript ;
+- librairie externe non demandée.
 
-## Fichiers principaux
-Les fichiers principaux du projet sont :
-- `index.html`
-- `style.css`
-- `script.js`
+## Objectif technique actuel
 
-Ne pas changer le nom de ces fichiers.
+Créer une application fonctionnelle côté navigateur.
 
----
+Les données doivent être :
+- centralisées ;
+- consultables ;
+- ajoutables ;
+- modifiables ;
+- supprimables ;
+- filtrables ;
+- exportables en CSV compatible Excel ;
+- sauvegardées avec localStorage.
 
-## Règles générales
-- Ne pas supprimer les sections existantes.
-- Ne pas casser la barre latérale existante.
-- Ne pas casser la navigation existante.
-- Ne pas refaire toute l’application sans demande explicite.
-- Faire des modifications progressives.
-- Modifier uniquement ce qui est demandé.
-- Garder une interface professionnelle, claire, moderne et responsive.
-- Utiliser des couleurs sobres adaptées à une application industrielle.
-- Ne jamais ajouter de données confidentielles.
-- Utiliser uniquement des données fictives.
-- Garder un code lisible et bien structuré.
-- Ajouter des commentaires simples si nécessaire.
+Plus tard, le projet pourra évoluer vers une vraie base de données serveur sans refaire toute l’interface.
 
----
+## Architecture obligatoire
 
-## Logique métier principale
-L’application est organisée autour des OF.
+Utiliser une structure modulaire claire :
 
-Structure logique :
-Client → Commande → OF → Références pièces → Gammes de fabrication → Étapes de production → Tâches opérateurs → Temps réel → Indicateurs
+- index.html
+- style.css
+- script.js
+- data/database.js
+- data/databaseService.js
+- pages/database.js
+- pages/manager.js
+- pages/production.js
+- pages/methodes.js
+- pages/preparation.js
+- pages/accroche.js
+- pages/peinture.js
+- pages/decroche.js
+- pages/qualite.js
+- pages/logistique.js
+- pages/stock.js
+- pages/settings.js
+
+Rôle des fichiers :
+- index.html : structure générale de l’application.
+- style.css : style global de l’application.
+- script.js : navigation générale, initialisation et fonctions communes.
+- data/database.js : données fictives initiales.
+- data/databaseService.js : fonctions de gestion des données.
+- pages/*.js : rendu et logique de chaque page.
+
+## Règle importante sur les données
+
+Les pages ne doivent jamais manipuler directement les données brutes.
+
+Toutes les pages doivent passer par les fonctions de data/databaseService.js.
+
+Exemples :
+- getTable(tableName)
+- addRecord(tableName, record)
+- updateRecord(tableName, id, updatedRecord)
+- deleteRecord(tableName, id)
+- filterRecords(tableName, filters)
+- exportTableToCSV(tableName, filteredData)
+
+Cette règle est importante pour pouvoir remplacer plus tard localStorage par une vraie base de données serveur.
+
+## Tables de données attendues
+
+La base interne doit contenir les tables suivantes :
+
+1. clients
+2. commandes
+3. affaires
+4. referencesPieces
+5. gammes
+6. etapesGamme
+7. taches
+8. personnel
+9. stocks
+10. mouvementsStock
+11. qualitePieces
+12. controlesEquipements
+13. logistique
+14. observations
+
+## Logique métier
+
+L’application couvre la production depuis la réception des pièces jusqu’à la mise à disposition des produits finis.
+
+La logique générale est :
+
+Client → Commande → Affaire / OF → Références pièces → Gamme → Étapes de production → Tâches opérateurs → Temps réel → Observations → Indicateurs
 
 Un OF peut contenir plusieurs références pièces.
 
-Chaque référence peut avoir :
-- une désignation
-- une quantité
-- une gamme
-- des étapes de production
-- des temps prévus
-- des temps réels
-- des consommables
-- un statut
-- des observations opérateur
-- des anomalies éventuelles
-
----
+Dans les pages manager, utiliser le mot “Affaire” plutôt que “OF”.
+Le mot “OF” peut être utilisé dans les pages opérationnelles.
 
 ## Pages principales
-La barre latérale doit contenir les pages suivantes :
-- Manager
-- Responsable méthode
-- Préparation
-- Accroche
-- Peinture
-- Décroche
-- Qualité
-- Logistique
-- Stock
-- Paramètres / Utilisateurs
 
----
+La barre latérale doit contenir :
+
+1. Manager
+2. Base de données
+3. Production / Affaires
+4. Responsable méthode
+5. Préparation
+6. Accroche
+7. Peinture
+8. Décroche
+9. Qualité
+10. Logistique
+11. Stock
+12. Paramètres / Utilisateurs
+
+La page ouverte par défaut doit être : Base de données.
+
+## Page Base de données
+
+La page Base de données est prioritaire.
+
+Elle doit permettre de gérer les tables :
+- Clients
+- Commandes
+- Affaires / OF
+- Références pièces
+- Gammes
+- Étapes de gamme
+- Tâches
+- Personnel
+- Stocks
+- Mouvements stock
+- Qualité pièces
+- Contrôles équipements
+- Logistique
+- Observations / REX
+
+Pour chaque table, prévoir :
+- affichage ;
+- recherche ;
+- filtres ;
+- ajout ;
+- modification ;
+- suppression ;
+- export CSV ;
+- sauvegarde localStorage.
+
+## Export
+
+Prévoir des exports CSV compatibles Excel.
+
+Les exports doivent pouvoir tenir compte des filtres :
+- date de début ;
+- date de fin ;
+- client ;
+- statut ;
+- activité ;
+- priorité ;
+- affaire / OF ;
+- référence.
+
+## Design attendu
+
+L’interface doit être :
+- professionnelle ;
+- industrielle ;
+- moderne ;
+- claire ;
+- responsive ;
+- utilisable par des non-informaticiens.
+
+S’inspirer de l’univers visuel du site Groupe Optitec / Technocoat :
+https://www.peinture-industrielle.fr/
+
+Style recherché :
+- bleu nuit ;
+- bleu industriel ;
+- blanc ;
+- gris clair ;
+- touches orange / jaune pour attention ;
+- vert pour validé ;
+- rouge pour critique ;
+- cartes avec bords arrondis ;
+- tableaux propres ;
+- boutons sobres ;
+- interface premium et sérieuse.
+
+Ne pas utiliser d’émojis.
+Utiliser plutôt du texte, des pictogrammes sobres en CSS ou des icônes professionnelles simples si nécessaire.
 
 ## Rôles futurs
-Prévoir une logique de rôles, sans créer de vraie authentification pour le moment.
 
-Rôles prévus :
-- Manager
-- Responsable méthode
-- Préparation
-- Accroche
-- Peinture
-- Décroche
-- Qualité
-- Logistique
-- Opérateur
+Prévoir une logique de rôles sans vraie authentification pour le moment :
+
+- Manager ;
+- Responsable méthode ;
+- Préparation ;
+- Accroche ;
+- Peinture ;
+- Décroche ;
+- Qualité ;
+- Logistique ;
+- Administrateur.
 
 Chaque rôle aura plus tard des droits différents.
 
-Pour le moment, utiliser seulement des données fictives et une simulation visuelle.
+## Règles de travail
 
----
-
-## Pages opérateurs
-Les pages opérateurs comme Préparation, Accroche, Peinture, Décroche doivent être très lisibles.
-
-Elles doivent permettre à l’opérateur de voir :
-- ses tâches du jour
-- le client
-- le numéro OF
-- le numéro de commande
-- la référence pièce
-- la désignation pièce
-- la quantité
-- la priorité
-- la localisation actuelle
-- l’étape à réaliser
-- la prochaine étape
-- les consommables nécessaires
-- l’outillage nécessaire
-- le temps prévu
-- le statut
-
-Elles doivent aussi permettre à l’opérateur de renseigner :
-- heure de début
-- heure de fin
-- temps réel passé
-- quantité réalisée
-- quantité bloquée
-- statut final
-- observation / retour d’expérience
-- anomalie éventuelle
-
----
-
-## Observations opérateurs / REX
-Prévoir une partie “Observation / Retour d’expérience opérateur”.
-
-Cette partie doit permettre de saisir :
-- type d’observation
-- niveau d’importance
-- commentaire libre
-- OF concerné
-- référence concernée
-
-Types d’observation possibles :
-- Anomalie
-- Amélioration
-- Information
-- Retard
-- Manque consommable
-- Outillage
-- Qualité
-
----
-
-## Stock
-Créer une page Stock centrale.
-
-Mais afficher aussi des blocs stock locaux dans les pages concernées.
-
-Exemples :
-- Préparation : bouchons, adhésifs, masquage, gants, chiffons
-- Accroche : crochets, balancelles, outillages
-- Peinture : poudre, solvants, consommables peinture
-- Qualité : équipements de contrôle
-- Logistique : stock global, commandes, livraisons
-
----
-
-## Indicateurs
-Les indicateurs globaux doivent être dans la page Manager.
-
-Chaque page métier doit aussi avoir ses propres indicateurs locaux :
-- OF en attente
-- OF en cours
-- OF terminés
-- tâches terminées
-- retards
-- temps prévu vs temps réel
-- anomalies
-- alertes stock
-- charge opérateur
-
----
-
-## Design attendu
-L’interface doit être :
-- professionnelle
-- moderne
-- claire
-- adaptée à un atelier
-- facile à comprendre pour des non-informaticiens
-- responsive
-
-Style recommandé :
-- barre latérale fixe
-- cartes avec bords arrondis
-- tableaux lisibles
-- badges de statut
-- alertes visuelles
-- boutons grands et lisibles
-- couleurs sobres : bleu foncé, gris clair, blanc
-- touches orange pour urgence
-- vert pour terminé
-- rouge pour blocage ou alerte critique
-
----
-
-## Travail avec Codex et GitHub
-Le projet est modifié avec Codex puis vérifié avec GitHub.
-
-Codex doit donc :
-- avancer étape par étape
-- éviter les modifications massives non demandées
-- garder le rendu vérifiable après chaque modification
-- résumer chaque modification à la fin
-- indiquer les fichiers modifiés
-- indiquer rapidement comment vérifier le résultat
+- Faire des modifications progressives.
+- Ne pas refaire toute l’application sans demande explicite.
+- Ne pas supprimer une section existante utile sans raison.
+- Ne pas casser la navigation.
+- Ne pas ajouter de données confidentielles.
+- Utiliser uniquement des données fictives.
+- Résumer chaque modification à la fin.
+- Indiquer les fichiers modifiés.
+- Garder un code lisible, organisé et commenté simplement si nécessaire.
+- Supprimer tout marqueur de conflit Git :
+  - <<<<<<<
+  - =======
+  - >>>>>>>
