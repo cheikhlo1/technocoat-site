@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Technocoat - Gestion de production</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <h1>Technocoat</h1>
+          <p>Gestion de production industrielle</p>
+        </div>
+        <nav id="sidebar-nav" class="sidebar-nav" aria-label="Navigation principale"></nav>
+      </aside>
+
+      <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+      <main class="main-content">
+        <header class="topbar">
+          <button id="menu-toggle" class="btn secondary menu-toggle" type="button">Menu</button>
+          <h2 id="page-title">Chargement</h2>
+          <p id="page-subtitle">Initialisation de l'application</p>
+        </header>
+        <section id="page-content" class="page-content" aria-live="polite"></section>
+      </main>
+    </div>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
