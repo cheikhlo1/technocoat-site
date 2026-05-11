@@ -32,6 +32,7 @@ const pageTitle = document.querySelector('#page-title');
 const pageSubtitle = document.querySelector('#page-subtitle');
 const pageContent = document.querySelector('#page-content');
 const menuToggle = document.querySelector('#menu-toggle');
+const menuClose = document.querySelector('#menu-close');
 const sidebarOverlay = document.querySelector('#sidebar-overlay');
 
 function renderFallback(error) {
@@ -75,6 +76,7 @@ function closeSidebarOnMobile() {
 
 function setupMenu() {
   menuToggle?.addEventListener('click', () => document.body.classList.toggle('sidebar-collapsed'));
+  menuClose?.addEventListener('click', () => document.body.classList.add('sidebar-collapsed'));
   sidebarOverlay?.addEventListener('click', () => document.body.classList.add('sidebar-collapsed'));
 }
 
