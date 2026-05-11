@@ -1,0 +1,41 @@
+import { badge, computeCommonKpi, getOperatorContext, mins, saveObservation, saveTaskUpdate } from './operatorCommon.js';
+
+const state = { selectedId: null };
+const prioRank = { Haute: 1, Moyenne: 2, Basse: 3 };
+
+const sortRows = (rows) => [...rows].sort((a, b) => (Number(a.task.ordrePassage ?? 9999) - Number(b.task.ordrePassage ?? 9999)) || (prioRank[a.task.priorite] ?? 9) - (prioRank[b.task.priorite] ?? 9) || (a.task.datePrevue || '').localeCompare(b.task.datePrevue || '') || (a.task.heureDebutPrevue || '').localeCompare(b.task.heureDebutPrevue || ''));
+
+const calcMinutes = (start, end) => {
+  if (!start || !end) return null;
+  const [sh, sm] = start.split(':').map(Number);
+  const [eh, em] = end.split(':').map(Number);
+  const delta = (eh * 60 + em) - (sh * 60 + sm);
+  return delta >= 0 ? delta : -1;
+};
+
+export function renderPreparationPage(container) {
+  function refresh() {
+    const { rows: baseRows, operator } = getOperatorContext('Préparation');
+    const rows = sortRows(baseRows);
+    if (!state.selectedId && rows[0]) state.selectedId = rows[0].task.id;
+    const selected = rows.find((r) => r.task.id === state.selectedId) || null;
+    const k = computeCommonKpi(rows, 'Préparation');
+    const nonConf = rows.reduce((s, r) => s + Number(r.task.quantiteBloquee || 0), 0);
+    const qtyPrepared = rows.reduce((s, r) => s + Number(r.task.quantiteTraitee || 0), 0);
+
+    container.innerHTML = `<article class='card'><h3>Préparation</h3><p>Tâches assignées, masquage, préparation avant production</p><p>Date: ${new Date().toLocaleDateString('fr-FR')} | Opérateur: ${operator.prenom} ${operator.nom} | Activité: Préparation</p></article>
+    <article class='card'><h3>Tâches du jour</h3><div class='prep-task-row'>${rows.map(r=>`<button class='prep-task-card ${r.task.id===state.selectedId?'active':''}' data-task='${r.task.id}'><strong class='of-title'>${r.affaire?.numeroOF||'OF'}</strong><span><b>Client</b> ${r.client?.nom||'-'}</span><span><b>Référence</b> ${r.reference?.referencePiece||'-'}</span><span><b>Désignation</b> ${r.reference?.designationPiece||'-'}</span><span><b>Quantité</b> ${r.reference?.quantite||0}</span><span class='time-focus'>Temps prévu: ${mins(r.task.tempsPrevu)}</span><div class='prep-badges'>${badge(r.task.priorite)} ${badge(r.task.statutTache)}</div></button>`).join('')}</div></article>
+    <article class='card'><h3>Détail de l’affaire sélectionnée</h3>${selected?`<div class='prep-detail-grid'><section class='inner-card'><h4>Identification</h4><p>Affaire: ${selected.affaire?.id}</p><p>N° OF: ${selected.affaire?.numeroOF}</p><p>Commande: ${selected.affaire?.commandeId}</p><p>Client: ${selected.client?.nom}</p></section><section class='inner-card'><h4>Pièce</h4><p>Référence pièce: ${selected.reference?.referencePiece}</p><p>Désignation: ${selected.reference?.designationPiece}</p><p>Quantité: ${selected.reference?.quantite}</p><p>Matière: ${selected.reference?.matiere}</p><p>Traitement: ${selected.reference?.traitement}</p><p>Couleur: ${selected.reference?.couleur}</p></section><section class='inner-card'><h4>Flux atelier</h4><p>Localisation: ${selected.affaire?.localisationActuelle}</p><p>Étape actuelle: Préparation</p><p>Prochaine étape: Accroche</p><p>Priorité: ${selected.task.priorite}</p><p>Statut: ${selected.task.statutTache}</p></section><section class='inner-card'><h4>Temps</h4><p>Temps prévu: ${mins(selected.task.tempsPrevu)}</p><p>Temps réel: ${mins(selected.task.tempsReel)}</p><p>Écart: ${mins((selected.task.tempsReel||0)-(selected.task.tempsPrevu||0))}</p></section><section class='inner-card'><h4>Besoins préparation</h4><p>Type de préparation: standard</p><p>Type de masquage: adhésif + bouchons</p><p>Zones à protéger: surfaces fonctionnelles</p><p>Consommables: bouchons, adhésifs, chiffons</p><p>Outillage: poste masquage, rack</p><p>Fiche instruction: PREP-01</p><p>Points de vigilance: traçabilité et contrôle masquage</p></section></div>
+    <h3>Déclaration opérateur</h3><form id='task-form' class='record-form'><label class='form-field'>Heure début réelle<input id='h-start' name='heureDebutReelle' type='time' value='${selected.task.heureDebutReelle||''}'/></label><label class='form-field'>Heure fin réelle<input id='h-end' name='heureFinReelle' type='time' value='${selected.task.heureFinReelle||''}'/></label><label class='form-field'>Temps réel calculé (min)<input id='h-total' name='tempsReel' type='number' readonly value='${selected.task.tempsReel||0}'/></label><label class='form-field'>Quantité préparée<input name='quantiteTraitee' type='number' value='${selected.task.quantiteTraitee||0}'/></label><label class='form-field'>Non-conformité<input name='quantiteBloquee' type='number' value='${selected.task.quantiteBloquee||0}'/></label><label class='form-field'>Statut final<select name='statutTache'><option>En cours</option><option>Terminée</option><option>Bloquée</option><option>Partiellement terminée</option></select></label></form><p id='time-alert' class='status-error'></p><button id='save-task' class='btn'>Enregistrer la déclaration</button>
+    <h3>Observation</h3><form id='obs-form' class='obs-layout'><div class='obs-top'><label class='form-field'>Type d’observation<select name='typeObservation'><option>Anomalie</option><option>Amélioration</option><option>Information</option><option>Retard</option><option>Manque consommable</option><option>Outillage</option><option>Qualité</option></select></label><label class='form-field'>Importance<select name='importance'><option>Faible</option><option>Moyenne</option><option>Critique</option></select></label></div><label class='form-field obs-comment'>Commentaire d’observation<textarea name='commentaire' rows='4'></textarea></label></form><button id='save-obs' class='btn secondary'>Enregistrer observation</button>`:'<p>Aucune tâche.</p>'}</article>
+    <article class='card'><h3>Indicateurs préparation</h3><div class='kpi-compact'><div class='ring' style='--pct:${k.rate};'><span>${k.rate}%</span></div><div><p>Tâches prévues: ${k.planned}</p><p>Tâches terminées: ${k.done}</p><p>Tâches en retard: ${k.late}</p><p>Observations ouvertes: ${k.openObs}</p><p>Quantité préparée: ${qtyPrepared}</p><p>Non-conformités: ${nonConf}</p></div></div><div class='bar-wrap'><span style='width:${Math.min(100,Math.round(k.plannedTime/6))}%'>Temps prévu ${k.plannedTime}</span><span class='done' style='width:${Math.min(100,Math.round(k.realTime/6))}%'>Temps réel ${k.realTime}</span><span style='width:${Math.min(100,k.planned*10)}%'>Tâches prévues ${k.planned}</span><span class='done' style='width:${Math.min(100,k.done*10)}%'>Tâches terminées ${k.done}</span><span style='width:${Math.min(100,k.late*10)}%'>Retard ${k.late}</span></div></article>`;
+
+    container.querySelectorAll('[data-task]').forEach((b)=>b.onclick=()=>{state.selectedId=Number(b.dataset.task);refresh();});
+    const sel = container.querySelector("select[name='statutTache']"); if(sel&&selected) sel.value=selected.task.statutTache||'En cours';
+    const calc = ()=>{const m=calcMinutes(container.querySelector('#h-start')?.value,container.querySelector('#h-end')?.value); if(m===-1){container.querySelector('#time-alert').textContent='Heure de fin inférieure à l’heure de début.'; return;} container.querySelector('#time-alert').textContent=''; if(m!==null) container.querySelector('#h-total').value=String(m);};
+    container.querySelector('#h-start')?.addEventListener('input',calc); container.querySelector('#h-end')?.addEventListener('input',calc);
+    container.querySelector('#save-task')?.addEventListener('click',()=>{if(!selected)return; const m=calcMinutes(container.querySelector('#h-start').value,container.querySelector('#h-end').value); if(m===-1) return; saveTaskUpdate(selected.task.id,container.querySelector('#task-form')); refresh();});
+    container.querySelector('#save-obs')?.addEventListener('click',()=>{if(!selected)return; saveObservation(selected,'Préparation',container.querySelector('#obs-form')); refresh();});
+  }
+  refresh();
+}
