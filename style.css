@@ -233,3 +233,33 @@ th {
   gap: 10px;
   margin-bottom: 12px;
 }
+
+
+.shortcut-card {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.shortcut-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(15, 31, 58, 0.12);
+}
+
+.shortcut-card.active {
+  border-color: var(--blue-industrial);
+  background: #f7fbff;
+}
+
+.kpi-count {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 6px 0;
+}
+
+.kpi-hint {
+  margin: 0;
+  color: #5b667c;
+  font-size: 0.86rem;
+}
