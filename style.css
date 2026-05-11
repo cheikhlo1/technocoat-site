@@ -646,3 +646,110 @@ body.sidebar-collapsed .sidebar-overlay {
   .app-topbar { grid-template-columns: auto 1fr; }
   .topbar-brand p { display: none; }
 }
+
+* { box-sizing: border-box; }
+
+.menu-toggle {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 10px;
+  background: var(--blue-night);
+  box-shadow: 0 6px 14px rgba(0,0,0,.18);
+  z-index: 120;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+body:not(.sidebar-collapsed) .menu-toggle {
+  left: 292px;
+}
+
+@media (max-width: 1024px) {
+  body:not(.sidebar-collapsed) .menu-toggle {
+    left: 12px;
+  }
+
+  .sidebar {
+    width: min(82vw, 320px);
+  }
+
+  .app-topbar {
+    padding-left: 70px;
+  }
+}
+
+@media (max-width: 600px) {
+  .app-topbar {
+    padding: 8px 10px 8px 66px;
+  }
+
+  .topbar-brand h1 {
+    font-size: 1rem;
+  }
+
+  .topbar {
+    padding: 12px;
+  }
+
+  .topbar h2 {
+    font-size: 1.1rem;
+  }
+
+  .topbar p {
+    font-size: 0.85rem;
+  }
+
+  .prep-task-card {
+    flex: 0 0 78vw;
+    min-width: 0;
+    padding: 10px;
+  }
+
+  .card {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .app-topbar {
+    padding: 6px 10px 6px 64px;
+  }
+
+  .menu-toggle {
+    width: 44px;
+    height: 44px;
+    top: 8px;
+  }
+
+  .main-content {
+    padding: 10px;
+  }
+
+  .card {
+    padding: 9px;
+  }
+
+  .prep-task-card {
+    flex: 0 0 58vw;
+  }
+
+  .sidebar {
+    width: min(72vw, 280px);
+  }
+}
