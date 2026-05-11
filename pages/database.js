@@ -26,6 +26,44 @@ const tableConfig = {
   observations: { label: 'Observations / REX', hint: 'Retours terrain et anomalies' }
 };
 
+
+const fieldLabels = {
+  id: 'ID',
+  nom: 'Nom',
+  secteur: 'Secteur',
+  statut: 'Statut',
+  clientId: 'Client',
+  commandeId: 'Commande',
+  affaireId: 'Affaire',
+  referenceId: 'Référence',
+  operateurId: 'Opérateur',
+  gammeId: 'Gamme',
+  etapeId: 'Étape',
+  numeroOF: 'N° OF',
+  numeroCommande: 'N° commande',
+  dateCommande: 'Date commande',
+  dateLivraisonDemandee: 'Date livraison demandée',
+  dateReceptionPieces: 'Date réception pièces',
+  dateProductionPrevue: 'Date production prévue',
+  referencePiece: 'Référence pièce',
+  designationPiece: 'Désignation pièce',
+  statutGlobal: 'Statut global',
+  localisationActuelle: 'Localisation actuelle',
+  avancementPourcentage: 'Avancement',
+  tempsPrevu: 'Temps prévu',
+  tempsReel: 'Temps réel',
+  statutTache: 'Statut tâche',
+  commentaireOperateur: 'Commentaire opérateur',
+  statutTraitement: 'Statut traitement',
+  actionPrevue: 'Action prévue'
+};
+
+function toLabel(fieldName) {
+  if (fieldLabels[fieldName]) return fieldLabels[fieldName];
+  return fieldName
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/^./, (char) => char.toUpperCase());
+}
 const filterLabels = {
   dateStart: 'Date de début',
   dateEnd: 'Date de fin',
@@ -42,6 +80,7 @@ let activeFilters = {};
 let activeSearch = '';
 
 const formatLines = (count) => `${count} ${count > 1 ? 'lignes' : 'ligne'}`;
+const formatDisplayed = (shown, total) => `${formatLines(shown)} ${shown > 1 ? 'affichées' : 'affichée'} sur ${total}`;
 
 function getColumns(tableName) {
   const rows = getTable(tableName);
@@ -132,7 +171,7 @@ function renderTable(tableName, rows) {
   const columns = getColumns(tableName);
   if (!rows.length) return '<p>Aucune donnée disponible pour cette table avec les filtres en cours.</p>';
 
-  const headers = columns.map((column) => `<th>${column}</th>`).join('');
+  const headers = columns.map((column) => `<th>${toLabel(column)}</th>`).join('');
   const body = rows
     .map((row) => `<tr>${columns.map((column) => `<td>${row[column] ?? ''}</td>`).join('')}<td class="actions-cell"><button class="btn secondary row-edit" data-id="${row.id}">Modifier</button><button class="btn warning row-delete" data-id="${row.id}">Supprimer</button></td></tr>`)
     .join('');
@@ -146,7 +185,7 @@ function buildForm(tableName, row = {}) {
   return columns
     .map((column) => {
       const isDate = normalize(column).includes('date');
-      return `<label class="form-field">${column}<input type="${isDate ? 'date' : 'text'}" name="${column}" value="${row[column] ?? ''}" /></label>`;
+      return `<label class="form-field">${toLabel(column)}<input type="${isDate ? 'date' : 'text'}" name="${column}" value="${row[column] ?? ''}" /></label>`;
     })
     .join('');
 }
@@ -177,11 +216,6 @@ export function renderDatabasePage(container) {
         <div class="filters">${renderFilterFields(activeTable) || '<p>Pas de filtres disponibles pour cette table.</p>'}</div>
       </article>
 
-      <article class="card" id="table-section">
-        <h3>${tableConfig[activeTable].label}</h3>
-        <p>${formatLines(filteredRows.length)} affichée(s) sur ${formatLines(getTable(activeTable).length)}</p>
-        ${renderTable(activeTable, filteredRows)}
-      </article>
 
       <article class="card" id="form-card" hidden>
         <h3 id="form-title">Ajouter une ligne</h3>
@@ -191,6 +225,13 @@ export function renderDatabasePage(container) {
           <button id="cancel-form" class="btn secondary" type="button">Annuler</button>
         </div>
       </article>
+
+      <article class="card" id="table-section">
+        <h3>${tableConfig[activeTable].label}</h3>
+        <p>${formatDisplayed(filteredRows.length, getTable(activeTable).length)}</p>
+        ${renderTable(activeTable, filteredRows)}
+      </article>
+
     `;
 
 
