@@ -263,3 +263,19 @@ th {
   color: #5b667c;
   font-size: 0.86rem;
 }
+
+.table-wrapper table {
+  min-width: 1200px;
+}
+
+.table-wrapper thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.actions-cell {
+  position: sticky;
+  right: 0;
+  background: var(--white);
+}

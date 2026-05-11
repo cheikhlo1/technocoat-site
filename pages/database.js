@@ -12,7 +12,7 @@ import {
 const tableConfig = {
   clients: { label: 'Clients', hint: 'Clients actifs, prospects et historiques' },
   commandes: { label: 'Commandes', hint: 'Commandes planifiées et suivies' },
-  affaires: { label: 'Affaires / OF', hint: 'Affaires liées à la production' },
+  affaires: { label: 'Affaires', hint: 'Affaires liées à la production' },
   referencesPieces: { label: 'Références pièces', hint: 'Pièces suivies par affaire' },
   gammes: { label: 'Gammes', hint: 'Standards et modes opératoires' },
   etapesGamme: { label: 'Étapes de gamme', hint: 'Étapes prévues par activité' },
@@ -58,7 +58,7 @@ function getMatchingField(columns, candidates) {
 
 function resolveFilterFields(tableName) {
   const columns = getColumns(tableName);
-return {
+  return {
     date: getMatchingField(columns, ['date']),
     client: getMatchingField(columns, ['client']),
     statut: getMatchingField(columns, ['statut', 'status']),
@@ -168,12 +168,6 @@ export function renderDatabasePage(container) {
       <section class="table-grid">${renderSummaryCards()}</section>
 
       <article class="card">
-        <div class="table-selector">${Object.entries(tableConfig)
-          .map(([key, config]) => `<button type="button" class="btn ${key === activeTable ? '' : 'secondary'} table-tab" data-table="${key}">${config.label}</button>`)
-          .join('')}</div>
-      </article>
-
-      <article class="card">
         <div class="controls">
           <label class="search-box">Recherche globale<input id="global-search" type="text" value="${activeSearch}" placeholder="Rechercher dans la table active" /></label>
           <button id="add-line" class="btn" type="button">Ajouter une ligne</button>
@@ -199,14 +193,6 @@ export function renderDatabasePage(container) {
       </article>
     `;
 
-    container.querySelectorAll('.table-tab').forEach((button) => {
-      button.addEventListener('click', () => {
-        activeTable = button.dataset.table;
-        activeFilters = {};
-        activeSearch = '';
-        refreshView();
-      });
-    });
 
     container.querySelectorAll('[data-shortcut]').forEach((button) => {
       button.addEventListener('click', () => {
