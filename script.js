@@ -33,23 +33,33 @@ const pageSubtitle = document.querySelector('#page-subtitle');
 const pageContent = document.querySelector('#page-content');
 const menuToggle = document.querySelector('#menu-toggle');
 
+function renderFallback(error) {
+  console.error('Erreur de chargement de page:', error);
+  if (pageTitle) pageTitle.textContent = 'Erreur de chargement';
+  if (pageSubtitle) pageSubtitle.textContent = 'Une erreur JavaScript a interrompu le rendu de la page.';
+  if (pageContent) pageContent.innerHTML = '<article class="card"><h3>Erreur</h3><p>Le rendu a échoué. Vérifier la console navigateur.</p></article>';
+}
+
 function setActivePage(pageKey) {
-  const currentPage = pages.find((page) => page.key === pageKey) || pages.find((page) => page.key === 'database');
+  try {
+    const currentPage = pages.find((page) => page.key === pageKey) || pages.find((page) => page.key === 'database');
+    if (!currentPage || typeof currentPage.render !== 'function') throw new Error(`Page introuvable ou renderer invalide: ${pageKey}`);
 
-  pageTitle.textContent = currentPage.label;
-  pageSubtitle.textContent = currentPage.subtitle;
-  currentPage.render(pageContent);
+    pageTitle.textContent = currentPage.label;
+    pageSubtitle.textContent = currentPage.subtitle;
+    currentPage.render(pageContent);
 
-  document.querySelectorAll('.nav-btn').forEach((button) => {
-    button.classList.toggle('active', button.dataset.page === currentPage.key);
-  });
+    document.querySelectorAll('.nav-btn').forEach((button) => {
+      button.classList.toggle('active', button.dataset.page === currentPage.key);
+    });
+  } catch (error) {
+    renderFallback(error);
+  }
 }
 
 function renderNavigation() {
-  nav.innerHTML = pages
-    .map((page) => `<button type="button" class="nav-btn" data-page="${page.key}">${page.label}</button>`)
-    .join('');
-
+  if (!nav) throw new Error('Conteneur navigation introuvable (#sidebar-nav).');
+  nav.innerHTML = pages.map((page) => `<button type="button" class="nav-btn" data-page="${page.key}">${page.label}</button>`).join('');
   nav.addEventListener('click', (event) => {
     const button = event.target.closest('.nav-btn');
     if (!button) return;
@@ -57,15 +67,19 @@ function renderNavigation() {
   });
 }
 
-function setupMenu(){
-  menuToggle?.addEventListener('click',()=>document.body.classList.toggle('sidebar-collapsed'));
+function setupMenu() {
+  menuToggle?.addEventListener('click', () => document.body.classList.toggle('sidebar-collapsed'));
 }
 
 function bootstrap() {
-  loadDatabase();
-  renderNavigation();
-  setActivePage('database');
-  setupMenu();
+  try {
+    loadDatabase();
+    renderNavigation();
+    setActivePage('database');
+    setupMenu();
+  } catch (error) {
+    renderFallback(error);
+  }
 }
 
 bootstrap();
