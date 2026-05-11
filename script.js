@@ -32,6 +32,7 @@ const pageTitle = document.querySelector('#page-title');
 const pageSubtitle = document.querySelector('#page-subtitle');
 const pageContent = document.querySelector('#page-content');
 const menuToggle = document.querySelector('#menu-toggle');
+const sidebarOverlay = document.querySelector('#sidebar-overlay');
 
 function renderFallback(error) {
   console.error('Erreur de chargement de page:', error);
@@ -64,12 +65,19 @@ function renderNavigation() {
     const button = event.target.closest('.nav-btn');
     if (!button) return;
     setActivePage(button.dataset.page);
+    closeSidebarOnMobile();
   });
+}
+
+function closeSidebarOnMobile() {
+  if (window.innerWidth <= 1024) document.body.classList.add('sidebar-collapsed');
 }
 
 function setupMenu() {
   menuToggle?.addEventListener('click', () => document.body.classList.toggle('sidebar-collapsed'));
+  sidebarOverlay?.addEventListener('click', () => document.body.classList.add('sidebar-collapsed'));
 }
+
 
 function bootstrap() {
   try {
@@ -77,6 +85,8 @@ function bootstrap() {
     renderNavigation();
     setActivePage('database');
     setupMenu();
+    closeSidebarOnMobile();
+    window.addEventListener('resize', closeSidebarOnMobile);
   } catch (error) {
     renderFallback(error);
   }
