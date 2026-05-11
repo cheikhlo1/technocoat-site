@@ -1,0 +1,281 @@
+:root {
+  --blue-night: #0f1f3a;
+  --blue-industrial: #1c4f8a;
+  --blue-soft: #2b6fb4;
+  --white: #ffffff;
+  --gray-light: #f2f5f9;
+  --gray-border: #d7dde8;
+  --orange-alert: #ff9f1a;
+  --green-ok: #1e8e5d;
+  --red-critical: #c73e3e;
+  --shadow-card: 0 10px 25px rgba(15, 31, 58, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--blue-night);
+  background: var(--gray-light);
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: linear-gradient(180deg, var(--blue-night), var(--blue-industrial));
+  color: var(--white);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.brand p {
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.nav-btn {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: var(--white);
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.main-content {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.topbar {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1px solid var(--gray-border);
+  padding: 18px;
+  box-shadow: var(--shadow-card);
+}
+
+.topbar h2 {
+  margin: 0;
+}
+
+.topbar p {
+  margin: 6px 0 0;
+  color: #5b667c;
+}
+
+.page-content {
+  display: grid;
+  gap: 16px;
+}
+
+.card {
+  background: var(--white);
+  border: 1px solid var(--gray-border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--shadow-card);
+}
+
+.card h3 {
+  margin: 0 0 8px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn {
+  border: 1px solid var(--blue-industrial);
+  background: var(--blue-industrial);
+  color: var(--white);
+  border-radius: 8px;
+  padding: 9px 12px;
+  cursor: pointer;
+}
+
+.btn.secondary {
+  background: var(--white);
+  color: var(--blue-industrial);
+}
+
+.btn.warning {
+  background: var(--orange-alert);
+  border-color: #dd8a0f;
+  color: var(--blue-night);
+}
+
+.table-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.kpi {
+  border-left: 4px solid var(--blue-soft);
+}
+
+.status-ok {
+  color: var(--green-ok);
+}
+
+.status-error {
+  color: var(--red-critical);
+}
+
+@media (max-width: 960px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+  }
+}
+
+.table-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.search-box,
+.filter-item,
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.9rem;
+}
+
+.search-box input,
+.filter-item input,
+.form-field input {
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.filters {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--gray-border);
+  padding: 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: #eef3fb;
+}
+
+.actions-cell {
+  min-width: 180px;
+  display: flex;
+  gap: 8px;
+}
+
+.record-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+
+.shortcut-card {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.shortcut-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(15, 31, 58, 0.12);
+}
+
+.shortcut-card.active {
+  border-color: var(--blue-industrial);
+  background: #f7fbff;
+}
+
+.kpi-count {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 6px 0;
+}
+
+.kpi-hint {
+  margin: 0;
+  color: #5b667c;
+  font-size: 0.86rem;
+}
+
+.table-wrapper table {
+  min-width: 1200px;
+}
+
+.table-wrapper thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.actions-cell {
+  position: sticky;
+  right: 0;
+  background: var(--white);
+}
