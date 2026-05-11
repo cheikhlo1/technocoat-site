@@ -58,7 +58,7 @@ function getMatchingField(columns, candidates) {
 
 function resolveFilterFields(tableName) {
   const columns = getColumns(tableName);
-  return {
+return {
     date: getMatchingField(columns, ['date']),
     client: getMatchingField(columns, ['client']),
     statut: getMatchingField(columns, ['statut', 'status']),
