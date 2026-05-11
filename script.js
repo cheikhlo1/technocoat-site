@@ -31,6 +31,7 @@ const nav = document.querySelector('#sidebar-nav');
 const pageTitle = document.querySelector('#page-title');
 const pageSubtitle = document.querySelector('#page-subtitle');
 const pageContent = document.querySelector('#page-content');
+const menuToggle = document.querySelector('#menu-toggle');
 
 function setActivePage(pageKey) {
   const currentPage = pages.find((page) => page.key === pageKey) || pages.find((page) => page.key === 'database');
@@ -56,10 +57,15 @@ function renderNavigation() {
   });
 }
 
+function setupMenu(){
+  menuToggle?.addEventListener('click',()=>document.body.classList.toggle('sidebar-collapsed'));
+}
+
 function bootstrap() {
   loadDatabase();
   renderNavigation();
   setActivePage('database');
+  setupMenu();
 }
 
 bootstrap();
