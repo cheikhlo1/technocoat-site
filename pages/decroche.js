@@ -1,13 +1,5 @@
+import { renderOperatorPage } from './operatorCommon.js';
+
 export function renderDecrochePage(container) {
-  container.innerHTML = `
-    <article class="card">
-      <h3>Décroche</h3>
-      <p>Vue de pilotage décroche.</p>
-    </article>
-    <article class="card">
-      <h3>Présentation</h3>
-      <p>Cette section prépare la future logique métier du service décroche.</p>
-      <p>Page à développer.</p>
-    </article>
-  `;
+  renderOperatorPage(container, 'decroche');
 }

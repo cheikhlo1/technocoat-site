@@ -280,3 +280,24 @@ th {
   right: 0;
   background: var(--white);
 }
+
+.operator-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+}
+
+.op-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--blue-industrial);
+  background: #eef4fc;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 1200px) {
+  .operator-grid {
+    grid-template-columns: 1fr;
+  }
+}
