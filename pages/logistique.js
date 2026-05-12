@@ -12,7 +12,8 @@ function readRows() {
   }
 }
 
-function renderReception(rows) {
+function renderReception(rows, state) {
+  const { receptionKpi = null, receptionDetail = null, receptionEdit = null, receptionRefs = 1 } = state;
   const receptionRows = rows.filter((r) => String(r.typeMouvement || '').includes('Réception'));
   const isToday = (d) => d === new Date().toISOString().slice(0, 10);
   const counters = {
@@ -22,19 +23,28 @@ function renderReception(rows) {
     validees: receptionRows.filter((r) => r.statut === 'Réceptionnée').length
   };
 
+  const filteredRows = receptionKpi ? receptionRows.filter((r) => ({
+    prevues: isToday(r.dateMouvement),
+    controle: r.statut === 'À contrôler',
+    bloquees: r.statut === 'Bloquée',
+    validees: r.statut === 'Réceptionnée'
+  }[receptionKpi])) : receptionRows;
+
   return `
     <article class="card">
       <h4>Réception</h4>
       <div class="table-grid logistic-kpi-grid">
-        <article class="card kpi"><h4>Réceptions prévues aujourd’hui</h4><p class="kpi-count">${counters.prevues}</p></article>
-        <article class="card kpi"><h4>Réceptions en attente de contrôle</h4><p class="kpi-count">${counters.controle}</p></article>
-        <article class="card kpi"><h4>Réceptions bloquées</h4><p class="kpi-count">${counters.bloquees}</p></article>
-        <article class="card kpi"><h4>Réceptions validées</h4><p class="kpi-count">${counters.validees}</p></article>
+        <button type="button" class="card kpi kpi-btn ${receptionKpi === 'prevues' ? 'active-tab' : ''}" data-rk="prevues"><h4>Réceptions prévues aujourd’hui</h4><p class="kpi-count">${counters.prevues}</p></button>
+        <button type="button" class="card kpi kpi-btn ${receptionKpi === 'controle' ? 'active-tab' : ''}" data-rk="controle"><h4>Réceptions en attente de contrôle</h4><p class="kpi-count">${counters.controle}</p></button>
+        <button type="button" class="card kpi kpi-btn ${receptionKpi === 'bloquees' ? 'active-tab' : ''}" data-rk="bloquees"><h4>Réceptions bloquées</h4><p class="kpi-count">${counters.bloquees}</p></button>
+        <button type="button" class="card kpi kpi-btn ${receptionKpi === 'validees' ? 'active-tab' : ''}" data-rk="validees"><h4>Réceptions validées</h4><p class="kpi-count">${counters.validees}</p></button>
       </div>
+      ${receptionKpi || receptionDetail ? '<div class="controls"><button class="btn secondary" type="button" id="back-rec">Retour à la vue Réception</button></div>' : ''}
       <h5>Réceptions à traiter</h5>
       <div class="table-wrapper"><table><thead><tr><th>Date prévue</th><th>Fournisseur / Client</th><th>BL / Commande</th><th>Référence</th><th>Quantité</th><th>État colis</th><th>Statut</th><th>Actions</th></tr></thead><tbody>
-      ${receptionRows.map((r) => `<tr><td>${safe(r.dateMouvement)}</td><td>${safe(r.clientNom || '')}</td><td>${safe(r.numeroBL || r.numeroCommande || '')}</td><td>${safe(r.referencePiece || '')}</td><td>${safe(r.quantiteAttendue ?? r.quantite ?? '')}</td><td>${safe(r.etatColis || 'À vérifier')}</td><td><span class="status-pill">${safe(r.statut || 'En attente')}</span></td><td><button class="btn secondary" type="button" data-rec="received" data-id="${r.id}">Réceptionner</button> <button class="btn secondary" type="button" data-rec="control" data-id="${r.id}">Contrôle requis</button> <button class="btn secondary" type="button" data-rec="block" data-id="${r.id}">Bloquer</button> <button class="btn secondary" type="button" data-rec="reserve" data-id="${r.id}">Réserve</button></td></tr>`).join('')}
+      ${(receptionDetail ? receptionRows.filter((r) => r.id === receptionDetail) : filteredRows).map((r) => `<tr><td>${safe(r.dateMouvement)}</td><td>${safe(r.clientNom || '')}</td><td>${safe(r.numeroBL || r.numeroCommande || '')}</td><td>${safe(r.referencePiece || '')}</td><td>${safe(r.quantiteAttendue ?? r.quantite ?? '')}</td><td>${safe(r.etatColis || 'À vérifier')}</td><td><span class="status-pill">${safe(r.statut || 'En attente')}</span></td><td><button class="btn secondary" type="button" data-rec="received" data-id="${r.id}">Réceptionner</button> <button class="btn secondary" type="button" data-rec="control" data-id="${r.id}">Contrôle requis</button> <button class="btn secondary" type="button" data-rec="block" data-id="${r.id}">Bloquer</button> <button class="btn secondary" type="button" data-rec="reserve" data-id="${r.id}">Réserve</button> <button class="btn secondary" type="button" data-rec-detail="${r.id}">Détail</button></td></tr>`).join('')}
       </tbody></table></div>
+      ${receptionEdit ? recEditForm(receptionRows.find((r) => r.id === receptionEdit)) : ''}
       <article class="card">
         <h5>Points de vigilance réception</h5>
         <ul>
@@ -49,6 +59,7 @@ function renderReception(rows) {
         <h5>Commentaire réception</h5>
         <textarea id="reception-note" rows="4" placeholder="colis abîmé, quantité manquante, référence douteuse, attente décision qualité, autre observation terrain"></textarea>
       </article>
+      ${recForm(receptionRefs)}
     </article>`;
 }
 
@@ -63,7 +74,7 @@ function renderShipping(rows) {
     </article>`;
 }
 
-function renderPage(container, section = 'reception') {
+function renderPage(container, section = 'reception', state = {}) {
   const rows = readRows();
   container.innerHTML = `
     <section class="card">
@@ -78,12 +89,16 @@ function renderPage(container, section = 'reception') {
       <button type="button" class="card kpi ${section === 'shipping' ? 'active-tab' : ''}" data-section="shipping"><h4>Expédition</h4></button>
       <button type="button" class="card kpi ${section === 'packaging' ? 'active-tab' : ''}" data-section="packaging"><h4>Conditionnement & palettes</h4></button>
     </section>
-    ${section === 'reception' ? renderReception(rows) : ''}
+    ${section === 'reception' ? renderReception(rows, state) : ''}
     ${section === 'shipping' ? renderShipping(rows) : ''}
     ${section === 'packaging' ? '<article class="card"><h4>Conditionnement & palettes</h4><p>En attente de développement.</p></article>' : ''}
   `;
 
-  container.querySelectorAll('[data-section]').forEach((btn) => btn.addEventListener('click', () => renderPage(container, btn.dataset.section)));
+  container.querySelectorAll('[data-section]').forEach((btn) => btn.addEventListener('click', () => renderPage(container, btn.dataset.section, {})));
+  container.querySelectorAll('[data-rk]').forEach((btn) => btn.addEventListener('click', () => renderPage(container, 'reception', { ...state, receptionKpi: state.receptionKpi === btn.dataset.rk ? null : btn.dataset.rk, receptionDetail: null })));
+  container.querySelector('#back-rec')?.addEventListener('click', () => renderPage(container, 'reception', {}));
+  container.querySelectorAll('[data-rec-detail]').forEach((btn) => btn.addEventListener('click', () => renderPage(container, 'reception', { ...state, receptionDetail: Number(btn.dataset.recDetail), receptionKpi: null })));
+  container.querySelector('#rec-edit-cancel')?.addEventListener('click', () => renderPage(container, 'reception', {}));
   container.querySelectorAll('[data-rec]').forEach((btn) => btn.addEventListener('click', () => {
     const id = Number(btn.dataset.id);
     const status = { received: 'Réceptionnée', control: 'À contrôler', block: 'Bloquée', reserve: 'Réserve émise' }[btn.dataset.rec] || 'En attente';
@@ -92,8 +107,23 @@ function renderPage(container, section = 'reception') {
     } catch (error) {
       console.error('Logistique: erreur action réception', error);
     }
-    renderPage(container, 'reception');
+    renderPage(container, 'reception', state);
   }));
+  container.querySelectorAll('[data-rec-edit]').forEach((btn) => btn.addEventListener('click', () => renderPage(container, 'reception', { ...state, receptionEdit: Number(btn.dataset.recEdit), receptionDetail: Number(btn.dataset.recEdit) })));
+  container.querySelector('#add-ref')?.addEventListener('click', () => renderPage(container, 'reception', { ...state, receptionRefs: (state.receptionRefs || 1) + 1 }));
+  container.querySelector('#rec-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(e.currentTarget).entries());
+    const refs = Object.keys(d).filter((k) => k.startsWith('ref_')).map((k) => k.split('_')[1]).map((i) => ({ referencePiece: d[`ref_${i}`], designationPiece: d[`des_${i}`], quantiteAttendue: Number(d[`qa_${i}`] || 0), quantiteRecue: Number(d[`qr_${i}`] || 0), etat: d[`etat_${i}`] }));
+    refs.forEach((r) => addRecord('logistique', { dateMouvement: d.dateReception, typeMouvement: 'Réception pièces brutes', numeroOF: d.numeroOF, numeroCommande: d.numeroCommande, clientNom: d.client, referencePiece: r.referencePiece, designationPiece: r.designationPiece, quantiteAttendue: r.quantiteAttendue, quantiteRecue: r.quantiteRecue, statut: r.etat === 'Conforme' ? 'Réceptionnée' : 'Anomalie réception', numeroBL: d.numeroBL, transporteur: d.transporteur, commentaire: d.commentaire }));
+    renderPage(container, 'reception', {});
+  });
+  container.querySelector('#rec-edit-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const d = Object.fromEntries(new FormData(e.currentTarget).entries());
+    updateRecord('logistique', Number(d.id), { numeroOF: d.numeroOF, quantiteAttendue: Number(d.quantiteAttendue || 0), quantiteRecue: Number(d.quantiteRecue || 0), statut: d.statut, transporteur: d.transporteur });
+    renderPage(container, 'reception', {});
+  });
   container.querySelectorAll('[data-ship]').forEach((btn) => btn.addEventListener('click', () => {
     const id = Number(btn.dataset.id);
     const status = btn.dataset.ship === 'sent' ? 'Expédiée' : 'Bloquée';
@@ -105,10 +135,20 @@ function renderPage(container, section = 'reception') {
     } catch (error) {
       console.error('Logistique: erreur action expédition', error);
     }
-    renderPage(container, 'shipping');
+    renderPage(container, 'shipping', state);
   }));
 }
 
 export function renderLogistiquePage(container) {
-  renderPage(container, 'reception');
+  renderPage(container, 'reception', {});
+}
+
+function recForm(refCount = 1) {
+  const refs = Array.from({ length: refCount }, (_, i) => `<div class="reference-row"><label class="form-field">Référence pièce<input name="ref_${i}" /></label><label class="form-field">Désignation pièce<input name="des_${i}" /></label><label class="form-field">Quantité attendue<input type="number" name="qa_${i}" value="0"/></label><label class="form-field">Quantité reçue<input type="number" name="qr_${i}" value="0"/></label><label class="form-field">État à réception<select name="etat_${i}"><option>Conforme</option><option>Abîmé</option><option>Incomplet</option><option>À vérifier</option></select></label></div>`).join('');
+  return `<h5>Enregistrer une réception</h5><form id="rec-form"><div class="record-form"><label class="form-field">Date réception<input type="date" name="dateReception" value="${new Date().toISOString().slice(0, 10)}"/></label><label class="form-field">Client<input name="client"/></label><label class="form-field">N° commande<input name="numeroCommande"/></label><label class="form-field">N° OF<input name="numeroOF"/></label><label class="form-field">Transporteur<input name="transporteur"/></label><label class="form-field">N° BL<input name="numeroBL"/></label><label class="form-field full-row">Commentaire<input name="commentaire"/></label></div>${refs}<div class="controls"><button class="btn secondary" type="button" id="add-ref">+ Ajouter une référence</button><button class="btn" type="submit">Enregistrer</button></div></form>`;
+}
+
+function recEditForm(r) {
+  if (!r) return '';
+  return `<form id="rec-edit-form" class="record-form"><input type="hidden" name="id" value="${r.id}" /><label class="form-field">N° OF<input name="numeroOF" value="${safe(r.numeroOF || '')}"/></label><label class="form-field">Qté attendue<input type="number" name="quantiteAttendue" value="${safe(r.quantiteAttendue || 0)}"/></label><label class="form-field">Qté reçue<input type="number" name="quantiteRecue" value="${safe(r.quantiteRecue || 0)}"/></label><label class="form-field">Statut<input name="statut" value="${safe(r.statut || '')}"/></label><label class="form-field">Transporteur<input name="transporteur" value="${safe(r.transporteur || '')}"/></label><div class="controls"><button class="btn" type="submit">Enregistrer</button><button class="btn secondary" id="rec-edit-cancel" type="button">Annuler</button></div></form>`;
 }
