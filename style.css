@@ -1010,3 +1010,26 @@ body:not(.sidebar-collapsed) .menu-toggle {
     grid-template-columns: 1fr;
   }
 }
+
+.logistic-reception-layout {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+.reception-form-card {
+  position: sticky;
+  top: 12px;
+}
+
+@media (max-width: 1024px) {
+  .logistic-reception-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .reception-form-card {
+    position: static;
+  }
+}
