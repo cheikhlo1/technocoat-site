@@ -64,12 +64,29 @@ function renderReception(rows, state) {
 }
 
 function renderShipping(rows) {
+  const shipments = rows.filter((r) => String(r.typeMouvement || '').includes('Expédition') || String(r.typeMouvement || '').includes('Mise à disposition produits finis'));
+  const kpi = {
+    prevues: shipments.filter((r) => (r.dateLivraisonDemandee || r.dateMouvement) === new Date().toISOString().slice(0, 10)).length,
+    pretes: shipments.filter((r) => ['Préparée', 'Prête expédition'].includes(r.statut)).length,
+    realisees: shipments.filter((r) => r.statut === 'Expédiée').length,
+    retard: shipments.filter((r) => r.statut === 'Retardée').length,
+    bl: shipments.filter((r) => !r.numeroBL).length,
+    ramassage: shipments.filter((r) => (r.statutRamassage || 'À faire') === 'À faire').length
+  };
   return `
     <article class="card">
       <h4>Expédition</h4>
-      <p>Section Expédition simplifiée.</p>
-      <div class="table-wrapper"><table><thead><tr><th>Date prévue</th><th>Référence</th><th>Statut</th><th>Transporteur</th><th>Actions</th></tr></thead><tbody>
-      ${rows.filter((r) => String(r.typeMouvement || '').includes('Expédition') || String(r.typeMouvement || '').includes('Mise à disposition produits finis')).map((r) => `<tr><td>${safe(r.dateMouvement || '')}</td><td>${safe(r.referencePiece || '')}</td><td><span class="status-pill">${safe(r.statut || 'En attente')}</span></td><td>${safe(r.transporteur || '')}</td><td><button class="btn secondary" type="button" data-ship="sent" data-id="${r.id}">Expédié</button> <button class="btn secondary" type="button" data-ship="block" data-id="${r.id}">Bloqué</button></td></tr>`).join('')}
+      <p>Préparation des BL, chargement, envoi client et suivi expédition.</p>
+      <div class="table-grid logistic-kpi-grid">
+        <article class="card kpi"><h4>Expéditions prévues aujourd’hui</h4><p class="kpi-count">${kpi.prevues}</p></article>
+        <article class="card kpi"><h4>Affaires prêtes à expédier</h4><p class="kpi-count">${kpi.pretes}</p></article>
+        <article class="card kpi"><h4>Expéditions réalisées</h4><p class="kpi-count">${kpi.realisees}</p></article>
+        <article class="card kpi"><h4>Expéditions en retard</h4><p class="kpi-count">${kpi.retard}</p></article>
+        <article class="card kpi"><h4>BL à préparer</h4><p class="kpi-count">${kpi.bl}</p></article>
+        <article class="card kpi"><h4>Demandes de ramassage à prévoir</h4><p class="kpi-count">${kpi.ramassage}</p></article>
+      </div>
+      <div class="table-wrapper"><table><thead><tr><th>Date expédition prévue</th><th>Client</th><th>N° OF</th><th>Référence</th><th>Désignation</th><th>Qté prête</th><th>Statut production</th><th>Statut expédition</th><th>BL</th><th>Transporteur</th><th>Besoins expédition</th><th>Actions</th></tr></thead><tbody>
+      ${shipments.map((r) => `<tr><td>${safe(r.dateLivraisonDemandee || r.dateMouvement || '')}</td><td>${safe(r.clientNom || '')}</td><td>${safe(r.numeroOF || '—')}</td><td>${safe(r.referencePiece || '')}</td><td>${safe(r.designationPiece || '')}</td><td>${safe(r.quantiteAttendue ?? r.quantite ?? '')}</td><td>${safe(r.statutProduction || 'En cours')}</td><td><span class="status-pill">${safe(r.statut || 'En attente')}</span></td><td>${safe(r.numeroBL || 'À préparer')}</td><td>${safe(r.transporteur || '')}</td><td>${safe(r.typeConditionnement || 'Standard')} / Colis: ${safe(r.nombreColis || 1)}</td><td><button class="btn secondary" type="button" data-ship=\"bl\" data-id="${r.id}">BL préparé</button> <button class="btn secondary" type="button" data-ship=\"ask\" data-id="${r.id}">Ramassage demandé</button> <button class="btn secondary" type="button" data-ship=\"ok\" data-id="${r.id}">Ramassage confirmé</button> <button class="btn secondary" type="button" data-ship=\"sent\" data-id="${r.id}">Expédié</button> <button class="btn secondary" type="button" data-ship=\"block\" data-id="${r.id}">Bloqué</button></td></tr>`).join('')}
       </tbody></table></div>
     </article>`;
 }
@@ -126,10 +143,16 @@ function renderPage(container, section = 'reception', state = {}) {
   });
   container.querySelectorAll('[data-ship]').forEach((btn) => btn.addEventListener('click', () => {
     const id = Number(btn.dataset.id);
-    const status = btn.dataset.ship === 'sent' ? 'Expédiée' : 'Bloquée';
+    const action = btn.dataset.ship;
     try {
-      updateRecord('logistique', id, { statut: status });
-      if (status === 'Bloquée') {
+      const patch = {};
+      if (action === 'sent') patch.statut = 'Expédiée';
+      if (action === 'block') patch.statut = 'Bloquée';
+      if (action === 'bl') patch.numeroBL = `BL-${new Date().toISOString().slice(0, 10)}`;
+      if (action === 'ask') patch.statutRamassage = 'Demandée';
+      if (action === 'ok') patch.statutRamassage = 'Confirmée';
+      updateRecord('logistique', id, patch);
+      if (action === 'block') {
         addRecord('observations', { dateObservation: new Date().toISOString().slice(0, 10), activite: 'Logistique', typeObservation: 'Anomalie', importance: 'Élevée', commentaire: 'Blocage expédition', statutTraitement: 'Ouvert', actionPrevue: 'Analyser le blocage', responsableTraitement: 'Responsable logistique' });
       }
     } catch (error) {
