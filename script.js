@@ -34,6 +34,7 @@ const pageContent = document.querySelector('#page-content');
 const menuToggle = document.querySelector('#menu-toggle');
 const menuClose = document.querySelector('#menu-close');
 const sidebarOverlay = document.querySelector('#sidebar-overlay');
+const LAST_PAGE_STORAGE_KEY = 'technocoat:lastPage';
 
 function renderFallback(error) {
   console.error('Erreur de chargement de page:', error);
@@ -54,6 +55,8 @@ function setActivePage(pageKey) {
     document.querySelectorAll('.nav-btn').forEach((button) => {
       button.classList.toggle('active', button.dataset.page === currentPage.key);
     });
+
+    localStorage.setItem(LAST_PAGE_STORAGE_KEY, currentPage.key);
   } catch (error) {
     renderFallback(error);
   }
@@ -85,7 +88,8 @@ function bootstrap() {
   try {
     loadDatabase();
     renderNavigation();
-    setActivePage('database');
+    const lastPage = localStorage.getItem(LAST_PAGE_STORAGE_KEY);
+    setActivePage(lastPage || 'database');
     setupMenu();
     closeSidebarOnMobile();
     window.addEventListener('resize', closeSidebarOnMobile);
