@@ -1033,3 +1033,28 @@ body:not(.sidebar-collapsed) .menu-toggle {
     position: static;
   }
 }
+
+.kpi-btn {
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+}
+
+.kpi-btn h4,
+.kpi-btn p {
+  margin-left: 0;
+}
+
+.full-row {
+  grid-column: 1 / -1;
+}
+
+.reference-row {
+  border: 1px solid var(--gray-border);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
