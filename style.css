@@ -954,3 +954,59 @@ body:not(.sidebar-collapsed) .menu-toggle {
     font-size: 0.92rem;
   }
 }
+
+.logistic-header-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.logistic-header-meta p {
+  margin: 0 0 6px;
+  color: #33415c;
+}
+
+.logistic-tabbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.logistic-tabbar .active-tab {
+  background: var(--blue-industrial);
+  color: var(--white);
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #edf3ff;
+  border: 1px solid #c8d8f5;
+  font-size: 0.85rem;
+}
+
+.form-field select,
+.search-box select,
+.filter-item select {
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  padding: 8px;
+  background: var(--white);
+}
+
+#logistic-tab-content {
+  display: grid;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .logistic-header-card {
+    flex-direction: column;
+  }
+
+  .logistic-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}

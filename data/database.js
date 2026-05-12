@@ -161,17 +161,37 @@ export const initialDatabase = {
     actionCorrective: i % 3 ? 'Aucune' : 'Ajustement bain',
     commentaire: `Contrôle équipement ${i + 1}`
   })),
-  logistique: Array.from({ length: 10 }, (_, i) => ({
+  logistique: Array.from({ length: 16 }, (_, i) => ({
     id: i + 1,
     affaireId: (i % 8) + 1,
     clientId: (i % 5) + 1,
     referenceId: (i % 15) + 1,
-    dateMouvement: day(i + 6),
-    typeMouvement: ['Réception', 'Expédition'][i % 2],
+    dateMouvement: day(i + 4),
+    typeMouvement: [
+      'Réception prévue',
+      'Réception pièces brutes',
+      'Mise à disposition atelier',
+      'Conditionnement',
+      'Mise en palette',
+      'Expédition client',
+      'Réception matière',
+      'Mise à disposition produits finis'
+    ][i % 8],
     quantite: 12 + i,
-    statut: ['Préparé', 'En transit', 'Livré'][i % 3],
+    quantiteAttendue: 14 + i,
+    quantiteRecue: 10 + i,
+    quantiteExpediee: 8 + i,
+    statut: ['Prête expédition', 'Préparée', 'Réception terminée', 'Retardée'][i % 4],
+    statutPalette: ['À préparer', 'En cours', 'Terminée', 'Bloquée'][i % 4],
+    typeConditionnement: ['Bac métal', 'Caisse bois', 'Filmage', 'Carton renforcé'][i % 4],
+    numeroPalette: `PAL-2026-${String(i + 1).padStart(3, '0')}`,
+    nombreColis: (i % 5) + 1,
     numeroBL: `BL-2026-${String(i + 1).padStart(3, '0')}`,
     transporteur: `Transporteur ${((i % 4) + 1)}`,
+    emplacementDepose: `Zone-${(i % 4) + 1}`,
+    emplacementPalette: `Palette-${(i % 6) + 1}`,
+    caristeAffecte: `Cariste ${((i % 3) + 1)}`,
+    actionAttendue: ['Contrôle réception', 'Transfert atelier', 'Finaliser palette', 'Préparer BL'][i % 4],
     commentaire: `Flux logistique ${i + 1}`
   })),
   observations: Array.from({ length: 15 }, (_, i) => ({
