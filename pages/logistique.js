@@ -102,6 +102,7 @@ function render(container, state = {}) {
     showOFAlert = false,
     detailKey = null,
     detailEditId = null,
+    receiptDetailId = null,
     extraRefs = 0
   } = state;
 
@@ -122,15 +123,9 @@ function render(container, state = {}) {
 
   const detailRows = detailKey ? kpiFilterRows(filteredRows, detailKey) : [];
   const detailEdit = rows.find((row) => row.id === detailEditId) || null;
+  const receiptDetail = rows.find((row) => row.id === receiptDetailId) || null;
 
   container.innerHTML = `
-    <article class="card logistic-header-card">
-      <div>
-        <h3>Logistique</h3>
-        <p>Réception, conditionnement, mise en palette et expédition des pièces</p>
-      </div>
-    </article>
-
     <section class="table-grid">
       <article class="card kpi"><h4>Réception</h4><p>Enregistrements des arrivées pièces et contrôles de conformité.</p></article>
       <article class="card kpi"><h4>Livraison / Expédition</h4><p>Section en attente de développement.</p></article>
@@ -143,21 +138,21 @@ function render(container, state = {}) {
       ${showOFAlert ? '<p class="status-error">OF à rattacher</p>' : ''}
 
       <div class="table-grid logistic-kpi-grid">
-        <button class="card kpi kpi-btn" data-kpi="prevuesJour" type="button"><h4>Réceptions prévues aujourd’hui</h4><p class="kpi-count">${kpi.prevuesJour}</p></button>
-        <button class="card kpi kpi-btn" data-kpi="enregistrees" type="button"><h4>Réceptions enregistrées</h4><p class="kpi-count">${kpi.enregistrees}</p></button>
-        <button class="card kpi kpi-btn" data-kpi="enAttente" type="button"><h4>Réceptions en attente</h4><p class="kpi-count">${kpi.enAttente}</p></button>
-        <button class="card kpi kpi-btn" data-kpi="anomalies" type="button"><h4>Réceptions avec anomalie</h4><p class="kpi-count">${kpi.anomalies}</p></button>
-        <button class="card kpi kpi-btn" data-kpi="qteAttendue" type="button"><h4>Quantité attendue</h4><p class="kpi-count">${kpi.qteAttendue}</p></button>
-        <button class="card kpi kpi-btn" data-kpi="qteRecue" type="button"><h4>Quantité reçue</h4><p class="kpi-count">${kpi.qteRecue}</p></button>
+        <button class="card kpi kpi-btn ${detailKey === 'prevuesJour' ? 'active-tab' : ''}" data-kpi="prevuesJour" type="button"><h4>Réceptions prévues aujourd’hui</h4><p class="kpi-count">${kpi.prevuesJour}</p></button>
+        <button class="card kpi kpi-btn ${detailKey === 'enregistrees' ? 'active-tab' : ''}" data-kpi="enregistrees" type="button"><h4>Réceptions enregistrées</h4><p class="kpi-count">${kpi.enregistrees}</p></button>
+        <button class="card kpi kpi-btn ${detailKey === 'enAttente' ? 'active-tab' : ''}" data-kpi="enAttente" type="button"><h4>Réceptions en attente</h4><p class="kpi-count">${kpi.enAttente}</p></button>
+        <button class="card kpi kpi-btn ${detailKey === 'anomalies' ? 'active-tab' : ''}" data-kpi="anomalies" type="button"><h4>Réceptions avec anomalie</h4><p class="kpi-count">${kpi.anomalies}</p></button>
+        <button class="card kpi kpi-btn ${detailKey === 'qteAttendue' ? 'active-tab' : ''}" data-kpi="qteAttendue" type="button"><h4>Quantité attendue</h4><p class="kpi-count">${kpi.qteAttendue}</p></button>
+        <button class="card kpi kpi-btn ${detailKey === 'qteRecue' ? 'active-tab' : ''}" data-kpi="qteRecue" type="button"><h4>Quantité reçue</h4><p class="kpi-count">${kpi.qteRecue}</p></button>
       </div>
 
-      ${detailKey ? `
+      ${detailKey || receiptDetail ? `
       <article class="card">
         <div class="controls"><button type="button" class="btn secondary" id="back-reception-view">Retour à la vue Réception</button></div>
-        <h4>${kpiTitle(detailKey)}</h4>
-        <p>${detailRows.length} élément(s)</p>
+        <h4>${receiptDetail ? 'Détail réception' : kpiTitle(detailKey)}</h4>
+        <p>${receiptDetail ? '1 élément sélectionné' : `${detailRows.length} élément(s)`}</p>
         <div class="table-wrapper"><table><thead><tr><th>Date prévue</th><th>Client</th><th>N° commande</th><th>N° OF</th><th>Référence</th><th>Désignation</th><th>Qté attendue</th><th>Qté reçue</th><th>Statut</th><th>Transporteur</th><th>Emplacement</th><th>Action</th></tr></thead>
-        <tbody>${detailRows.map((row) => `<tr><td>${safe(row.dateMouvement)}</td><td>${safe(row.clientNom)}</td><td>${safe(row.numeroCommande)}</td><td>${safe(row.numeroOF || '—')}</td><td>${safe(row.referencePiece)}</td><td>${safe(row.designationPiece)}</td><td>${safe(row.quantiteAttendue)}</td><td>${safe(row.quantiteRecue)}</td><td><span class="status-pill">${safe(row.statut)}</span></td><td>${safe(row.transporteur)}</td><td>${safe(row.emplacementDepose)}</td><td><button class="btn secondary" data-detail-edit="${row.id}" type="button">Modifier</button></td></tr>`).join('')}</tbody></table></div>
+        <tbody>${(receiptDetail ? [receiptDetail] : detailRows).map((row) => `<tr><td>${safe(row.dateMouvement)}</td><td>${safe(row.clientNom)}</td><td>${safe(row.numeroCommande)}</td><td>${safe(row.numeroOF || '—')}</td><td>${safe(row.referencePiece)}</td><td>${safe(row.designationPiece)}</td><td>${safe(row.quantiteAttendue)}</td><td>${safe(row.quantiteRecue)}</td><td><span class="status-pill">${safe(row.statut)}</span></td><td>${safe(row.transporteur)}</td><td>${safe(row.emplacementDepose)}</td><td><button class="btn secondary" data-detail-edit="${row.id}" type="button">Modifier</button></td></tr>`).join('')}</tbody></table></div>
       </article>
       ${detailEdit ? `<article class="card"><h4>Modifier une réception</h4>${renderDetailEditForm(detailEdit)}</article>` : ''}
       ` : `
@@ -165,7 +160,7 @@ function render(container, state = {}) {
       <div class="logistic-reception-layout">
         <div class="table-wrapper">
           <table><thead><tr><th>Date prévue</th><th>Client</th><th>N° commande</th><th>N° OF</th><th>Référence</th><th>Désignation</th><th>Qté attendue</th><th>Statut réception</th><th>Transporteur</th><th>Emplacement prévu</th><th>Action</th></tr></thead>
-          <tbody>${filteredRows.map((row) => `<tr><td>${safe(row.dateMouvement)}</td><td>${safe(row.clientNom)}</td><td>${safe(row.numeroCommande)}</td><td>${safe(row.numeroOF || '—')}</td><td>${safe(row.referencePiece)}</td><td>${safe(row.designationPiece)}</td><td>${safe(row.quantiteAttendue)}</td><td><span class="status-pill">${safe(row.statut)}</span></td><td>${safe(row.transporteur)}</td><td>${safe(row.emplacementDepose)}</td><td><button type="button" class="btn secondary" data-open-form="${row.id}">Enregistrer réception</button></td></tr>`).join('')}</tbody></table>
+          <tbody>${filteredRows.map((row) => `<tr><td>${safe(row.dateMouvement)}</td><td>${safe(row.clientNom)}</td><td>${safe(row.numeroCommande)}</td><td>${safe(row.numeroOF || '—')}</td><td>${safe(row.referencePiece)}</td><td>${safe(row.designationPiece)}</td><td>${safe(row.quantiteAttendue)}</td><td><span class="status-pill">${safe(row.statut)}</span></td><td>${safe(row.transporteur)}</td><td>${safe(row.emplacementDepose)}</td><td><button type="button" class="btn secondary" data-receipt-detail="${row.id}">Détail</button> <button type="button" class="btn secondary" data-open-form="${row.id}">Enregistrer réception</button></td></tr>`).join('')}</tbody></table>
         </div>
 
         <article class="card reception-form-card">
@@ -200,10 +195,17 @@ function render(container, state = {}) {
     </section>
   `;
 
-  container.querySelectorAll('.kpi-btn').forEach((button) => button.addEventListener('click', () => render(container, { ...state, detailKey: button.dataset.kpi, detailEditId: null })));
+  container.querySelectorAll('.kpi-btn').forEach((button) => button.addEventListener('click', () => {
+    const clickedKey = button.dataset.kpi;
+    render(container, { ...state, detailKey: detailKey === clickedKey ? null : clickedKey, detailEditId: null, receiptDetailId: null });
+  }));
 
-  container.querySelector('#back-reception-view')?.addEventListener('click', () => render(container, { ...state, detailKey: null, detailEditId: null }));
+  container.querySelector('#back-reception-view')?.addEventListener('click', () => render(container, { ...state, detailKey: null, detailEditId: null, receiptDetailId: null }));
   container.querySelectorAll('[data-detail-edit]').forEach((button) => button.addEventListener('click', () => render(container, { ...state, detailEditId: Number(button.dataset.detailEdit) })));
+  container.querySelectorAll('[data-receipt-detail]').forEach((button) => button.addEventListener('click', () => {
+    const id = Number(button.dataset.receiptDetail);
+    render(container, { ...state, receiptDetailId: receiptDetailId === id ? null : id, detailKey: null, detailEditId: null });
+  }));
 
   container.querySelector('#detail-edit-form')?.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -220,8 +222,9 @@ function render(container, state = {}) {
       transporteur: data.transporteur,
       emplacementDepose: data.emplacementDepose
     });
-    render(container, { ...state });
+    render(container, { ...state, detailEditId: null, detailKey: null, receiptDetailId: null });
   });
+  container.querySelector('#detail-edit-cancel')?.addEventListener('click', () => render(container, { ...state, detailEditId: null, detailKey: null, receiptDetailId: null }));
 
   container.querySelectorAll('[data-open-form]').forEach((button) => {
     button.addEventListener('click', () => render(container, { ...state, selectedId: Number(button.dataset.openForm) }));
@@ -305,7 +308,7 @@ function renderDetailEditForm(item) {
     <label class="form-field">Statut<input name="statut" value="${safe(item.statut || '')}" /></label>
     <label class="form-field">Transporteur<input name="transporteur" value="${safe(item.transporteur || '')}" /></label>
     <label class="form-field">Emplacement<input name="emplacementDepose" value="${safe(item.emplacementDepose || '')}" /></label>
-    <div><button type="submit" class="btn">Enregistrer la modification</button></div>
+    <div class="controls"><button type="submit" class="btn">Enregistrer la modification</button><button type="button" class="btn secondary" id="detail-edit-cancel">Annuler</button></div>
   </form>`;
 }
 
