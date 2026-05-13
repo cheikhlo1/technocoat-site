@@ -91,6 +91,55 @@ function renderShipping(rows) {
     </article>`;
 }
 
+function renderPackaging(rows) {
+  const lots = rows.filter((r) => String(r.typeMouvement || '').includes('Expédition') || String(r.typeMouvement || '').includes('Mise à disposition produits finis'));
+  const stats = {
+    aConditionner: lots.filter((l) => (l.statutConditionnement || 'À conditionner') === 'À conditionner').length,
+    enPreparation: lots.filter((l) => ['En cours', 'En attente emballage'].includes(l.statutConditionnement || '')).length,
+    pretes: lots.filter((l) => (l.statutConditionnement || '') === 'Palette prête').length,
+    anomalies: lots.filter((l) => (l.statutConditionnement || '') === 'Bloqué').length
+  };
+  const example = lots[0] || {};
+  return `
+    <article class="card">
+      <h4>Conditionnement & palettes</h4>
+      <div class="table-grid logistic-kpi-grid">
+        <article class="card kpi"><h4>Lots à conditionner</h4><p class="kpi-count">${stats.aConditionner}</p></article>
+        <article class="card kpi"><h4>Palettes en préparation</h4><p class="kpi-count">${stats.enPreparation}</p></article>
+        <article class="card kpi"><h4>Palettes prêtes à expédier</h4><p class="kpi-count">${stats.pretes}</p></article>
+        <article class="card kpi"><h4>Anomalies conditionnement</h4><p class="kpi-count">${stats.anomalies}</p></article>
+      </div>
+      <h5>Lots à conditionner</h5>
+      <div class="table-wrapper"><table><thead><tr><th>OF</th><th>Client</th><th>Référence</th><th>Quantité</th><th>Type de conditionnement</th><th>Support / palette</th><th>Statut</th><th>Actions</th></tr></thead><tbody>
+      ${lots.map((l) => `<tr><td>${safe(l.numeroOF || '—')}</td><td>${safe(l.clientNom || '')}</td><td>${safe(l.referencePiece || '')}</td><td>${safe(l.quantiteAttendue ?? l.quantite ?? '')}</td><td>${safe(l.typeConditionnement || 'Carton standard')}</td><td>${safe(l.numeroPalette || 'Support A')}</td><td><span class="status-pill">${safe(l.statutConditionnement || 'À conditionner')}</span></td><td><button class="btn secondary" type="button" data-pack="start" data-id="${l.id}">Démarrer</button> <button class="btn secondary" type="button" data-pack="ready" data-id="${l.id}">Marquer prêt</button> <button class="btn secondary" type="button" data-pack="issue" data-id="${l.id}">Signaler anomalie</button> <button class="btn secondary" type="button" data-pack="block" data-id="${l.id}">Bloquer</button></td></tr>`).join('')}
+      </tbody></table></div>
+      <article class="card">
+        <h5>Consignes de conditionnement</h5>
+        <ul>
+          <li>Vérifier la conformité des pièces avant emballage.</li>
+          <li>Respecter le type de carton ou support prévu.</li>
+          <li>Utiliser les protections demandées : papier, mousse, film, intercalaire.</li>
+          <li>Identifier correctement la palette ou le colis.</li>
+          <li>Isoler les pièces douteuses ou abîmées.</li>
+          <li>Signaler les écarts avant expédition.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h5>Détails palette</h5>
+        <p><strong>N° palette :</strong> ${safe(example.numeroPalette || 'PAL-000')}</p>
+        <p><strong>Client :</strong> ${safe(example.clientNom || 'Client')}</p>
+        <p><strong>Nombre de colis :</strong> ${safe(example.nombreColis || 1)}</p>
+        <p><strong>Poids estimé :</strong> ${safe(example.poidsEstime || '120 kg')}</p>
+        <p><strong>Destination :</strong> ${safe(example.destination || 'Zone expédition')}</p>
+        <p><strong>Statut palette :</strong> ${safe(example.statutConditionnement || 'À conditionner')}</p>
+      </article>
+      <article class="card">
+        <h5>Commentaire conditionnement</h5>
+        <textarea id="packaging-note" rows="4" placeholder="carton non adapté, manque protection, pièce abîmée, palette incomplète, attente décision qualité, autre observation terrain"></textarea>
+      </article>
+    </article>`;
+}
+
 function renderPage(container, section = 'reception', state = {}) {
   const rows = readRows();
   container.innerHTML = `
@@ -108,7 +157,7 @@ function renderPage(container, section = 'reception', state = {}) {
     </section>
     ${section === 'reception' ? renderReception(rows, state) : ''}
     ${section === 'shipping' ? renderShipping(rows) : ''}
-    ${section === 'packaging' ? '<article class="card"><h4>Conditionnement & palettes</h4><p>En attente de développement.</p></article>' : ''}
+    ${section === 'packaging' ? renderPackaging(rows) : ''}
   `;
 
   container.querySelectorAll('[data-section]').forEach((btn) => btn.addEventListener('click', () => renderPage(container, btn.dataset.section, {})));
@@ -159,6 +208,20 @@ function renderPage(container, section = 'reception', state = {}) {
       console.error('Logistique: erreur action expédition', error);
     }
     renderPage(container, 'shipping', state);
+  }));
+  container.querySelectorAll('[data-pack]').forEach((btn) => btn.addEventListener('click', () => {
+    const id = Number(btn.dataset.id);
+    const action = btn.dataset.pack;
+    const status = { start: 'En cours', ready: 'Palette prête', issue: 'En attente emballage', block: 'Bloqué' }[action] || 'À conditionner';
+    try {
+      updateRecord('logistique', id, { statutConditionnement: status });
+      if (action === 'issue' || action === 'block') {
+        addRecord('observations', { dateObservation: new Date().toISOString().slice(0, 10), activite: 'Logistique', typeObservation: 'Anomalie', importance: action === 'block' ? 'Élevée' : 'Moyenne', commentaire: 'Anomalie conditionnement', statutTraitement: 'Ouvert', actionPrevue: 'Analyser le conditionnement', responsableTraitement: 'Responsable logistique' });
+      }
+    } catch (error) {
+      console.error('Logistique: erreur action conditionnement', error);
+    }
+    renderPage(container, 'packaging', state);
   }));
 }
 
