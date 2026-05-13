@@ -112,6 +112,30 @@ function renderPackaging(rows, state) {
   const qtyCond = Number(selectedLot.quantiteConditionnee || 0);
   const qtyAtt = Number(selectedLot.quantiteAttendue ?? selectedLot.quantite ?? 0);
   const qtyRest = Math.max(0, qtyAtt - qtyCond);
+  const emptyMessage = {
+    enPreparation: 'Aucune palette en préparation.',
+    pretes: 'Aucune palette prête à expédier.',
+    anomalies: 'Aucune anomalie conditionnement.',
+    bloques: 'Aucune anomalie conditionnement.',
+    aConditionner: 'Aucune donnée disponible pour le moment.'
+  }[packKpi] || 'Aucune donnée disponible pour le moment.';
+  const cardsHtml = filteredLots.length ? filteredLots.map((l) => {
+    const pieces = [
+      `<div><strong>${safe(l.numeroOF || 'OF non renseigné')}</strong></div>`,
+      l.clientNom ? `<span>Client ${safe(l.clientNom)}</span>` : '',
+      l.referencePiece ? `<span>Réf. ${safe(l.referencePiece)}</span>` : '',
+      `<span>Quantité ${safe(l.quantiteAttendue ?? l.quantite ?? 0)}</span>`,
+      `<span>Conditionnement ${safe(l.typeConditionnement || 'Standard')}</span>`,
+      `<span>Support ${safe(l.numeroPalette || 'Support à définir')}</span>`,
+      `<span class="status-pill">${safe(l.statutConditionnement || 'À conditionner')}</span>`
+    ].filter(Boolean).join('');
+    return `<button type="button" class="card prep-task-card ${packSelectedId === l.id ? 'active' : ''}" data-pack-select="${l.id}">${pieces}</button>`;
+  }).join('') : `<article class="card"><h5>${safe({
+    aConditionner: 'Lots à conditionner',
+    enPreparation: 'Palettes en préparation',
+    pretes: 'Palettes prêtes à expédier',
+    anomalies: 'Anomalies conditionnement'
+  }[packKpi] || 'Conditionnement')}</h5><p>${safe(emptyMessage)}</p></article>`;
   return `
     <article class="card">
       <h4>Conditionnement & palettes</h4>
@@ -122,11 +146,16 @@ function renderPackaging(rows, state) {
         <button class="card kpi kpi-btn ${packKpi === 'anomalies' ? 'active-tab' : ''}" type="button" data-pack-kpi="anomalies"><h4>Anomalies conditionnement</h4><p class="kpi-count">${stats.anomalies}</p></button>
       </div>
       ${packKpi ? '<div class="controls"><button class="btn secondary" type="button" id="pack-reset-kpi">Retour vue normale</button></div>' : ''}
-      <h5>Lots à conditionner</h5>
-      <div class="task-row">
-        ${filteredLots.map((l) => `<button type="button" class="card prep-task-card ${packSelectedId === l.id ? 'active' : ''}" data-pack-select="${l.id}"><div><strong>${safe(l.numeroOF || 'OF non défini')}</strong></div><span>Client ${safe(l.clientNom || '')}</span><span>Référence ${safe(l.referencePiece || '')}</span><span>Désignation ${safe(l.designationPiece || '')}</span><span>Quantité ${safe(l.quantiteAttendue ?? l.quantite ?? 0)}</span><span>Conditionnement ${safe(l.typeConditionnement || 'Carton standard')}</span><span>Support ${safe(l.numeroPalette || 'Support A')}</span><span class="status-pill">${safe(l.statutConditionnement || 'À conditionner')}</span></button>`).join('')}
+      <h5>${safe({
+        aConditionner: 'Lots à conditionner',
+        enPreparation: 'Palettes en préparation',
+        pretes: 'Palettes prêtes à expédier',
+        anomalies: 'Anomalies conditionnement'
+      }[packKpi] || 'Lots à conditionner')}</h5>
+      <div class="prep-task-row">
+        ${cardsHtml}
       </div>
-      <article class="card">
+      ${filteredLots.length ? `<article class="card">
         <h5>Détail conditionnement</h5>
         <div class="prep-detail-grid">
           <article class="card"><h6>Identification</h6><p><strong>N° OF :</strong> ${safe(selectedLot.numeroOF || '—')}</p><p><strong>Client :</strong> ${safe(selectedLot.clientNom || '')}</p><p><strong>Commande :</strong> ${safe(selectedLot.numeroCommande || '')}</p><p><strong>Référence :</strong> ${safe(selectedLot.referencePiece || '')}</p><p><strong>Désignation :</strong> ${safe(selectedLot.designationPiece || '')}</p></article>
@@ -135,7 +164,7 @@ function renderPackaging(rows, state) {
           <article class="card"><h6>Flux</h6><p><strong>Localisation :</strong> ${safe(selectedLot.localisationActuelle || 'Zone conditionnement')}</p><p><strong>Destination :</strong> Expédition</p><p><strong>Statut conditionnement :</strong> ${safe(selectedLot.statutConditionnement || 'À conditionner')}</p><p><strong>Statut palette :</strong> ${safe(selectedLot.statutPalette || 'En préparation')}</p><p><strong>Date expédition prévue :</strong> ${safe(selectedLot.dateLivraisonDemandee || selectedLot.dateMouvement || '')}</p></article>
           <article class="card"><h6>Besoins / consommables</h6><p>Carton, Film, Étiquette, Protection mousse, Intercalaire, Palette, Cerclage si nécessaire.</p></article>
         </div>
-      </article>
+      </article>` : ''}
       <article class="card">
         <h5>Consignes de conditionnement</h5>
         <ul>
@@ -147,7 +176,7 @@ function renderPackaging(rows, state) {
           <li>Signaler les écarts avant expédition.</li>
         </ul>
       </article>
-      <article class="card">
+      ${filteredLots.length ? `<article class="card">
         <h5>Déclaration conditionnement</h5>
         <form id="pack-declare" class="record-form">
           <input type="hidden" name="id" value="${safe(selectedLot.id || '')}" />
@@ -159,8 +188,8 @@ function renderPackaging(rows, state) {
           <div><button class="btn" type="submit">Enregistrer</button></div>
         </form>
       </article>
-      <div class="controls"><button class="btn secondary" type="button" data-pack="start" data-id="${safe(selectedLot.id || '')}">Démarrer</button> <button class="btn secondary" type="button" data-pack="ready" data-id="${safe(selectedLot.id || '')}">Marquer prêt</button> <button class="btn secondary" type="button" data-pack="issue" data-id="${safe(selectedLot.id || '')}">Signaler anomalie</button> <button class="btn secondary" type="button" data-pack="block" data-id="${safe(selectedLot.id || '')}">Bloquer</button> <button class="btn secondary" type="button" data-pack-detail="${safe(selectedLot.id || '')}">Détail</button></div>
-      ${(showPackObs || ['Bloqué', 'En attente emballage'].includes(selectedLot.statutConditionnement || '')) ? `<article class="card"><h5>Observation conditionnement</h5><form id="pack-observation" class="record-form"><input type="hidden" name="id" value="${safe(selectedLot.id || '')}" /><label class="form-field">Type<select name="typeObservation"><option>Anomalie</option><option>Retard</option></select></label><label class="form-field">Importance<select name="importance"><option>Moyenne</option><option>Élevée</option></select></label><label class="form-field full-row">Commentaire<textarea name="commentaire" rows="3" placeholder="carton non adapté, manque protection, pièce abîmée, palette incomplète, attente décision qualité, autre observation terrain"></textarea></label><div><button class="btn" type="submit">Enregistrer observation</button></div></form></article>` : ''}
+      <div class="controls"><button class="btn secondary" type="button" data-pack="start" data-id="${safe(selectedLot.id || '')}">Démarrer</button> <button class="btn secondary" type="button" data-pack="ready" data-id="${safe(selectedLot.id || '')}">Marquer prêt</button> <button class="btn secondary" type="button" data-pack="issue" data-id="${safe(selectedLot.id || '')}">Signaler anomalie</button> <button class="btn secondary" type="button" data-pack="block" data-id="${safe(selectedLot.id || '')}">Bloquer</button></div>
+      ${(showPackObs || ['Bloqué', 'En attente emballage'].includes(selectedLot.statutConditionnement || '')) ? `<article class="card"><h5>Observation conditionnement</h5><form id="pack-observation" class="record-form"><input type="hidden" name="id" value="${safe(selectedLot.id || '')}" /><label class="form-field">Type<select name="typeObservation"><option>Anomalie</option><option>Retard</option></select></label><label class="form-field">Importance<select name="importance"><option>Moyenne</option><option>Élevée</option></select></label><label class="form-field full-row">Commentaire<textarea name="commentaire" rows="3" placeholder="carton non adapté, manque protection, pièce abîmée, palette incomplète, attente décision qualité, autre observation terrain"></textarea></label><div><button class="btn" type="submit">Enregistrer observation</button></div></form></article>` : ''}` : ''}
     </article>`;
 }
 
@@ -250,7 +279,6 @@ function renderPage(container, section = 'reception', state = {}) {
   container.querySelectorAll('[data-pack-kpi]').forEach((btn) => btn.addEventListener('click', () => renderPage(container, 'packaging', { ...state, packKpi: state.packKpi === btn.dataset.packKpi ? null : btn.dataset.packKpi, packSelectedId: null })));
   container.querySelector('#pack-reset-kpi')?.addEventListener('click', () => renderPage(container, 'packaging', { ...state, packKpi: null }));
   container.querySelectorAll('[data-pack-select]').forEach((btn) => btn.addEventListener('click', () => renderPage(container, 'packaging', { ...state, packSelectedId: Number(btn.dataset.packSelect) })));
-  container.querySelectorAll('[data-pack-detail]').forEach((btn) => btn.addEventListener('click', () => renderPage(container, 'packaging', { ...state, packSelectedId: Number(btn.dataset.packDetail) })));
   container.querySelector('#pack-declare')?.addEventListener('submit', (e) => {
     e.preventDefault();
     const d = Object.fromEntries(new FormData(e.currentTarget).entries());
