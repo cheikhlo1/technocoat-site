@@ -1,4 +1,4 @@
-import { badge, computeCommonKpi, getOperatorContext, mins, saveObservation, saveTaskUpdate } from './operatorCommon.js';
+import { badge, computeCommonKpi, getOperatorContext, kpiCards, mins, renderOperatorDetailBlocks, renderOperatorIndicators, saveObservation, saveTaskUpdate } from './operatorCommon.js';
 
 const state = { selectedId: null };
 
@@ -79,7 +79,7 @@ export function renderAccrochePage(container) {
               <label class='form-field obs-comment'>Commentaire<textarea name='commentaire' rows='4'></textarea></label>
             </div>
           </form>
-        ` : '<p>Aucune tâche.</p>'}
+        ` : '${kpiCards([{ label: 'Aucune tâche', value: 0 }])}'}
       </article>
 
       <article class='card'>

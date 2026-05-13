@@ -1,3 +1,5 @@
+import { renderKpiCard, renderStatusBadge, renderPriorityBadge, renderEmptyState, renderProgressBar, renderDonutChart } from '../components/charts.js';
+import { renderDetailBlock } from '../components/ui.js';
 import { addRecord, getTable, updateRecord } from '../data/databaseService.js';
 
 export function getOperatorContext(activity) {
@@ -15,11 +17,20 @@ export function getOperatorContext(activity) {
   return { rows, operator };
 }
 
-export const badge = (value) => `<span class="op-badge">${value || 'N/A'}</span>`;
+export const badge = (value) => (/haute|moyenne|basse|urgent/i.test(String(value || '')) ? renderPriorityBadge(value || 'N/A') : renderStatusBadge(value || 'N/A'));
 export const mins = (value) => `${Number(value || 0)} min`;
 
 export function kpiCards(items) {
-  return `<section class="table-grid">${items.map((i) => `<article class="card"><h3>${i.label}</h3><p>${i.value}</p></article>`).join('')}</section>`;
+  return `<section class="table-grid logistic-kpi-grid">${items.map((i) => renderKpiCard(i.label, i.value, i.unit || '')).join('')}</section>`;
+}
+
+export function renderOperatorDetailBlocks(blocks = []) {
+  if (!blocks.length) return renderEmptyState('Aucune donnée disponible pour le moment.');
+  return `<div class='prep-detail-grid'>${blocks.map((b) => renderDetailBlock(b.title, b.rows)).join('')}</div>`;
+}
+
+export function renderOperatorIndicators({ titleA = "Nombre d’affaires", valueA = 0, progressLabel = 'Prévues / Réalisées', progressValue = 0, progressMax = 100, efficiencyLabel = 'Efficacité', efficiencyValue = 0 }) {
+  return `<div class='table-grid'>${renderKpiCard(titleA, valueA)}${renderProgressBar(progressLabel, progressValue, progressMax)}${renderDonutChart(efficiencyLabel, efficiencyValue, 100)}</div>`;
 }
 
 export function saveTaskUpdate(taskId, form) {
