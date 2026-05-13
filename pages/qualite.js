@@ -8,6 +8,9 @@ const SECTIONS = [
 
 const safe = (v) => String(v ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 const today = () => new Date().toISOString().slice(0, 10);
+const DEFAUT_TYPES = ['Manque peinture', 'Coulure', 'Rayure', 'Mauvais masquage', 'Pièce abîmée', 'Défaut aspect', 'Non-conformité dimensionnelle', 'Erreur référence', 'Problème conditionnement', 'Réclamation client', 'Autre'];
+const STATUTS = ['Ouvert', 'En analyse', 'Action en cours', 'En attente client', 'Clôturé'];
+const GRAVITES = ['Faible', 'Moyenne', 'Élevée', 'Critique'];
 
 function equipementData() {
   const controles = getTable('controlesEquipements') || [];
@@ -16,6 +19,38 @@ function equipementData() {
   const fours = controles.filter((c) => /four/i.test(String(c.equipement || '')));
   const cabines = controles.filter((c) => /cabine|séchage|mesure/i.test(String(c.equipement || '')) && !/four/i.test(String(c.equipement || '')));
   return { controles, appareils, bains, fours, cabines };
+}
+
+
+function signalementsData() {
+  const observations = getTable('observations') || [];
+  const affaires = getTable('affaires') || [];
+  const references = getTable('referencesPieces') || [];
+  const clients = getTable('clients') || [];
+  return observations.filter((o) => String(o.activite || '').toLowerCase().includes('qualit')).map((o) => {
+    const affaire = affaires.find((a) => a.id === Number(o.affaireId));
+    const ref = references.find((r) => r.id === Number(o.referenceId));
+    const client = clients.find((c) => c.id === Number(affaire?.clientId));
+    const statut = o.statutTraitement === 'Ouverte' ? 'Ouvert' : o.statutTraitement === 'En cours' ? 'Action en cours' : o.statutTraitement === 'Clôturée' ? 'Clôturé' : (o.statutTraitement || 'Ouvert');
+    const origine = o.origineSignalement || o.origine || (String(o.typeObservation || '').toLowerCase().includes('réclamation') ? 'Client' : 'Interne');
+    return {
+      ...o,
+      origineSignalement: origine,
+      client: o.client || client?.nom || '',
+      numeroOF: o.numeroOF || affaire?.numeroOF || '',
+      reference: o.reference || ref?.referencePiece || '',
+      designation: o.designation || ref?.designationPiece || '',
+      typeDefaut: o.typeDefaut || o.typeObservation || 'Autre',
+      gravite: o.gravite || o.importance || 'Moyenne',
+      quantiteConcernee: Number(o.quantiteConcernee || 0),
+      descriptionProbleme: o.descriptionProbleme || o.commentaire || '',
+      causeProbable: o.causeProbable || '',
+      statutTraitement: statut,
+      dateCibleCloture: o.dateCibleCloture || '',
+      dateCloture: o.dateCloture || '',
+      commentaireCloture: o.commentaireCloture || ''
+    };
+  });
 }
 
 function sectionKpis(section) {
@@ -38,17 +73,19 @@ function sectionKpis(section) {
     ];
   }
   if (section === 'signalements') {
-    const ouverts = qualiteObs.filter((o) => o.statutTraitement !== 'Clôturée');
-    const clotures = qualiteObs.filter((o) => o.statutTraitement === 'Clôturée').length;
+    const data = signalementsData();
+    const ouverts = data.filter((o) => o.statutTraitement !== 'Clôturé');
+    const clotures = data.filter((o) => o.statutTraitement === 'Clôturé').length;
+    const retard = data.filter((o) => o.dateCibleCloture && o.dateCibleCloture < today() && o.statutTraitement !== 'Clôturé').length;
     return [
       ['Signalements ouverts', ouverts.length],
-      ['Signalements internes', qualiteObs.filter((o) => (o.origine || 'Interne') === 'Interne').length],
-      ['Signalements clients', qualiteObs.filter((o) => o.origine === 'Client').length],
-      ['Signalements critiques', qualiteObs.filter((o) => o.importance === 'Critique').length],
-      ['Actions correctives en cours', qualiteObs.filter((o) => o.statutTraitement === 'En cours').length],
-      ['Actions en retard', qualiteObs.filter((o) => o.statutTraitement === 'En retard').length],
+      ['Signalements internes', data.filter((o) => o.origineSignalement === 'Interne').length],
+      ['Signalements clients', data.filter((o) => o.origineSignalement === 'Client').length],
+      ['Signalements critiques', data.filter((o) => o.gravite === 'Critique').length],
+      ['Actions correctives en cours', data.filter((o) => o.statutTraitement === 'Action en cours').length],
+      ['Actions en retard', retard],
       ['Signalements clôturés', clotures],
-      ['Taux de clôture', `${qualiteObs.length ? Math.round((clotures / qualiteObs.length) * 100) : 0}%`]
+      ['Taux de clôture', `${data.length ? Math.round((clotures / data.length) * 100) : 0}%`]
     ];
   }
   const standards = [
@@ -81,9 +118,21 @@ function sectionEquipements(showForm = false) {
   </article></article>`;
 }
 
-function sectionSignalements() {
-  const obs = (getTable('observations') || []).filter((o) => String(o.activite || '').toLowerCase().includes('qualit'));
-  return `<article class="card"><h4>Signalements qualité</h4>${kpiHtml('signalements')}<div class="table-grid"><article class="card"><h5>Signalements internes</h5></article><article class="card"><h5>Signalements clients</h5></article></div>${obs.length ? `<div class="table-wrapper"><table><thead><tr><th>Date</th><th>Origine</th><th>Client</th><th>N° OF</th><th>Référence</th><th>Type signalement</th><th>Importance</th><th>Statut</th><th>Action prévue</th></tr></thead><tbody>${obs.map((o) => `<tr><td>${safe(o.dateObservation)}</td><td>${safe(o.origine || 'Interne')}</td><td>${safe(o.client || '')}</td><td>${safe(o.numeroOF || '')}</td><td>${safe(o.reference || '')}</td><td>${safe(o.typeObservation)}</td><td>${safe(o.importance)}</td><td>${safe(o.statutTraitement)}</td><td>${safe(o.actionPrevue)}</td></tr>`).join('')}</tbody></table></div>` : '<p>Aucun signalement qualité disponible pour le moment.</p>'}</article>`;
+function sectionSignalements(state) {
+  const filters = state.filters || {};
+  const all = signalementsData();
+  const nav = state.subsection || 'tous';
+  const active = all.filter((o) => (nav === 'tous' ? true : nav === 'internes' ? o.origineSignalement === 'Interne' : o.origineSignalement === 'Client')).filter((o) => (!filters.dateDebut || o.dateObservation >= filters.dateDebut) && (!filters.dateFin || o.dateObservation <= filters.dateFin) && (!filters.origine || o.origineSignalement === filters.origine) && (!filters.client || o.client === filters.client) && (!filters.statut || o.statutTraitement === filters.statut) && (!filters.gravite || o.gravite === filters.gravite) && (!filters.typeDefaut || o.typeDefaut === filters.typeDefaut) && (!filters.responsable || o.responsableTraitement === filters.responsable));
+  const row = (o) => `<tr><td>${safe(o.dateObservation)}</td><td>${safe(o.origineSignalement)}</td><td>${safe(o.client)}</td><td>${safe(o.numeroOF)}</td><td>${safe(o.reference)}</td><td>${safe(o.designation)}</td><td>${safe(o.typeDefaut)}</td><td><span class="badge ${String(o.gravite).toLowerCase()}">${safe(o.gravite)}</span></td><td>${safe(o.quantiteConcernee)}</td><td><span class="badge">${safe(o.statutTraitement)}</span></td><td>${safe(o.responsableTraitement)}</td><td>${safe(o.actionPrevue || '')}</td><td><button class="btn secondary" data-s-action="detail" data-id="${o.id}">Détail</button> <button class="btn secondary" data-s-action="edit" data-id="${o.id}">Modifier</button></td></tr>`;
+  const options = (vals, selected) => ['<option value="">Tous</option>', ...Array.from(new Set(vals.filter(Boolean))).map((v) => `<option ${v === selected ? 'selected' : ''}>${safe(v)}</option>`)].join('');
+  if (state.mode === 'detail' || state.mode === 'edit' || state.mode === 'create') {
+    const current = state.current || {};
+    const edit = state.mode !== 'detail';
+    const fields = `<label class="form-field">Date signalement<input type="date" name="dateObservation" value="${safe(current.dateObservation || today())}" ${edit ? '' : 'disabled'} required /></label><label class="form-field">Origine<select name="origineSignalement" ${edit ? '' : 'disabled'}><option ${current.origineSignalement === 'Interne' ? 'selected' : ''}>Interne</option><option ${current.origineSignalement === 'Client' ? 'selected' : ''}>Client</option></select></label><label class="form-field">Client<input name="client" value="${safe(current.client || '')}" ${edit ? '' : 'disabled'} /></label><label class="form-field">N° OF<input name="numeroOF" value="${safe(current.numeroOF || '')}" ${edit ? '' : 'disabled'} /></label><label class="form-field">Référence pièce<input name="reference" value="${safe(current.reference || '')}" ${edit ? '' : 'disabled'} /></label><label class="form-field">Désignation pièce<input name="designation" value="${safe(current.designation || '')}" ${edit ? '' : 'disabled'} /></label><label class="form-field">Type défaut<select name="typeDefaut" ${edit ? '' : 'disabled'}>${DEFAUT_TYPES.map((d)=>`<option ${current.typeDefaut===d?'selected':''}>${d}</option>`).join('')}</select></label><label class="form-field">Gravité<select name="gravite" ${edit ? '' : 'disabled'}>${GRAVITES.map((g)=>`<option ${current.gravite===g?'selected':''}>${g}</option>`).join('')}</select></label><label class="form-field">Quantité concernée<input type="number" min="0" name="quantiteConcernee" value="${safe(current.quantiteConcernee || 0)}" ${edit ? '' : 'disabled'} /></label><label class="form-field full-row">Description du problème<input name="descriptionProbleme" value="${safe(current.descriptionProbleme || '')}" ${edit ? '' : 'disabled'} /></label><label class="form-field">Cause probable<input name="causeProbable" value="${safe(current.causeProbable || '')}" ${edit ? '' : 'disabled'} /></label><label class="form-field">Action prévue<input name="actionPrevue" value="${safe(current.actionPrevue || '')}" ${edit ? '' : 'disabled'} /></label><label class="form-field">Responsable traitement<input name="responsableTraitement" value="${safe(current.responsableTraitement || '')}" ${edit ? '' : 'disabled'} /></label><label class="form-field">Statut<select name="statutTraitement" ${edit ? '' : 'disabled'}>${STATUTS.map((s)=>`<option ${current.statutTraitement===s?'selected':''}>${s}</option>`).join('')}</select></label><label class="form-field">Date cible de clôture<input type="date" name="dateCibleCloture" value="${safe(current.dateCibleCloture || '')}" ${edit ? '' : 'disabled'} /></label>`;
+    const detailBlocks = state.mode === 'detail' ? `<div class="table-grid"><article class="card"><h5>Identification</h5><p>Date : ${safe(current.dateObservation)}</p><p>Origine : ${safe(current.origineSignalement)}</p><p>Client : ${safe(current.client)}</p><p>N° OF : ${safe(current.numeroOF)}</p><p>Référence : ${safe(current.reference)}</p><p>Désignation : ${safe(current.designation)}</p></article><article class="card"><h5>Problème</h5><p>Type défaut : ${safe(current.typeDefaut)}</p><p>Gravité : ${safe(current.gravite)}</p><p>Quantité : ${safe(current.quantiteConcernee)}</p><p>Description : ${safe(current.descriptionProbleme)}</p></article><article class="card"><h5>Analyse</h5><p>Cause probable : ${safe(current.causeProbable)}</p><p>Responsable : ${safe(current.responsableTraitement)}</p><p>Statut : ${safe(current.statutTraitement)}</p></article><article class="card"><h5>Action corrective</h5><p>Action prévue : ${safe(current.actionPrevue)}</p><p>Date cible : ${safe(current.dateCibleCloture)}</p><p>Date clôture : ${safe(current.dateCloture || '-')}</p><p>Commentaire clôture : ${safe(current.commentaireCloture || '-')}</p></article></div>` : '';
+    return `<article class="card"><h4>Signalements qualité</h4><p>Suivi des signalements internes, réclamations clients et non-conformités.</p>${kpiHtml('signalements')}<article class="card">${detailBlocks}<form id="signalement-form" class="record-form">${fields}<div class="controls">${edit ? '<button class="btn" type="submit">Enregistrer</button>' : ''}${state.mode === 'detail' ? '<button class="btn secondary" type="button" data-s-action="edit" data-id="'+current.id+'">Modifier</button><button class="btn secondary" type="button" data-s-action="close" data-id="'+current.id+'">Clôturer</button>' : ''}<button class="btn secondary" type="button" data-s-action="back">Retour</button></div></form></article></article>`;
+  }
+  return `<article class="card"><h4>Signalements qualité</h4><p>Suivi des signalements internes, réclamations clients et non-conformités.</p>${kpiHtml('signalements')}<div class="controls"><button class="btn secondary ${nav === 'internes' ? 'active-tab' : ''}" data-s-nav="internes">Signalements internes</button><button class="btn secondary ${nav === 'clients' ? 'active-tab' : ''}" data-s-nav="clients">Signalements clients</button><button class="btn secondary ${nav === 'tous' ? 'active-tab' : ''}" data-s-nav="tous">Tous les signalements</button><button class="btn" data-s-action="create">Ajouter un signalement</button></div><form id="signalements-filters" class="record-form"><label class="form-field">Date début<input type="date" name="dateDebut" value="${safe(filters.dateDebut || '')}"/></label><label class="form-field">Date fin<input type="date" name="dateFin" value="${safe(filters.dateFin || '')}"/></label><label class="form-field">Origine<select name="origine">${options(['Interne','Client'], filters.origine)}</select></label><label class="form-field">Client<select name="client">${options(all.map((o)=>o.client), filters.client)}</select></label><label class="form-field">Statut<select name="statut">${options(STATUTS, filters.statut)}</select></label><label class="form-field">Gravité<select name="gravite">${options(GRAVITES, filters.gravite)}</select></label><label class="form-field">Type défaut<select name="typeDefaut">${options(DEFAUT_TYPES, filters.typeDefaut)}</select></label><label class="form-field">Responsable<select name="responsable">${options(all.map((o)=>o.responsableTraitement), filters.responsable)}</select></label><div class="controls"><button class="btn" type="submit">Filtrer</button><button class="btn secondary" type="button" data-s-action="reset-filters">Réinitialiser les filtres</button></div></form>${active.length ? `<div class="table-wrapper"><table><thead><tr><th>Date signalement</th><th>Origine</th><th>Client</th><th>N° OF</th><th>Référence</th><th>Désignation</th><th>Type défaut</th><th>Gravité</th><th>Quantité concernée</th><th>Statut</th><th>Responsable</th><th>Action prévue</th><th>Action</th></tr></thead><tbody>${active.map(row).join('')}</tbody></table></div>` : '<p>Aucun signalement pour les filtres sélectionnés.</p>'}</article>`;
 }
 
 function sectionStandards() {
@@ -91,11 +140,11 @@ function sectionStandards() {
   return `<article class="card"><h4>Standards process</h4>${kpiHtml('standards')}<div class="table-grid">${standards.map(([n, o, s]) => `<article class="card"><h5>${n}</h5><p>${o}</p><p><strong>Statut :</strong> ${s}</p></article>`).join('')}</div></article>`;
 }
 
-function renderQualite(container, active = 'equipements', showForm = false) {
+function renderQualite(container, active = 'equipements', showForm = false, signalementsState = { subsection: 'tous', filters: {}, mode: 'list', current: null }) {
   const activeSection = SECTIONS.find((s) => s.key === active) || SECTIONS[0];
-  const sectionHtml = activeSection.key === 'equipements' ? sectionEquipements(showForm) : activeSection.key === 'signalements' ? sectionSignalements() : sectionStandards();
+  const sectionHtml = activeSection.key === 'equipements' ? sectionEquipements(showForm) : activeSection.key === 'signalements' ? sectionSignalements(signalementsState) : sectionStandards();
   container.innerHTML = `<article class="card"><h3>Qualité</h3><p>Contrôles équipements, signalements qualité et standards process</p></article><section class="table-grid">${SECTIONS.map((s) => `<button type="button" class="card kpi ${s.key === activeSection.key ? 'active-tab' : ''}" data-q="${s.key}"><h4>${s.title}</h4><p>${s.description}</p></button>`).join('')}</section>${sectionHtml}`;
-  container.querySelectorAll('[data-q]').forEach((btn) => btn.addEventListener('click', () => renderQualite(container, btn.dataset.q, false)));
+  container.querySelectorAll('[data-q]').forEach((btn) => btn.addEventListener('click', () => renderQualite(container, btn.dataset.q, false, signalementsState)));
   container.querySelector('#add-device-btn')?.addEventListener('click', () => renderQualite(container, 'equipements', true));
   container.querySelector('#cancel-device-btn')?.addEventListener('click', () => renderQualite(container, 'equipements', false));
   container.querySelector('#device-form')?.addEventListener('submit', (e) => {
@@ -103,6 +152,35 @@ function renderQualite(container, active = 'equipements', showForm = false) {
     const d = Object.fromEntries(new FormData(e.currentTarget).entries());
     addRecord('appareilsMesure', d);
     renderQualite(container, 'equipements', false);
+  });
+
+  container.querySelectorAll('[data-s-nav]').forEach((btn) => btn.addEventListener('click', () => renderQualite(container, 'signalements', false, { ...signalementsState, subsection: btn.dataset.sNav, mode: 'list', current: null })));
+  container.querySelector('#signalements-filters')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    renderQualite(container, 'signalements', false, { ...signalementsState, mode: 'list', filters: Object.fromEntries(new FormData(e.currentTarget).entries()) });
+  });
+  container.querySelectorAll('[data-s-action]').forEach((btn) => btn.addEventListener('click', () => {
+    const id = Number(btn.dataset.id);
+    const action = btn.dataset.sAction;
+    const current = signalementsData().find((o) => o.id === id) || null;
+    if (action === 'create') return renderQualite(container, 'signalements', false, { ...signalementsState, mode: 'create', current: { dateObservation: today(), origineSignalement: 'Interne', typeDefaut: 'Autre', gravite: 'Moyenne', statutTraitement: 'Ouvert' } });
+    if (action === 'detail') return renderQualite(container, 'signalements', false, { ...signalementsState, mode: 'detail', current });
+    if (action === 'edit') return renderQualite(container, 'signalements', false, { ...signalementsState, mode: 'edit', current });
+    if (action === 'back') return renderQualite(container, 'signalements', false, { ...signalementsState, mode: 'list', current: null });
+    if (action === 'reset-filters') return renderQualite(container, 'signalements', false, { ...signalementsState, filters: {}, mode: 'list' });
+    if (action === 'close' && current) {
+      const commentaire = window.prompt('Commentaire de clôture', current.commentaireCloture || '');
+      updateRecord('observations', id, { statutTraitement: 'Clôturé', dateCloture: today(), commentaireCloture: commentaire || '' });
+      return renderQualite(container, 'signalements', false, { ...signalementsState, mode: 'detail', current: signalementsData().find((o) => o.id === id) });
+    }
+  }));
+  container.querySelector('#signalement-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.currentTarget).entries());
+    const payload = { ...data, activite: 'Qualité', typeObservation: data.typeDefaut, importance: data.gravite, commentaire: data.descriptionProbleme, origine: data.origineSignalement };
+    if (signalementsState.mode === 'edit' && signalementsState.current?.id) updateRecord('observations', signalementsState.current.id, payload);
+    else addRecord('observations', payload);
+    renderQualite(container, 'signalements', false, { ...signalementsState, mode: 'list', current: null });
   });
   container.querySelectorAll('[data-app-action]').forEach((btn) => btn.addEventListener('click', () => {
     const id = Number(btn.dataset.id);
